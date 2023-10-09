@@ -20,9 +20,11 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class PasswordResetView : Page
     {
-        public PasswordResetView()
+        private MainWindow mainWindow;
+        public PasswordResetView(MainWindow mainWindow)
         {
             InitializeComponent();
+            this.mainWindow = mainWindow;
         }
     }
 }
