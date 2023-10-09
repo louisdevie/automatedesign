@@ -1,4 +1,6 @@
-﻿namespace AutomateDesign.Core.Users
+﻿using AutomateDesign.Core.Random;
+
+namespace AutomateDesign.Core.Users
 {
     /// <summary>
     /// Une demande d'inscription.
@@ -24,6 +26,15 @@
             this.user = user;
         }
 
-        
+        /// <summary>
+        /// Crée une nouvelle demande d'inscription.
+        /// </summary>
+        /// <param name="user">L'utilisateur pour qui créer la demande d'inscription.</param>
+        public Registration(User user)
+        {
+            var rtg = new RandomTextGenerator(new BasicRandomProvider());
+            this.verificationCode = rtg.AlphaNumericString(30);
+            this.user = user;
+        }
     }
 }

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace AutomateDesign.Client.View
 {
     /// <summary>
-    /// Logique d'interaction pour Page1.xaml
+    /// Logique d'interaction pour PasswordResetView.xaml
     /// </summary>
-    public partial class Page1 : Page
+    public partial class PasswordResetView : Page
     {
-        public Page1()
+        public PasswordResetView()
         {
             InitializeComponent();
         }
