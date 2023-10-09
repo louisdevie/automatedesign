@@ -9,7 +9,16 @@
       Title="SignUpView">
 
     <Grid>
-        
-        
+        <TextBlock HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="PAGE D'INSCRIPTION" FontSize="25" VerticalAlignment="Top"/>
+        <Label Name="messageErreurMDP" Content="Mot de Passe Incorrect" Visibility="Hidden" FontSize="18" HorizontalAlignment="Center" Margin="0,102,0,0" VerticalAlignment="Top"/>
+        <Label Content="Adresse Mail : " FontSize="18" HorizontalAlignment="Left" Margin="275,141,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="emailBox" HorizontalAlignment="Left" Margin="400,145,0,0" TextWrapping="Wrap" FontSize="18" VerticalAlignment="Top" Width="210"/>
+        <Label Content="Mot de Passe :" FontSize="18" HorizontalAlignment="Left" Margin="270,181,0,0" VerticalAlignment="Top"/>
+        <PasswordBox x:Name="passBox" DataContext="{}" HorizontalAlignment="Left" Margin="400,185,0,0" FontSize="18" VerticalAlignment="Top" Width="210"/>
+        <Label Content="Confirmer Mot de Passe :" FontSize="18" HorizontalAlignment="Left" Margin="186,221,0,0" VerticalAlignment="Top"/>
+        <PasswordBox x:Name="passBoxConf" HorizontalAlignment="Left" Margin="400,225,0,0" FontSize="18" VerticalAlignment="Top" Width="210"/>
+        <Button Content="Confirmer" FontSize="18" HorizontalAlignment="Center" Margin="0,300,0,0" VerticalAlignment="Top" Click="ConfirmerInscriptionButtonClick"/>
+
+
     </Grid>
 </Page>

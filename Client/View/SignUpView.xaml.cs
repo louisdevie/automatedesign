@@ -20,9 +20,35 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class SignUpView : Page
     {
-        public SignUpView()
+        private string email;
+        private string password;
+        private string passwordConf;
+        private MainWindow mainWindow;
+
+        /// <summary>
+        /// Envoyer False lors d'un premier appel a la page
+        /// </summary>
+        /// <param name="passwordIncorrect">Vrai si demande d'inscription avec 2 mot de passe differents</param>
+        public SignUpView(bool passwordIncorrect, MainWindow main)
         {
+            this.mainWindow = main;
+            DataContext = this;  
             InitializeComponent();
+        }
+
+        private void ConfirmerInscriptionButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.email = emailBox.Text;
+            this.password = passBox.Password;
+            this.passwordConf = passBoxConf.Password;
+            if (passBox != passBoxConf)
+            {
+                this.messageErreurMDP.Visibility = Visibility.Visible;
+            } else
+            {
+                // TEMPORAIRE !
+                mainWindow.ChangementFenetre(new LoginView(mainWindow));
+            }
         }
     }
 }

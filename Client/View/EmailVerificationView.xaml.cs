@@ -20,9 +20,11 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class EmailVerificationView : Page
     {
-        public EmailVerificationView()
+        private MainWindow mainWindow;
+        public EmailVerificationView(MainWindow mainWindow)
         {
             InitializeComponent();
+            this.mainWindow = mainWindow;
         }
     }
 }

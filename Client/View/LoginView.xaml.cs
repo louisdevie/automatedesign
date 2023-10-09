@@ -20,9 +20,11 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class LoginView : Page
     {
-        public LoginView()
+        private MainWindow mainWindow;
+        public LoginView(MainWindow mainWindow)
         {
             InitializeComponent();
+            this.mainWindow = mainWindow;
         }
     }
 }
