@@ -36,7 +36,10 @@
 
   <ItemGroup>
     <Folder Include="Model\" />
-    <Folder Include="View\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2612" />
   </ItemGroup>
 
   <ItemGroup>
