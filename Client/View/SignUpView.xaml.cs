@@ -60,5 +60,20 @@ namespace AutomateDesign.Client.View
                 mainWindow.ChangementFenetre(new LoginView(mainWindow));
             }
         }
+
+        private void ConfirmerInscriptionButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.email = emailBox.Text;
+            this.password = passBox.Password;
+            this.passwordConf = passBoxConf.Password;
+            if (passBox != passBoxConf)
+            {
+                this.messageErreurMDP.Visibility = Visibility.Visible;
+            } else
+            {
+                // TEMPORAIRE !
+                mainWindow.ChangementFenetre(new LoginView(mainWindow));
+            }
+        }
     }
 }
