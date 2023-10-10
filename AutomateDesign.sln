@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{588C7ABC-DEB3-4581-BFCB-B5EAB4D29D72}"
 	ProjectSection(SolutionItems) = preProject
-		Protos\greet.proto = Protos\greet.proto
+		Protos\users.proto = Protos\users.proto
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{FAC70D2F-021F-4BF9-80DE-A390877513C4}"
