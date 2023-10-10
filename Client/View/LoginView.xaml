@@ -9,6 +9,34 @@
       Title="LoginView">
 
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="PAGE DE CONNEXION" FontSize="25" VerticalAlignment="Top"/>
+        <Label Grid.Row="1" Grid.Column="1" Content="Adresse Mail : " FontSize="18" HorizontalAlignment="Left" Margin="33,50,0,0" VerticalAlignment="Top"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="emailBox" HorizontalAlignment="Left" Margin="158,54,0,0" TextWrapping="Wrap" FontSize="18" VerticalAlignment="Top" Width="210"/>
+        <Label Grid.Row="1" Grid.Column="1" Content="Mot de Passe :" FontSize="18" HorizontalAlignment="Left" Margin="28,100,0,0" VerticalAlignment="Top"/>
+        <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passBox" DataContext="{}" HorizontalAlignment="Left" Margin="158,104,0,0" FontSize="18" VerticalAlignment="Top" Width="210"/>
+
+        <Button Grid.Row="2" Grid.Column="1" Content="Connexion" FontSize="18" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Click="ConnexionButtonClick" RenderTransformOrigin="0.474,-2.05"/>
+        <Button Grid.Column="1"  Grid.Row="1"
+                Background="Transparent" BorderThickness="0"
+                Content="Pas encore inscrit ?"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="208,160,0,0" 
+                Click="pasInscritButtonClick"/>
+        <Button Grid.Column="1"  Grid.Row="1"
+                Background="Transparent" BorderThickness="0"
+                Content="Mot de passe oublié ?" 
+                HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="80,160,0,0"
+                Click="passwordOulbieButtonClick"/>
+
     </Grid>
 </Page>

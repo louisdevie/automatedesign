@@ -23,7 +23,7 @@ namespace AutomateDesign.Client.View
         {
             InitializeComponent();
 
-            this.frame.Content = new SignUpView(false, this);
+            this.ChangementFenetre(new LoginView(this));
         }
 
         public void ChangementFenetre(Page page)

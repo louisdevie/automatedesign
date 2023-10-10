@@ -20,11 +20,35 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class LoginView : Page
     {
+        #region Attributs
+        private string email;
+        private string password;
         private MainWindow mainWindow;
+        #endregion
+
         public LoginView(MainWindow mainWindow)
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
+            this.email = string.Empty;
+            this.password = string.Empty;
+        }
+
+        private void ConnexionButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.email = emailBox.Text;
+            this.password = passBox.Password;
+            this.mainWindow.ChangementFenetre(new HomeView(mainWindow));
+        }
+
+        private void passwordOulbieButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.mainWindow.ChangementFenetre(new PasswordResetView(mainWindow));
+        }
+
+        private void pasInscritButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.mainWindow.ChangementFenetre(new SignUpView(false, mainWindow));
         }
     }
 }

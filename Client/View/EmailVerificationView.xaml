@@ -19,6 +19,7 @@
             <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
+        
         <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="VERIFICATION PAR EMAIL" FontSize="25" VerticalAlignment="Top"/>
         <Label Content="Saissez le code que vous avez reçu par mail :" HorizontalAlignment="Center" Margin="0,34,0,0" Grid.Row="1" FontSize="18" VerticalAlignment="Top" Width="Auto" Height="40" Grid.Column="1"/>
         <TextBox x:Name="codeVerifBox" Grid.Row="1" Grid.Column="1" Margin="0,80,0,0" Height="Auto" Width="80" FontSize="30" VerticalAlignment="Top" HorizontalAlignment="Center" MaxLength="4" PreviewTextInput="TextBox_PreviewTextInput"/>
