@@ -25,6 +25,7 @@ namespace AutomateDesign.Client.View
         private string password;
         private string passwordConf;
         private MainWindow mainWindow;
+        private bool checkBox;
         #endregion
 
         /// <summary>
@@ -39,6 +40,7 @@ namespace AutomateDesign.Client.View
             this.email = string.Empty;
             this.password = string.Empty;
             this.passwordConf = string.Empty;
+            this.checkBox = false;
         }
 
         /// <summary>
@@ -52,9 +54,12 @@ namespace AutomateDesign.Client.View
             this.email = emailBox.Text;
             this.password = passBox.Password;
             this.passwordConf = passBoxConf.Password;
+            this.checkBox = this.checkBoxButton.IsChecked.Value;
             if (password != passwordConf)
             {
                 this.messageErreurMDP.Visibility = Visibility.Visible;
+            } else if (!this.checkBox){
+                this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
             } else {
                 // TEMPORAIRE !
                 mainWindow.ChangementFenetre(new EmailVerificationView(mainWindow));
