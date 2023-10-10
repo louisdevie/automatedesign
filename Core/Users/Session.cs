@@ -28,6 +28,16 @@ namespace AutomateDesign.Core.Users
         public string Token => this.token;
 
         /// <summary>
+        /// La dernière utilisation de la session.
+        /// </summary>
+        public DateTime LastUse => this.lastUse;
+
+        /// <summary>
+        /// Le moment auquel la session expirera.
+        /// </summary>
+        public DateTime Expiration => this.expiration;
+
+        /// <summary>
         /// La durée depuis la dernière utilisation de la session.
         /// </summary>
         public TimeSpan UnusedSince => DateTime.UtcNow.Subtract(this.lastUse);

@@ -91,8 +91,7 @@ namespace AutomateDesign.Server.Data.Implementation
             }
 
             using MySqlConnection connection = Connect();
-            {
-                
+            {                
                 connection.ExecuteNonQuery("UPDATE User SET Email = '?', Hash = '?', Salt = '?' WHERE IdUser = ?",
                     item.Email,item.Password.Hash, item.Password.Salt,key);
             }

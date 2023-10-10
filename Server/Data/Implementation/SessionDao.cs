@@ -1,40 +1,34 @@
 ﻿using AutomateDesign.Core;
+using AutomateDesign.Core.Users;
 using MySql.Data.MySqlClient;
 
 namespace AutomateDesign.Server.Data.Implementation
 {
-    public class SessionDao : DatabaseConnector, ISessionDao
+    public class SessionDao : BaseDao, ISessionDao
     {
-        public SessionDao(ConfigurationService configurationService) : base(configurationService)
-        {
+        private IUserDao userDao;
 
-        }
+        public SessionDao(DatabaseConnector connector) : base(connector) { this.userDao = new UserDao(connector); }
 
         public void Create(Session item)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
+            using MySqlConnection connection = Connect();
 
-            string query = $"INSERT INTO Session (Token, DateTimeLastUse, DateTimeExpired) VALUES ('{item.Token}', '{item.DateTimeLastUse}', '{item.DateTimeExpired}')";
+            connection.ExecuteNonQuery(
+                "INSERT INTO Session (Token, DateTimeLastUse, DateTimeExpired) VALUES ('?', '?', '?')",
+                item.Token, item.LastUse, item.Expiration
+                );
 
-            using (MySqlConnection connection = Connection)
-            {
-                OpenConnection();
-                ExecuteQuery(query);
-            }
+
         }
 
         public void Delete(int key)
         {
             string query = $"DELETE FROM Session WHERE IdSession = {key}";
 
-            using (MySqlConnection connection = Connection)
-            {
-                OpenConnection();
-                ExecuteQuery(query);
-            }
+            using MySqlConnection connection = Connect();
+
+            connection.ExecuteNonQuery("DELETE FROM Session WHERE IdSession = ?", key);            
         }
 
         public IEnumerable<Session> Read()
@@ -47,23 +41,24 @@ namespace AutomateDesign.Server.Data.Implementation
             Session session = null;
             string query = $"SELECT * FROM Session WHERE IdSession = {key}";
 
-            using (MySqlConnection connection = Connection)
-            {
-                OpenConnection();
+            using MySqlConnection connection = Connect();
+            
+                
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
                 if (dataReader.Read())
                 {
-                    session = new Session
-                    {
-                        IdSession = Convert.ToInt32(dataReader["IdUser"]),
-                        DateTimeLastUse = Convert.ToDateTime(dataReader["DateTimeLastUse"]),
-                        DateTimeExpired = Convert.ToDateTime(dataReader["DateTimeExpired"])
-                    };
+                User user = this.userDao.Read(Convert.ToInt32(dataReader["IdUser"]));
+                session = new Session(
+                    dataReader.GetString("Token"),
+                    Convert.ToDateTime(dataReader["DateTimeLastUse"]),
+                    Convert.ToDateTime(dataReader["DateTimeExpired"]),
+                    user
+                    );               
                 }
                 dataReader.Close();
-            }
+            
             return session;
         }
 
@@ -79,14 +74,11 @@ namespace AutomateDesign.Server.Data.Implementation
             {
                 throw new ArgumentNullException(nameof(item));
             }
-
-            string query = $"UPDATE Session SET DateTimeLastUse = '{item.DateTimeLastUse}' WHERE IdSession = {key}";
-
-            using (MySqlConnection connection = Connection)
-            {
-                OpenConnection();
-                ExecuteQuery(query);
-            }
+            using MySqlConnection connection = Connect();
+            
+                connection.ExecuteNonQuery("UPDATE Session SET DateTimeLastUse = '?' WHERE IdSession = ?",
+                    item.LastUse,key);
+            
         }
     }
 }

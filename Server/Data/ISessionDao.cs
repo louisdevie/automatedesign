@@ -1,4 +1,4 @@
-﻿using AutomateDesign.Core;
+﻿using AutomateDesign.Core.Users;
 
 namespace AutomateDesign.Server.Data
 {
