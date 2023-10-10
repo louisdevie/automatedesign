@@ -3,7 +3,7 @@ using MySql.Data.MySqlClient;
 
 namespace AutomateDesign.Server.Data
 {
-    public class SessionDao : DatabaseConnection, ISessionDao
+    public class SessionDao : DatabaseConnector, ISessionDao
     {
         public SessionDao(ConfigurationService configurationService) : base(configurationService)
         {

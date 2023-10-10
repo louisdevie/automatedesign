@@ -1,46 +1,49 @@
-﻿namespace AutomateDesign.Server.Data
+﻿using MySql.Data.MySqlClient;
+
+namespace AutomateDesign.Server.Data
 {
-    /// <summary>
-    /// Opérations basiques (CRUD) d'accès aux données.
-    /// </summary>
-    /// <typeparam name="TKey">Le type par lequel les items sont indexés.</typeparam>
-    /// <typeparam name="TItem">Le type des item gérés par le DAO.</typeparam>
-    public interface BaseDAO<TKey, TItem>
+    public class BaseDao
     {
-        /// <summary>
-        /// Enregistre un nouvel item
-        /// </summary>
-        /// <param name="item">L'item à insérer.</param>
-        
-        public void Create(TItem item);
+        private DatabaseConnector connector;
+
+        public BaseDao(DatabaseConnector connector)
+        {
+            this.connector = connector;
+        }
+
+        public MySqlConnection Connect() => this.connector.Connect();
+    }
+
+    public static class MySqlQueryExtensions
+    {
+        private static MySqlCommand PrepareCommand(MySqlConnection connection, string query, object?[] parameters)
+        {
+            MySqlCommand cmd = new(query, connection);
+            foreach (object? parameter in parameters)
+            {
+                cmd.Parameters.AddWithValue("", parameter);
+            }
+            return cmd;
+        }
 
         /// <summary>
-        /// Récupère tous les items.
+        /// Exécute une requête SQL sans résultat. 
         /// </summary>
-        /// <returns>La liste des items.</returns>
-        public IEnumerable<TItem> Read();
+        /// <param name="query">La requête SQL à exécuter.</param>
+        /// <param name="parameters">Les paramètres de la requête.</param>
+        public static int ExecuteNonQuery(this MySqlConnection connection, string query, params object?[] parameters)
+        {
+            return PrepareCommand(connection, query, parameters).ExecuteNonQuery();
+        }
 
         /// <summary>
-        /// Récupère l'item correspondant à une clé.
+        /// Exécute une requête SQL avec résultat.
         /// </summary>
-        /// <param name="key">La clé de l'item à récupérer.</param>
-        /// <returns>L'item correspondant.</returns>
-        /// <exception cref="ItemNotFoundException"></exception>
-        public TItem Read(TKey key);
-
-        /// <summary>
-        /// Mets à jour un item.
-        /// </summary>
-        /// <param name="key">La clé de l'item.</param>
-        /// <param name="item">Le nouvel item.</param>
-        /// <exception cref="ItemNotFoundException"></exception>
-        /// <exception cref="InvalidItemException"></exception>
-        public void Update(TKey key, TItem item);
-
-        /// <summary>
-        /// Supprimme un item.
-        /// </summary>
-        /// <param name="key">La clé de l'item à supprimer.</param>
-        public void Delete(TKey key);
+        /// <param name="query">La requête SQL à exécuter.</param>
+        /// <param name="parameters">Les paramètres de la requête.</param>
+        public static MySqlDataReader ExecuteReader(this MySqlConnection connection, string query, params object?[] parameters)
+        {
+            return PrepareCommand(connection, query, parameters).ExecuteReader();
+        }
     }
 }

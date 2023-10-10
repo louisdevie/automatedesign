@@ -8,13 +8,13 @@ namespace AutomateDesign.Server.Data
         /// Lit le fichier config.json
         /// </summary>
         /// <returns>format de donnés qui contient les données nécessaire à la connection BDD</returns>
-        public DatabaseSetting GetDatabaseSetting()
+        public DatabaseSettings GetDatabaseSetting()
         {
             // Lire le fichier JSON
             var json = File.ReadAllText("appsetting.json");
 
             // Désérialiser les données en objet
-            return JsonSerializer.Deserialize<DatabaseSetting>(json);
+            return JsonSerializer.Deserialize<DatabaseSettings>(json);
         }
     }
 }

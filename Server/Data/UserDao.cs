@@ -4,27 +4,18 @@ using System.Runtime.CompilerServices;
 
 namespace AutomateDesign.Server.Data
 {
-    public class UserDao : DatabaseConnection, IUserDao
+    public class UserDao : BaseDao, IUserDao
     {
-        public UserDao(ConfigurationService configurationService) : base(configurationService)
-        {
-
-        }
+        public UserDao(DatabaseConnector connector) : base(connector) { }
 
         public void Create(User item)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
+            using MySqlConnection connection = this.Connect();
 
-            string query = $"INSERT INTO User (Email, Hash, Salt) VALUES ('{item.Email}', '{item.Hash}', '{item.Salt}')";
-
-            using (MySqlConnection connection = Connection)
-            {
-                OpenConnection();
-                ExecuteQuery(query);            
-            }
+            connection.ExecuteNonQuery(
+                "INSERT INTO User (Email, Hash, Salt) VALUES (?, ?, ?)",
+                item.Email, item.Password, 0
+            );
         }
 
         public void Delete(int key)

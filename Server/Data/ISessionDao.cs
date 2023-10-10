@@ -2,7 +2,7 @@
 
 namespace AutomateDesign.Server.Data
 {
-    public interface ISessionDao : BaseDAO<int, Session>
+    public interface ISessionDao : IBaseDAO<int, Session>
     {
     }
 }
