@@ -21,6 +21,6 @@ var app = builder.Build();
 
 app.UseRouting();
 
-app.MapGrpcService<GreeterService>();
+app.MapGrpcService<UsersService>();
 
 app.Run();

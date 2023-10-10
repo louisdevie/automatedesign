@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "AutomateDesign.Protos";
+
+service Users {
+    rpc SignUp (SignUpRequest) returns (Null);
+}
+
+message SignUpRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message Null { }
