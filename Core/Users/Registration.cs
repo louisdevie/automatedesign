@@ -17,9 +17,14 @@ namespace AutomateDesign.Core.Users
         public uint VerificationCode => this.verificationCode;
 
         /// <summary>
-        /// La durée maximum d'une demande d'inscription (24 heures).
+        /// La durée maximum d'une demande d'inscription (2 heures).
         /// </summary>
-        public static readonly TimeSpan LIFETIME = TimeSpan.FromHours(24);
+        public static readonly TimeSpan LIFETIME = TimeSpan.FromHours(2);
+
+        /// <summary>
+        /// Le moment auquel la demande d'inscription expirera.
+        /// </summary>
+        public DateTime Expiration => this.expiration;
 
         /// <summary>
         /// Indique si la session a expiré ou non, en prenant en compte l'inactivité.
@@ -36,9 +41,10 @@ namespace AutomateDesign.Core.Users
         /// </summary>
         /// <param name="verificationCode">Le code de vérification.</param>
         /// <param name="user">L'utilisateru qui demande à s'inscrire.</param>
-        public Registration(uint verificationCode, User user)
+        public Registration(uint verificationCode, DateTime expiration, User user)
         {
             this.verificationCode = verificationCode;
+            this.expiration = expiration;
             this.user = user;
         }
 
@@ -50,7 +56,10 @@ namespace AutomateDesign.Core.Users
         {
             var random = new BasicRandomProvider();
             this.verificationCode = random.NextUInt();
+            this.expiration = DateTime.UtcNow + LIFETIME;
             this.user = user;
         }
+
+        public Registration WithUser(User user) => new(this.verificationCode, this.expiration, user);
     }
 }

@@ -45,5 +45,21 @@ namespace AutomateDesign.Server.Data
         {
             return PrepareCommand(connection, query, parameters).ExecuteReader();
         }
+
+        /// <summary>
+        /// Exécute une requête SQL avec un résultat unique.
+        /// </summary>
+        /// <param name="query">La requête SQL à exécuter.</param>
+        /// <param name="parameters">Les paramètres de la requête.</param>
+        public static object ExecuteScalar(this MySqlConnection connection, string query, params object?[] parameters)
+        {
+            return PrepareCommand(connection, query, parameters).ExecuteScalar();
+        }
+
+        /// <inheritdoc cref="ExecuteScalar(MySqlConnection, string, object?[])"/>
+        public static T ExecuteScalar<T>(this MySqlConnection connection, string query, params object?[] parameters)
+        {
+            return (T)PrepareCommand(connection, query, parameters).ExecuteScalar();
+        }
     }
 }

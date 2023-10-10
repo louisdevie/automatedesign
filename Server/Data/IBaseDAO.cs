@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="item">L'item à insérer.</param>
         
-        public void Create(TItem item);
+        public TItem Create(TItem item);
 
         /// <summary>
         /// Récupère tous les items.

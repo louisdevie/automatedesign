@@ -8,13 +8,13 @@ namespace AutomateDesign.Server.Data
         /// Enregistre une demande d'inscription. Si l'utilisateur associé n'existe pas encore, il est créé en même temps.
         /// </summary>
         /// <param name="registration">La demande d'inscription à enregistrer.</param>
-        public void Create(Registration registration);
+        public Registration Create(Registration registration);
 
         /// <summary>
         /// Récupère la demande d'inscription correspondant à un utilisateur.
         /// </summary>
         /// <param name="userId">L'identifiant de l'utilisateur pour qui récupérer les informations.</param>
-        public void Read(int userId);
+        public Registration ReadById(int userId);
 
         /// <summary>
         /// Supprimme une demande d'inscription.
