@@ -1,5 +1,6 @@
 ﻿using AutomateDesign.Core;
 using MySql.Data.MySqlClient;
+using System.Runtime.CompilerServices;
 
 namespace AutomateDesign.Server.Data
 {
@@ -10,7 +11,7 @@ namespace AutomateDesign.Server.Data
 
         }
 
-        public User Create(User item)
+        public void Create(User item)
         {
             if (item == null)
             {
@@ -24,9 +25,6 @@ namespace AutomateDesign.Server.Data
                 OpenConnection();
                 ExecuteQuery(query);            
             }
-
-
-            return item;
         }
 
         public void Delete(int key)
@@ -93,7 +91,7 @@ namespace AutomateDesign.Server.Data
             return user;
         }
 
-        public User Update(int key, User item)
+        public void Update(int key, User item)
         {
             if (item == null)
             {
@@ -107,8 +105,6 @@ namespace AutomateDesign.Server.Data
                 OpenConnection();
                 ExecuteQuery(query);
             }
-
-            return item;
         }
     }
 }

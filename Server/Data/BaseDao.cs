@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="item">L'item à insérer.</param>
         
-        public TItem Create(TItem item);
+        public void Create(TItem item);
 
         /// <summary>
         /// Récupère tous les items.
@@ -35,7 +35,7 @@
         /// <param name="item">Le nouvel item.</param>
         /// <exception cref="ItemNotFoundException"></exception>
         /// <exception cref="InvalidItemException"></exception>
-        public TItem Update(TKey key, TItem item);
+        public void Update(TKey key, TItem item);
 
         /// <summary>
         /// Supprimme un item.
