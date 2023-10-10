@@ -9,7 +9,10 @@
       Title="HomeView">
 
     <Grid>
-        <Label Content="Ceci est la page d'accueil" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Label Content="Ceci est la page d'accueil" 
+               FontSize="40" 
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               />
 
     </Grid>
 </Page>

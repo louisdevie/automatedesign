@@ -20,30 +20,84 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="PAGE D'INSCRIPTION" FontSize="25" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" 
+                   HorizontalAlignment="Center" VerticalAlignment="Top"
+                   Margin="0,40,0,0" 
+                   TextWrapping="Wrap" Text="PAGE D'INSCRIPTION" 
+                   FontSize="25" 
+                   />
 
-        <Label Grid.Column="1" Name="messageErreurMDP" Content="Mot de Passe Incorrect" Visibility="Hidden" FontSize="18" HorizontalAlignment="Center" Margin="0,112,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
-        <Label Grid.Row="1" Grid.Column="1" Content="Adresse Mail : " FontSize="18" HorizontalAlignment="Left" Margin="33,12,0,0" VerticalAlignment="Top"/>
-        <TextBox Grid.Row="1" Grid.Column="1" x:Name="emailBox" HorizontalAlignment="Left" Margin="158,16,0,0" TextWrapping="Wrap" FontSize="18" VerticalAlignment="Top" Width="210"/>
-        <Label Grid.Row="1" Grid.Column="1" Content="Mot de Passe :" FontSize="18" HorizontalAlignment="Left" Margin="28,58,0,0" VerticalAlignment="Top"/>
-        <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passBox" DataContext="{}" HorizontalAlignment="Left" Margin="158,62,0,0" FontSize="18" VerticalAlignment="Top" Width="210"/>
-        <Label Grid.Row="1" Content="Confirmer Mot de Passe :" FontSize="18" HorizontalAlignment="Left" Margin="144,108,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passBoxConf" HorizontalAlignment="Left" Margin="158,112,0,0" FontSize="18" VerticalAlignment="Top" Width="210"/>
+        <Label Name="messageErreurMDP"
+               Grid.Column="1" Grid.RowSpan="2"
+               Content="Mot de Passe Incorrect" 
+               Visibility="Hidden" 
+               FontSize="18" 
+               HorizontalAlignment="Center" VerticalAlignment="Top" 
+               Margin="0,112,0,0" 
+               />
+        <Label Grid.Row="1" Grid.Column="1" 
+               Content="Adresse Mail : " 
+               FontSize="18" 
+               HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="33,12,0,0" 
+               />
+        <TextBox x:Name="emailBox"
+                 Grid.Row="1" Grid.Column="1" 
+                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                 Margin="158,16,0,0" 
+                 TextWrapping="Wrap" 
+                 FontSize="18"  
+                 Width="210"
+                 />
+        <Label Grid.Row="1" Grid.Column="1" 
+               Content="Mot de Passe :" 
+               FontSize="18" 
+               HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="28,58,0,0" 
+               />
+        <PasswordBox x:Name="passBox"
+                     Grid.Row="1" Grid.Column="1" 
+                     DataContext="{}" 
+                     HorizontalAlignment="Left" 
+                     Margin="158,62,0,0" VerticalAlignment="Top" 
+                     FontSize="18" 
+                     Width="210"
+                     />
+        <Label Grid.Row="1" Grid.ColumnSpan="2"
+               Content="Confirmer Mot de Passe :" 
+               FontSize="18" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" 
+               Margin="144,108,0,0" 
+               />
+        <PasswordBox x:Name="passBoxConf"
+                     Grid.Row="1" Grid.Column="1" 
+                     HorizontalAlignment="Left" VerticalAlignment="Top"
+                     Margin="158,112,0,0" 
+                     FontSize="18"  
+                     Width="210"
+                     />
         <CheckBox x:Name="checkBoxButton" 
-          Grid.Column="1" Grid.Row="1" FontSize="16" 
-          Content="" 
-          HorizontalAlignment="Left" VerticalAlignment="Top" 
-          Margin="10,160,0,0"
-          />
+                  Grid.Column="1" Grid.Row="1" 
+                  FontSize="16" 
+                  Content="" 
+                  HorizontalAlignment="Left" VerticalAlignment="Top" 
+                  Margin="10,160,0,0"
+                  />
         <TextBlock x:Name="checkBoxText"
-           Grid.Row="1" Grid.Column="1" 
-           FontSize="16" 
-           HorizontalAlignment="Left"  VerticalAlignment="Top"
-           Margin="35,154,0,0" Height="Auto" Width="355"
-           TextWrapping="Wrap"
-           Text="Notez bien votre mot de passe. Vos données seront perdues en cas rénitialisation de votre mot de passe." Grid.RowSpan="2"
-           />
+                   Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
+                   FontSize="16" 
+                   HorizontalAlignment="Left"  VerticalAlignment="Top"
+                   Margin="35,154,0,0" 
+                   Height="Auto" Width="355"
+                   TextWrapping="Wrap" Text="Vos données seront perdues en cas de réinitialisation de votre mot de passe." 
+                   />   
 
-        <Button Grid.Row="2" Grid.Column="1" Content="Confirmer" FontSize="18" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Click="ConfirmerInscriptionButtonClick"/>
+        <Button Grid.Row="2" Grid.Column="1" 
+                Content="Confirmer" 
+                FontSize="18" 
+                HorizontalAlignment="Center" VerticalAlignment="Top"
+                Margin="0,10,0,0"  
+                Click="ConfirmerInscriptionButtonClick"
+                />
     </Grid>
 </Page>

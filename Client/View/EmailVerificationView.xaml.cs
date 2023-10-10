@@ -20,7 +20,10 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class EmailVerificationView : Page
     {
+        #region Attributs
         private MainWindow mainWindow;
+        #endregion
+
         public EmailVerificationView(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -29,9 +32,10 @@ namespace AutomateDesign.Client.View
 
         private void ConfirmerVerifButtonClick(object sender, RoutedEventArgs e)
         {
-            // VERFICATION DU CODE
+            // TEMPORAIRE
             this.mainWindow.ChangementFenetre(new LoginView(mainWindow));
         }
+
         /// <summary>
         /// Verifie que les caractère entrer soient bien des chiffres et non des lettres
         /// </summary>

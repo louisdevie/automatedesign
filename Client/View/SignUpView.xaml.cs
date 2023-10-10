@@ -55,8 +55,7 @@ namespace AutomateDesign.Client.View
             this.password = passBox.Password;
             this.passwordConf = passBoxConf.Password;
             this.checkBox = this.checkBoxButton.IsChecked.Value;
-            if (password != passwordConf)
-            {
+            if (password != passwordConf) {
                 this.messageErreurMDP.Visibility = Visibility.Visible;
             } else if (!this.checkBox){
                 this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);

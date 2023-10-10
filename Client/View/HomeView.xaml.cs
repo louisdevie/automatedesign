@@ -20,7 +20,10 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class HomeView : Page
     {
+        #region Attributs
         private MainWindow mainWindow;
+        #endregion
+
         public HomeView(MainWindow mainWindow)
         {
             InitializeComponent();
