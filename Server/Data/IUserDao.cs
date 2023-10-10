@@ -1,8 +1,8 @@
-﻿using AutomateDesign.Core;
+﻿using AutomateDesign.Core.Users;
 
 namespace AutomateDesign.Server.Data
 {
-    public interface IUserDao : IBaseDAO<int,User>
+    public interface IUserDao : IBaseDAO<int, User>
     {
     }
 }

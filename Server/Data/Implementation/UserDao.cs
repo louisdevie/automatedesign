@@ -1,8 +1,9 @@
-﻿using AutomateDesign.Core;
+﻿using AutomateDesign.Core.Users;
+using AutomateDesign.Server.Data;
 using MySql.Data.MySqlClient;
 using System.Runtime.CompilerServices;
 
-namespace AutomateDesign.Server.Data
+namespace AutomateDesign.Server.Data.Implementation
 {
     public class UserDao : BaseDao, IUserDao
     {
@@ -10,11 +11,11 @@ namespace AutomateDesign.Server.Data
 
         public void Create(User item)
         {
-            using MySqlConnection connection = this.Connect();
+            using MySqlConnection connection = Connect();
 
             connection.ExecuteNonQuery(
                 "INSERT INTO User (Email, Hash, Salt) VALUES (?, ?, ?)",
-                item.Email, item.Password, 0
+                item.Email, item.Password.Hash, item.Password.Salt
             );
         }
 
@@ -35,7 +36,7 @@ namespace AutomateDesign.Server.Data
             string query = "SELECT * FROM User";
 
             using (MySqlConnection connection = Connection)
-            {              
+            {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -51,7 +52,7 @@ namespace AutomateDesign.Server.Data
                     users.Add(user);
                 }
                 dataReader.Close();
-                CloseConnection();                
+                CloseConnection();
             }
             return users;
         }
@@ -77,7 +78,7 @@ namespace AutomateDesign.Server.Data
                         Salt = dataReader["Salt"].ToString()
                     };
                 }
-                dataReader.Close();                
+                dataReader.Close();
             }
             return user;
         }
