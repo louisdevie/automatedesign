@@ -8,7 +8,23 @@ namespace AutomateDesign.Core.Users
     public class Registration
     {
         private string verificationCode;
+        private DateTime expiration;
         private User user;
+
+        /// <summary>
+        /// Le code de vérification associé à cette demande d'inscription.
+        /// </summary>
+        public string VerificationCode => this.verificationCode;
+
+        /// <summary>
+        /// La durée maximum d'une demande d'inscription (24 heures).
+        /// </summary>
+        public static readonly TimeSpan LIFETIME = TimeSpan.FromHours(24);
+
+        /// <summary>
+        /// Indique si la session a expiré ou non, en prenant en compte l'inactivité.
+        /// </summary>
+        public bool Expired => this.expiration < DateTime.UtcNow;
 
         /// <summary>
         /// L'utilisateur concerné par la demande d'inscription.
