@@ -2,40 +2,27 @@
 
 namespace AutomateDesign.Server.Data
 {
-    public abstract class DatabaseConnection
+    public abstract class DatabaseConnection: IDisposable
     {
         private MySqlConnection connection;
-        private string server;
-        private string database;
-        private string uid;
-        private string password;
 
-        public DatabaseConnection()
+        public MySqlConnection Connection { get => connection; }
+
+        public DatabaseConnection(ConfigurationService configurationService)
         {
-            Initialize();
-        }
+            var databaseSettings = configurationService.GetDatabaseSetting();
 
-        /// <summary>
-        /// Initialise la connexion
-        /// </summary>
-        private void Initialize()
-        {
-            server = "127.0.0.1"; // Adresse IP serveur MySQL
-            database = "sae_automate"; // Nom de votre la base de données
-            uid = "automateUser"; // Utilisateur MySQL
-            password = "automateUser!"; // Mot de passe MySQL
+            string connectionString = $"SERVER={databaseSettings.Server};DATABASE={databaseSettings.Database};UID={databaseSettings.UserId};PASSWORD={databaseSettings.Password};";
+            string ConnectionString = connectionString;
 
-            string connectionString;
-            connectionString = $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};";
-
-            connection = new MySqlConnection(connectionString);
+            connection = new MySqlConnection(ConnectionString);
         }
 
         /// <summary>
         /// Ouvrir la connexion à la base de données
         /// </summary>
         /// <returns></returns>
-        private bool OpenConnection()
+        public bool OpenConnection()
         {
             try
             {
@@ -65,11 +52,11 @@ namespace AutomateDesign.Server.Data
         /// Fermer la connexion à la base de données
         /// </summary>
         /// <returns></returns>
-        private bool CloseConnection()
+        public bool CloseConnection()
         {
             try
             {
-                connection.Close();
+                connection.Close(); 
                 return true;
             }
             catch (MySqlException ex)
@@ -94,6 +81,23 @@ namespace AutomateDesign.Server.Data
             }
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this); ;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (connection != null)
+                {
+                    connection.Dispose();
+                    connection = null;
+                }
+            }
+        }
     }
 }
 
