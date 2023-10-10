@@ -43,6 +43,7 @@ namespace AutomateDesign.Client.View
 
         /// <summary>
         /// Boutton déclenchant la procedure d'inscription
+        /// Si le mot de passe est incorrect ne fait rien et l'indique à l'utilisateur sinon renvoie vers la page de vérification d'email
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -51,28 +52,12 @@ namespace AutomateDesign.Client.View
             this.email = emailBox.Text;
             this.password = passBox.Password;
             this.passwordConf = passBoxConf.Password;
-            if (passBox != passBoxConf)
+            if (password != passwordConf)
             {
                 this.messageErreurMDP.Visibility = Visibility.Visible;
-            } else
-            {
+            } else {
                 // TEMPORAIRE !
-                mainWindow.ChangementFenetre(new LoginView(mainWindow));
-            }
-        }
-
-        private void ConfirmerInscriptionButtonClick(object sender, RoutedEventArgs e)
-        {
-            this.email = emailBox.Text;
-            this.password = passBox.Password;
-            this.passwordConf = passBoxConf.Password;
-            if (passBox != passBoxConf)
-            {
-                this.messageErreurMDP.Visibility = Visibility.Visible;
-            } else
-            {
-                // TEMPORAIRE !
-                mainWindow.ChangementFenetre(new LoginView(mainWindow));
+                mainWindow.ChangementFenetre(new EmailVerificationView(mainWindow));
             }
         }
     }
