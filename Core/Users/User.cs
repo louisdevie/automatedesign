@@ -10,6 +10,7 @@ namespace AutomateDesign.Core.Users
         private int id;
         private MailAddress email;
         private HashedPassword password;
+        private bool isValidated;
 
         /// <summary>
         /// L'identifiant unique de l'utilisateur.
@@ -27,34 +28,40 @@ namespace AutomateDesign.Core.Users
         public HashedPassword Password { get => password; set => password = value; }
 
         /// <summary>
+        /// Si l'utilisateur est validé ou non.
+        /// </summary>
+        public bool IsValidated { get => this.isValidated; set => this.isValidated = value; }
+
+        /// <summary>
         /// Crée un utilisateur existant.
         /// </summary>
         /// <param name="id">L'identifiant unique de l'utilisateur.</param>
         /// <param name="email">L'adresse mail de l'utilisateur.</param>
         /// <param name="password">Le mot de passe de l'utilisateur.</param>
-        public User(int id, MailAddress email, HashedPassword password)
+        /// <param name="isValidated">Si l'utilisateur est validé ou non.</param>
+        public User(int id, MailAddress email, HashedPassword password, bool isValidated)
         {
             this.id = id;
             this.email = email;
             this.password = password;
+            IsValidated = isValidated;
+
         }
 
         /// <inheritdoc cref="User(int, MailAddress, HashedPassword)"/>
-        public User(int id, string email, HashedPassword password)
-        {
-            this.id = id;
-            this.email = new MailAddress(email);
-            this.password = password;
-        }
+        public User(int id, string email, HashedPassword password, bool isValidated)
+        : this(id, new MailAddress(email), password, isValidated) { }
 
         /// <summary>
         /// Crée un nouvel utilisateur.
         /// </summary>
         /// <param name="email">L'adresse mail de l'utilisateur.</param>
         /// <param name="password">Le mot de passe de l'utilisateur.</param>
-        public User(MailAddress email, HashedPassword password) : this(-1, email, password) { }
+        public User(MailAddress email, HashedPassword password, bool isValidated)
+        : this(-1, email, password, isValidated) { }
 
         /// <inheritdoc cref="User(MailAddress, HashedPassword)"/>
-        public User(string email, HashedPassword password) : this(-1, email, password) { }
+        public User(string email, HashedPassword password, bool isValidated)
+        : this(-1, email, password, isValidated) { }
     }
 }
