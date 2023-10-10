@@ -1,7 +1,9 @@
 ﻿using AutomateDesign.Core.Users;
 using AutomateDesign.Server.Data;
 using MySql.Data.MySqlClient;
+using System.Data;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 
 namespace AutomateDesign.Server.Data.Implementation
 {
@@ -21,13 +23,9 @@ namespace AutomateDesign.Server.Data.Implementation
 
         public void Delete(int key)
         {
-            string query = $"DELETE FROM User WHERE IdUser = {key}";
-
-            using (MySqlConnection connection = Connection)
-            {
-                OpenConnection();
-                ExecuteQuery(query);
-            }
+            using MySqlConnection connection = Connect();
+            
+            connection.ExecuteNonQuery("DELETE FROM User WHERE IdUser = ?",key);
         }
 
         public IEnumerable<User> Read()
@@ -35,24 +33,26 @@ namespace AutomateDesign.Server.Data.Implementation
             List<User> users = new List<User>();
             string query = "SELECT * FROM User";
 
-            using (MySqlConnection connection = Connection)
+            using MySqlConnection connection = Connect();
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
                 while (dataReader.Read())
                 {
-                    User user = new User
-                    {
-                        IdUser = Convert.ToInt32(dataReader["IdUser"]),
-                        Email = dataReader["Email"].ToString(),
-                        Hash = dataReader["Hash"].ToString(),
-                        Salt = dataReader["Salt"].ToString()
-                    };
+                    byte[] password = new byte[32];
+                    dataReader.GetBytes("Hash", 0, password, 0, 32);
+
+
+                    User user = new User(
+
+                        dataReader.GetInt32("IdUser"),
+                        dataReader.GetString("Email"),
+                        new HashedPassword(password, dataReader.GetString("Salt"))
+                    );
                     users.Add(user);
                 }
                 dataReader.Close();
-                CloseConnection();
             }
             return users;
         }
@@ -62,21 +62,21 @@ namespace AutomateDesign.Server.Data.Implementation
             User user = null;
             string query = $"SELECT * FROM User WHERE IdUser = {key}";
 
-            using (MySqlConnection connection = Connection)
+            using MySqlConnection connection = Connect();
             {
-                OpenConnection();
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
                 if (dataReader.Read())
                 {
-                    user = new User
-                    {
-                        IdUser = Convert.ToInt32(dataReader["IdUser"]),
-                        Email = dataReader["Email"].ToString(),
-                        Hash = dataReader["Hash"].ToString(),
-                        Salt = dataReader["Salt"].ToString()
-                    };
+                    byte[] password = new byte[32];
+                    dataReader.GetBytes("Hash", 0, password, 0, 32);
+                    user = new User(
+
+                        dataReader.GetInt32("IdUser"),
+                        dataReader.GetString("Email"),
+                        new HashedPassword(password, dataReader.GetString("Salt"))
+                    );
                 }
                 dataReader.Close();
             }
@@ -90,12 +90,11 @@ namespace AutomateDesign.Server.Data.Implementation
                 throw new ArgumentNullException(nameof(item));
             }
 
-            string query = $"UPDATE User SET Email = '{item.Email}', Hash = '{item.Hash}', Salt = '{item.Salt}' WHERE IdUser = {key}";
-
-            using (MySqlConnection connection = Connection)
+            using MySqlConnection connection = Connect();
             {
-                OpenConnection();
-                ExecuteQuery(query);
+                
+                connection.ExecuteNonQuery("UPDATE User SET Email = '?', Hash = '?', Salt = '?' WHERE IdUser = ?",
+                    item.Email,item.Password.Hash, item.Password.Salt,key);
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using AutomateDesign.Core;
 using MySql.Data.MySqlClient;
 
-namespace AutomateDesign.Server.Data
+namespace AutomateDesign.Server.Data.Implementation
 {
     public class SessionDao : DatabaseConnector, ISessionDao
     {
