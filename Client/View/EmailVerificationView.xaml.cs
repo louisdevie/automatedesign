@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace AutomateDesign.Client.View
 {
     /// <summary>
-    /// Logique d'interaction pour Page1.xaml
+    /// Logique d'interaction pour EmailVerificationView.xaml
     /// </summary>
-    public partial class Page1 : Page
+    public partial class EmailVerificationView : Page
     {
-        public Page1()
+        public EmailVerificationView()
         {
             InitializeComponent();
         }
