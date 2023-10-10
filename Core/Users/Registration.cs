@@ -7,14 +7,14 @@ namespace AutomateDesign.Core.Users
     /// </summary>
     public class Registration
     {
-        private string verificationCode;
+        private uint verificationCode;
         private DateTime expiration;
         private User user;
 
         /// <summary>
         /// Le code de vérification associé à cette demande d'inscription.
         /// </summary>
-        public string VerificationCode => this.verificationCode;
+        public uint VerificationCode => this.verificationCode;
 
         /// <summary>
         /// La durée maximum d'une demande d'inscription (24 heures).
@@ -36,7 +36,7 @@ namespace AutomateDesign.Core.Users
         /// </summary>
         /// <param name="verificationCode">Le code de vérification.</param>
         /// <param name="user">L'utilisateru qui demande à s'inscrire.</param>
-        public Registration(string verificationCode, User user)
+        public Registration(uint verificationCode, User user)
         {
             this.verificationCode = verificationCode;
             this.user = user;
@@ -48,8 +48,8 @@ namespace AutomateDesign.Core.Users
         /// <param name="user">L'utilisateur pour qui créer la demande d'inscription.</param>
         public Registration(User user)
         {
-            var rtg = new RandomTextGenerator(new BasicRandomProvider());
-            this.verificationCode = rtg.AlphaNumericString(30);
+            var random = new BasicRandomProvider();
+            this.verificationCode = random.NextUInt();
             this.user = user;
         }
     }

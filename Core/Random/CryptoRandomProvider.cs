@@ -17,6 +17,12 @@ namespace AutomateDesign.Core.Random
         /// </summary>
         public CryptoRandomProvider() { }
 
+        public uint NextUInt()
+        {
+            byte[] buffer = RandomNumberGenerator.GetBytes(4);
+            return BitConverter.ToUInt32(buffer, 0);
+        }
+
         public char Pick(string allowed)
         {
             return allowed[RandomNumberGenerator.GetInt32(allowed.Length)];
