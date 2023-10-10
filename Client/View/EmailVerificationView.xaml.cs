@@ -26,5 +26,29 @@ namespace AutomateDesign.Client.View
             InitializeComponent();
             this.mainWindow = mainWindow;
         }
+
+        private void ConfirmerVerifButtonClick(object sender, RoutedEventArgs e)
+        {
+            // VERFICATION DU CODE
+            this.mainWindow.ChangementFenetre(new LoginView(mainWindow));
+        }
+        /// <summary>
+        /// Verifie que les caractère entrer soient bien des chiffres et non des lettres
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            foreach (char c in e.Text)
+            {
+                if (!char.IsDigit(c)) // Vérifie si le caractère n'est pas un chiffre
+                {
+                    e.Handled = true; // Ignore le caractère non numérique
+                    break;
+                }
+            }
+        }
+
+
     }
 }
