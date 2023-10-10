@@ -1,4 +1,4 @@
-﻿namespace AutomateDesign.Server.Data
+﻿namespace AutomateDesign.Server.Data.MariaDb
 {
     public class DatabaseSettings
     {
@@ -10,9 +10,9 @@
         public DatabaseSettings()
         {
             Server = "localhost";
-            Database = String.Empty;
-            UserId = String.Empty;
-            Password = String.Empty;
+            Database = string.Empty;
+            UserId = string.Empty;
+            Password = string.Empty;
         }
     }
 }

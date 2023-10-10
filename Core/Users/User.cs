@@ -57,11 +57,13 @@ namespace AutomateDesign.Core.Users
         /// </summary>
         /// <param name="email">L'adresse mail de l'utilisateur.</param>
         /// <param name="password">Le mot de passe de l'utilisateur.</param>
-        public User(MailAddress email, HashedPassword password, bool isValidated)
-        : this(-1, email, password, isValidated) { }
+        public User(MailAddress email, HashedPassword password)
+        : this(-1, email, password, false) { }
 
         /// <inheritdoc cref="User(MailAddress, HashedPassword)"/>
-        public User(string email, HashedPassword password, bool isValidated)
-        : this(-1, email, password, isValidated) { }
+        public User(string email, HashedPassword password)
+        : this(-1, email, password, false) { }
+
+        public User WithId(int id) => new(id, this.email, this.password, this.isValidated);
     }
 }

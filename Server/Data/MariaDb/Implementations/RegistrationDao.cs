@@ -1,7 +1,7 @@
 ﻿using AutomateDesign.Core.Users;
 using AutomateDesign.Server.Model.Exceptions;
 
-namespace AutomateDesign.Server.Data.Implementation
+namespace AutomateDesign.Server.Data.MariaDb.Implementations
 {
     public class RegistrationDao : BaseDao, IRegistrationDao
     {
@@ -55,7 +55,7 @@ namespace AutomateDesign.Server.Data.Implementation
                 return new Registration(
                     result.GetUInt32(0),
                     result.GetDateTime(1),
-                    this.userDao.Read(userId)
+                    this.userDao.ReadById(userId)
                 );
             }
             else

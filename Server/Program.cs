@@ -1,4 +1,4 @@
-using AutomateDesign.Server.Data;
+using AutomateDesign.Server.Data.MariaDb;
 
 var builder = WebApplication.CreateBuilder(args);
 

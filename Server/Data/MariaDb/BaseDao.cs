@@ -1,6 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 
-namespace AutomateDesign.Server.Data
+namespace AutomateDesign.Server.Data.MariaDb
 {
     public class BaseDao
     {
@@ -60,6 +60,19 @@ namespace AutomateDesign.Server.Data
         public static T ExecuteScalar<T>(this MySqlConnection connection, string query, params object?[] parameters)
         {
             return (T)PrepareCommand(connection, query, parameters).ExecuteScalar();
+        }
+
+        public static int GetLastInsertId(this MySqlConnection connection)
+        {
+            MySqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT LAST_INSERT_ID()";
+            object id = cmd.ExecuteScalar();
+
+            if (id is int intId) return intId;
+            else if (id is long longId) return (int)longId;
+            else if (id is uint uintId) return (int)uintId;
+            else if (id is ulong ulongId) return (int)ulongId;
+            else throw new InvalidOperationException($"Unhandled type {id.GetType()} returned by LAST_INSERT_ID.");
         }
     }
 }

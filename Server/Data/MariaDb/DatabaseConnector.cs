@@ -1,7 +1,7 @@
 ﻿using AutomateDesign.Server.Model.Exceptions;
 using MySql.Data.MySqlClient;
 
-namespace AutomateDesign.Server.Data
+namespace AutomateDesign.Server.Data.MariaDb
 {
     public class DatabaseConnector
     {
