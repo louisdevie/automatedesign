@@ -2,6 +2,6 @@
 {
     internal interface IUsersClient
     {
-        public void SignUp(string email, string password);
+        public int SignUp(string email, string password);
     }
 }
