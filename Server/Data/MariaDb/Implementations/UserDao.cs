@@ -75,8 +75,8 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
             using MySqlConnection connection = Connect();
             
             connection.ExecuteNonQuery(
-                "UPDATE `User` SET `PasswordHash` = ?, `PasswordSalt` = ? WHERE `UserId` = ?",
-                user.Password.Hash, user.Password.Salt, user.Id
+                "UPDATE `User` SET `PasswordHash` = ?, `PasswordSalt` = ?, `IsVerified` = ? WHERE `UserId` = ?",
+                user.Password.Hash, user.Password.Salt, user.IsVerified, user.Id
             );
         }
 

@@ -6,10 +6,20 @@ option csharp_namespace = "AutomateDesign.Protos";
 import "helpers.proto";
 
 service Users {
-    rpc SignUp (SignUpRequest) returns (Nothing);
+    rpc SignUp (SignUpRequest) returns (SignUpReply);
+    rpc Verify (VerificationRequest) returns (Nothing);
 }
 
 message SignUpRequest {
     string email = 1;
     string password = 2;
+}
+
+message SignUpReply {
+    int32 userId = 1;
+}
+
+message VerificationRequest {
+    int32 userId = 1;
+    uint32 secretCode = 2;
 }
