@@ -23,7 +23,16 @@ namespace AutomateDesign.Client.View
         {
             InitializeComponent();
 
-            this.frame.Content = new LoginView();
+            this.ChangementFenetre(new LoginView(this));
+        }
+
+        /// <summary>
+        /// Appeler par les pages pour changer la page a afficher
+        /// </summary>
+        /// <param name="page">la nouvelle page a afficher</param>
+        public void ChangementFenetre(Page page)
+        {
+            this.frame.Content = page;
         }
     }
 }
