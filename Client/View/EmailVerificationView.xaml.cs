@@ -22,18 +22,31 @@ namespace AutomateDesign.Client.View
     {
         #region Attributs
         private MainWindow mainWindow;
+        private bool inscription;
         #endregion
 
-        public EmailVerificationView(MainWindow mainWindow)
+        /// <summary>
+        /// Mettre True si incription, False si modification mot de passe en cas de perte
+        /// </summary>
+        /// <param name="mainWindow"></param>
+        /// <param name="inscription"></param>
+        public EmailVerificationView(MainWindow mainWindow, bool inscription)
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
+            this.inscription = inscription;
         }
 
         private void ConfirmerVerifButtonClick(object sender, RoutedEventArgs e)
         {
             // TEMPORAIRE
-            this.mainWindow.ChangementFenetre(new LoginView(mainWindow));
+            if (inscription)
+            {
+                this.mainWindow.ChangementFenetre(new LoginView(mainWindow));
+            }
+            else {
+                this.mainWindow.ChangementFenetre(new EditPasswordView(mainWindow));
+            }
         }
 
         /// <summary>

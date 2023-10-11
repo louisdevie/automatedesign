@@ -41,7 +41,7 @@ namespace AutomateDesign.Client.View
                 this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
             } else {
                 // TEMPORAIRE
-                this.mainWindow.ChangementFenetre(new LoginView(mainWindow));
+                this.mainWindow.ChangementFenetre(new EmailVerificationView(mainWindow, false));
             }
         }
     }

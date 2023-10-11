@@ -48,7 +48,7 @@ namespace AutomateDesign.Client.View
 
         private void pasInscritButtonClick(object sender, RoutedEventArgs e)
         {
-            this.mainWindow.ChangementFenetre(new SignUpView(false, mainWindow));
+            this.mainWindow.ChangementFenetre(new SignUpView(mainWindow));
         }
     }
 }

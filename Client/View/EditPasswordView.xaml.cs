@@ -18,22 +18,23 @@ namespace AutomateDesign.Client.View
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml
     /// </summary>
-    public partial class SignUpView : Page
+    public partial class EditPasswordView : Page
     {
         #region Attributs
-        private string email;
         private string password;
         private string passwordConf;
         private MainWindow mainWindow;
         private bool checkBox;
         #endregion
 
-        public SignUpView(MainWindow main)
+        /// <summary>
+        /// Envoyer False lors d'un premier appel a la page
+        /// </summary>
+        public EditPasswordView(MainWindow main)
         {
             this.mainWindow = main;
             DataContext = this;  
             InitializeComponent();
-            this.email = string.Empty;
             this.password = string.Empty;
             this.passwordConf = string.Empty;
             this.checkBox = false;
@@ -47,7 +48,6 @@ namespace AutomateDesign.Client.View
         /// <param name="e"></param>
         private void ConfirmerInscriptionButtonClick(object sender, RoutedEventArgs e)
         {
-            this.email = emailBox.Text;
             this.password = passBox.Password;
             this.passwordConf = passBoxConf.Password;
             this.checkBox = this.checkBoxButton.IsChecked.Value;
@@ -57,7 +57,7 @@ namespace AutomateDesign.Client.View
                 this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
             } else {
                 // TEMPORAIRE !
-                mainWindow.ChangementFenetre(new EmailVerificationView(mainWindow, true));
+                mainWindow.ChangementFenetre(new LoginView(mainWindow));
             }
         }
     }
