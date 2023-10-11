@@ -10,7 +10,7 @@ namespace AutomateDesign.Core.Users
         private int id;
         private MailAddress email;
         private HashedPassword password;
-        private bool isValidated;
+        private bool isVerified;
 
         /// <summary>
         /// L'identifiant unique de l'utilisateur.
@@ -30,7 +30,7 @@ namespace AutomateDesign.Core.Users
         /// <summary>
         /// Si l'utilisateur est validé ou non.
         /// </summary>
-        public bool IsValidated { get => this.isValidated; set => this.isValidated = value; }
+        public bool IsVerified { get => this.isVerified; set => this.isVerified = value; }
 
         /// <summary>
         /// Crée un utilisateur existant.
@@ -38,19 +38,19 @@ namespace AutomateDesign.Core.Users
         /// <param name="id">L'identifiant unique de l'utilisateur.</param>
         /// <param name="email">L'adresse mail de l'utilisateur.</param>
         /// <param name="password">Le mot de passe de l'utilisateur.</param>
-        /// <param name="isValidated">Si l'utilisateur est validé ou non.</param>
-        public User(int id, MailAddress email, HashedPassword password, bool isValidated)
+        /// <param name="isVerified">Si l'utilisateur est validé ou non.</param>
+        public User(int id, MailAddress email, HashedPassword password, bool isVerified)
         {
             this.id = id;
             this.email = email;
             this.password = password;
-            IsValidated = isValidated;
+            this.isVerified = isVerified;
 
         }
 
         /// <inheritdoc cref="User(int, MailAddress, HashedPassword)"/>
-        public User(int id, string email, HashedPassword password, bool isValidated)
-        : this(id, new MailAddress(email), password, isValidated) { }
+        public User(int id, string email, HashedPassword password, bool isVerified)
+        : this(id, new MailAddress(email), password, isVerified) { }
 
         /// <summary>
         /// Crée un nouvel utilisateur.
@@ -64,6 +64,6 @@ namespace AutomateDesign.Core.Users
         public User(string email, HashedPassword password)
         : this(-1, email, password, false) { }
 
-        public User WithId(int id) => new(id, this.email, this.password, this.isValidated);
+        public User WithId(int id) => new(id, this.email, this.password, this.isVerified);
     }
 }

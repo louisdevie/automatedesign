@@ -14,31 +14,40 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
 
         public Registration Create(Registration registration)
         {
-            User existingUser;
+            User user;
             try
             {
-                existingUser = this.userDao.ReadByEmail(registration.User.Email.Address);
+                user = this.userDao.ReadByEmail(registration.User.Email.Address);
+
+                if (user.IsVerified)
+                {
+                    throw new DuplicateResourceException("Cette adresse mail est déjà utilisée.");
+                }
+
+                // nouveau mot de passe, ancien id
+                user = registration.User.WithId(user.Id);
+                this.userDao.Update(user);
             }
             catch (ResourceNotFoundException)
             {
-                existingUser = this.userDao.Create(registration.User);
+                user = this.userDao.Create(registration.User);
             }
 
             using var connection = this.Connect();
 
             connection.ExecuteNonQuery(
-                "REPLACE INTO `Registration`(`IdUser`, `VerificationCode`, `Expiration`) VALUES (?, ?, ?)",
-                existingUser.Id, registration.VerificationCode, registration.Expiration
+                "REPLACE INTO `Registration`(`UserId`, `VerificationCode`, `Expiration`) VALUES (?, ?, ?)",
+                user.Id, registration.VerificationCode, registration.Expiration
             );
 
-            return registration.WithUser(existingUser);
+            return registration.WithUser(user);
         }
 
         public void Delete(int userId)
         {
             using var connection = this.Connect();
 
-            connection.ExecuteNonQuery("DELETE FROM `Registration` WHERE `IdUser` = ?", userId);
+            connection.ExecuteNonQuery("DELETE FROM `Registration` WHERE `UserId` = ?", userId);
         }
 
         public Registration ReadById(int userId)

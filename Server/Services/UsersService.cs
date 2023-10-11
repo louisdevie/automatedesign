@@ -1,18 +1,27 @@
-﻿using AutomateDesign.Protos;
+﻿using AutomateDesign.Core.Users;
+using AutomateDesign.Protos;
+using AutomateDesign.Server.Data;
 using Grpc.Core;
 
 namespace AutomateDesign.Server.Services
 {
     public class UsersService : Users.UsersBase
     {
-        public UsersService()
+        private IRegistrationDao registrationDao;
+
+        public UsersService(IRegistrationDao registrationDao)
         {
+            this.registrationDao = registrationDao;
         }
 
-        public override Task<Null> SignUp(SignUpRequest request, ServerCallContext context)
+        public override Task<Nothing> SignUp(SignUpRequest request, ServerCallContext context)
         {
-            Console.WriteLine($"inscription : email = {request.Email}, password = {request.Password}");
-            return Task.FromResult(new Null());
+            User newUser = new(request.Email, HashedPassword.FromPlain(request.Password));
+            Registration registration = new(newUser);
+
+            this.registrationDao.Create(registration);
+
+            return Task.FromResult(new Nothing());
         }
     }
 }

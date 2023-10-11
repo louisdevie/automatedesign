@@ -14,8 +14,8 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
             using MySqlConnection connection = Connect();
 
             connection.ExecuteNonQuery(
-                "INSERT INTO User (Email, PasswordHash, PasswordSalt, IsValidated) VALUES (?, ?, ?, ?)",
-                user.Email, user.Password.Hash, user.Password.Salt, user.IsValidated
+                "INSERT INTO User (Email, PasswordHash, PasswordSalt, IsVerified) VALUES (?, ?, ?, ?)",
+                user.Email, user.Password.Hash, user.Password.Salt, user.IsVerified
             );
 
             return user.WithId(connection.GetLastInsertId());
@@ -30,7 +30,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
                 result.GetInt32("UserId"),
                 result.GetString("Email"),
                 new HashedPassword(password, result.GetString("PasswordSalt")),
-                result.GetBoolean("IsValidated")
+                result.GetBoolean("IsVerified")
             );
         }
 

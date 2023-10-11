@@ -58,7 +58,7 @@ namespace AutomateDesign.Core.Users
         /// </summary>
         /// <param name="password">Le mot de passe à hacher.</param>
         /// <returns>Le mot de passe haché avec un sel aléatoire.</returns>
-        public static HashedPassword FromPassword(string password)
+        public static HashedPassword FromPlain(string password)
         {
             var rtg = new RandomTextGenerator(new CryptoRandomProvider());
             string salt = rtg.AlphaNumericString(32);

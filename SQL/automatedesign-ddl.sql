@@ -7,7 +7,7 @@ create table `User` (
    `Email` VARCHAR(50) character set ascii collate ascii_bin not null,
    `PasswordHash` BINARY(32) not null,
    `PasswordSalt` CHAR(32) character set ascii collate ascii_bin not null,
-   `Verified` BOOL not null,
+   `IsVerified` BOOL not null,
    primary key (`UserId`),
    unique (`Email`)
 );

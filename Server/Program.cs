@@ -1,6 +1,8 @@
 using AutomateDesign.Server.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using AutomateDesign.Server.Data.MariaDb;
+using AutomateDesign.Server.Data;
+using AutomateDesign.Server.Data.MariaDb.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,10 @@ builder.WebHost.ConfigureKestrel(options =>
 DatabaseSettings dbSettings = builder.Configuration.GetSection("DatabaseSettings")
     .Get<DatabaseSettings>() ?? new DatabaseSettings();
 
-builder.Services.AddSingleton(new DatabaseConnector(dbSettings));
+builder.Services.AddSingleton(new DatabaseConnector(dbSettings))
+                .AddScoped<IUserDao, UserDao>()
+                .AddScoped<IRegistrationDao, RegistrationDao>()
+                .AddScoped<ISessionDao, SessionDao>();
 
 var app = builder.Build();
 

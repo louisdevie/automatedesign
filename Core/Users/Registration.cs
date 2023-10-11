@@ -54,8 +54,7 @@ namespace AutomateDesign.Core.Users
         /// <param name="user">L'utilisateur pour qui créer la demande d'inscription.</param>
         public Registration(User user)
         {
-            var random = new BasicRandomProvider();
-            this.verificationCode = random.NextUInt();
+            this.verificationCode = new BasicRandomProvider().FourDigitCode();
             this.expiration = DateTime.UtcNow + LIFETIME;
             this.user = user;
         }
