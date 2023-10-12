@@ -1,5 +1,5 @@
-﻿using AutomateDesign.Core.Users;
-using AutomateDesign.Server.Model.Exceptions;
+﻿using AutomateDesign.Core.Exceptions;
+using AutomateDesign.Core.Users;
 
 namespace AutomateDesign.Server.Data.MariaDb.Implementations
 {

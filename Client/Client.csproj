@@ -17,25 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.24.4" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.57.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.58.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Page Include="App.xaml" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\GrpcNetworkClient\ClientNetwork.csproj" />
   </ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="../Protos/helpers.proto" GrpcServices="Client" />
-		<Protobuf Include="../Protos/users.proto" GrpcServices="Client" />
-	</ItemGroup>
 
 </Project>

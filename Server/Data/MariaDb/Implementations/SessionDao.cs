@@ -1,6 +1,5 @@
 ﻿using AutomateDesign.Core.Users;
-using AutomateDesign.Server.Model.Exceptions;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using AutomateDesign.Core.Exceptions;
 using MySql.Data.MySqlClient;
 
 namespace AutomateDesign.Server.Data.MariaDb.Implementations

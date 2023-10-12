@@ -1,39 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Helpers;
+using AutomateDesign.Core.Users;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AutomateDesign.Client.View
 {
     /// <summary>
     /// Logique d'interaction pour EmailVerificationView.xaml
     /// </summary>
-    public partial class EmailVerificationView : Page
+    public partial class EmailVerificationView : NavigablePage
     {
-        #region Attributs
-        private MainWindow mainWindow;
-        #endregion
+        private UsersClient users;
+        private int userToVerify;
 
-        public EmailVerificationView(MainWindow mainWindow)
+        public EmailVerificationView(int userToVerify)
         {
+            this.users = new UsersClient();
+            this.userToVerify = userToVerify;
+
             InitializeComponent();
-            this.mainWindow = mainWindow;
+        }
+
+        public bool IsFormEnabled
+        {
+            set
+            {
+                this.codeVerifBox.IsEnabled = value;
+                this.confirmButton.IsEnabled = value;
+            }
         }
 
         private void ConfirmerVerifButtonClick(object sender, RoutedEventArgs e)
         {
-            // TEMPORAIRE
-            this.mainWindow.ChangementFenetre(new LoginView(mainWindow));
+            uint code = UInt32.Parse(this.codeVerifBox.Text);
+
+            this.users
+            .VerifyEmailAsync(this.userToVerify, code)
+            .ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    ErrorMessageBox.Show(task.Exception?.InnerException);
+                    this.IsFormEnabled = true;
+                }
+                else
+                {
+                    // TODO: Connexion auto
+                }
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
+
+            this.IsFormEnabled = false;
         }
 
         /// <summary>

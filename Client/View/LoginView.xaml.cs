@@ -1,35 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutomateDesign.Client.View.Helpers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AutomateDesign.Client.View
 {
     /// <summary>
     /// Logique d'interaction pour LoginView.xaml
     /// </summary>
-    public partial class LoginView : Page
+    public partial class LoginView : NavigablePage
     {
         #region Attributs
         private string email;
         private string password;
-        private MainWindow mainWindow;
         #endregion
 
-        public LoginView(MainWindow mainWindow)
+        public LoginView()
         {
             InitializeComponent();
-            this.mainWindow = mainWindow;
+
             this.email = string.Empty;
             this.password = string.Empty;
         }
@@ -38,17 +26,19 @@ namespace AutomateDesign.Client.View
         {
             this.email = emailBox.Text;
             this.password = passBox.Password;
-            this.mainWindow.ChangementFenetre(new HomeView(mainWindow));
+            //this.mainWindow.NavigateTo(new HomeView(mainWindow));
         }
 
         private void passwordOulbieButtonClick(object sender, RoutedEventArgs e)
         {
-            this.mainWindow.ChangementFenetre(new PasswordResetView(mainWindow));
+            //this.mainWindow.NavigateTo(new PasswordResetView(mainWindow));
         }
 
         private void pasInscritButtonClick(object sender, RoutedEventArgs e)
         {
-            this.mainWindow.ChangementFenetre(new SignUpView(false, mainWindow));
+            this.Navigator.Go(new SignUpView());
         }
+
     }
 }
+    

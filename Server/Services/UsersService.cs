@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Core.Users;
+﻿using AutomateDesign.Core.Exceptions;
+using AutomateDesign.Core.Users;
 using AutomateDesign.Protos;
 using AutomateDesign.Server.Data;
 using Grpc.Core;
@@ -9,6 +10,8 @@ namespace AutomateDesign.Server.Services
     {
         private IUserDao userDao;
         private IRegistrationDao registrationDao;
+
+        private static readonly string IUT_EMAIL_HOST = "iut-dijon.u-bourgogne.fr";
 
         public UsersService(IUserDao userDao, IRegistrationDao registrationDao)
         {
@@ -21,12 +24,17 @@ namespace AutomateDesign.Server.Services
             User newUser = new(request.Email, HashedPassword.FromPlain(request.Password));
             Registration registration = new(newUser);
 
+            if (newUser.Email.Host != IUT_EMAIL_HOST)
+            {
+                throw new InvalidResourceException("L'adresse mail doit être votre adresse IUT.");
+            }
+
             int userId = this.registrationDao.Create(registration).User.Id;
 
             return Task.FromResult(new SignUpReply { UserId = userId });
         }
 
-        public override Task<Nothing> Verify(VerificationRequest request, ServerCallContext context)
+        public override Task<Nothing> VerifyEmail(VerificationRequest request, ServerCallContext context)
         {
             Registration registration = this.registrationDao.ReadById(request.UserId);
 

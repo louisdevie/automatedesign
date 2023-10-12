@@ -1,4 +1,4 @@
-﻿namespace AutomateDesign.Server.Model.Exceptions
+﻿namespace AutomateDesign.Core.Exceptions
 {
     public class ResourceNotFoundException : Exception
     {

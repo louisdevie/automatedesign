@@ -1,4 +1,4 @@
-﻿using AutomateDesign.Server.Model.Exceptions;
+﻿using AutomateDesign.Core.Exceptions;
 using MySql.Data.MySqlClient;
 
 namespace AutomateDesign.Server.Data.MariaDb
@@ -31,11 +31,14 @@ namespace AutomateDesign.Server.Data.MariaDb
                 switch (ex.Number)
                 {
                     case 0:
-                        throw new DatabaseUnavailableException("Impossible de se connecter au serveur.");
+                        Console.WriteLine("Impossible de se connecter au serveur de BDD.");
+                        throw new DatabaseUnavailableException();
                     case 1045:
-                        throw new DatabaseUnavailableException("Nom d'utilisateur ou mot de passe invalide.");
+                        Console.WriteLine("Nom d'utilisateur ou mot de passe invalide.");
+                        throw new DatabaseUnavailableException();
                     default:
-                        throw new DatabaseUnavailableException("Erreur de connexion à la base de données.");
+                        Console.WriteLine("Erreur de connexion à la base de données.");
+                        throw new DatabaseUnavailableException();
                 }
             }
         }

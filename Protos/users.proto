@@ -7,7 +7,7 @@ import "helpers.proto";
 
 service Users {
     rpc SignUp (SignUpRequest) returns (SignUpReply);
-    rpc Verify (VerificationRequest) returns (Nothing);
+    rpc VerifyEmail (VerificationRequest) returns (Nothing);
 }
 
 message SignUpRequest {

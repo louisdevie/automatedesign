@@ -1,46 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Helpers;
 
 namespace AutomateDesign.Client.View
 {
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml
     /// </summary>
-    public partial class SignUpView : Page
+    public partial class SignUpView : NavigablePage
     {
-        #region Attributs
-        private string email;
-        private string password;
-        private string passwordConf;
-        private MainWindow mainWindow;
-        private bool checkBox;
-        #endregion
+        private UsersClient users;
 
-        /// <summary>
-        /// Envoyer False lors d'un premier appel a la page
-        /// </summary>
-        /// <param name="passwordIncorrect">Vrai si demande d'inscription avec 2 mot de passe differents</param>
-        public SignUpView(bool passwordIncorrect, MainWindow main)
+        public SignUpView()
         {
-            this.mainWindow = main;
-            DataContext = this;  
+            this.users = new UsersClient();
+
             InitializeComponent();
-            this.email = string.Empty;
-            this.password = string.Empty;
-            this.passwordConf = string.Empty;
-            this.checkBox = false;
+        }
+
+        private bool IsFormEnabled
+        {
+            set
+            {
+                this.signUpButton.IsEnabled = value;
+                this.emailBox.IsEnabled = value;
+                this.passBox.IsEnabled = value;
+                this.passBoxConf.IsEnabled = value;
+            }
         }
 
         /// <summary>
@@ -51,17 +41,42 @@ namespace AutomateDesign.Client.View
         /// <param name="e"></param>
         private void ConfirmerInscriptionButtonClick(object sender, RoutedEventArgs e)
         {
-            this.email = emailBox.Text;
-            this.password = passBox.Password;
-            this.passwordConf = passBoxConf.Password;
-            this.checkBox = this.checkBoxButton.IsChecked.Value;
-            if (password != passwordConf) {
-                this.messageErreurMDP.Visibility = Visibility.Visible;
-            } else if (!this.checkBox){
+            string email = emailBox.Text;
+            string password = passBox.Password;
+            string passwordAgain = passBoxConf.Password;
+            bool warningRead = this.checkBoxButton.IsChecked ?? false;
+
+            if (password != passwordAgain)
+            {
+                MessageBox.Show("Les mots de passe ne correspondent pas", "Erreur");
+            }
+            else if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Veuillez saisir une addresse mail et un mot de passe", "Erreur");
+            }
+            else if (!warningRead)
+            {
                 this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
-            } else {
-                // TEMPORAIRE !
-                mainWindow.ChangementFenetre(new EmailVerificationView(mainWindow));
+            }
+            else
+            {
+                this.users
+                .SignUpAsync(email, password)
+                .ContinueWith(task =>
+                {
+                    if (task.IsFaulted)
+                    {
+                        ErrorMessageBox.Show(task.Exception?.InnerException);
+                        this.IsFormEnabled = true;
+                    }
+                    else
+                    {
+                        this.Navigator.Go(new EmailVerificationView(task.Result));
+                    }
+                },
+                TaskScheduler.FromCurrentSynchronizationContext());
+
+                this.IsFormEnabled = false;
             }
         }
     }

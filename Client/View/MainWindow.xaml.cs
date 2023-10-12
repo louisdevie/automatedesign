@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutomateDesign.Client.View.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,20 +20,13 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Navigator navigator;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            this.ChangementFenetre(new LoginView(this));
-        }
-
-        /// <summary>
-        /// Appeler par les pages pour changer la page a afficher
-        /// </summary>
-        /// <param name="page">la nouvelle page a afficher</param>
-        public void ChangementFenetre(Page page)
-        {
-            this.frame.Content = page;
+            this.navigator = new(this.frame, new LoginView());
         }
     }
 }

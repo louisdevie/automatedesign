@@ -1,4 +1,6 @@
-﻿using System.Net.Mail;
+﻿using AutomateDesign.Core.Exceptions;
+using System.Net;
+using System.Net.Mail;
 
 namespace AutomateDesign.Core.Users
 {
@@ -50,7 +52,20 @@ namespace AutomateDesign.Core.Users
 
         /// <inheritdoc cref="User(int, MailAddress, HashedPassword)"/>
         public User(int id, string email, HashedPassword password, bool isVerified)
-        : this(id, new MailAddress(email), password, isVerified) { }
+        {
+            this.id = id;
+            this.password = password;
+            this.isVerified = isVerified;
+
+            try
+            {
+                this.email = new MailAddress(email);
+            }
+            catch (ArgumentException)
+            {
+                throw new InvalidResourceException("L'adresse mail n'est pas valide.");
+            }
+        }
 
         /// <summary>
         /// Crée un nouvel utilisateur.
