@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutomateDesign.Client.View.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,11 +20,13 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Navigator navigator;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            this.frame.Content = new LoginView();
+            this.navigator = new(this.frame, new LoginView());
         }
     }
 }

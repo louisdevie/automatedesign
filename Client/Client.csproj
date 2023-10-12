@@ -9,13 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Model\**" />
-    <EmbeddedResource Remove="Model\**" />
-    <None Remove="Model\**" />
-    <Page Remove="Model\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Page Remove="HomeView.xaml" />
     <Page Remove="LoginView.xaml" />
     <Page Remove="ResetPasswordView.xaml" />
@@ -29,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\GrpcNetworkClient\ClientNetwork.csproj" />
   </ItemGroup>
 
 </Project>

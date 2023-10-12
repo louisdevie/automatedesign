@@ -18,11 +18,16 @@ namespace AutomateDesign.Client.View
     /// <summary>
     /// Logique d'interaction pour Page1.xaml
     /// </summary>
-    public partial class Page1 : Page
+    public partial class HomeView : Page
     {
-        public Page1()
+        #region Attributs
+        private MainWindow mainWindow;
+        #endregion
+
+        public HomeView(MainWindow mainWindow)
         {
             InitializeComponent();
+            this.mainWindow = mainWindow;
         }
     }
 }

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutomateDesign.Client.ViewModel
+namespace AutomateDesign.Client.View.Helpers
 {
-    internal class RegistrationViewModel
+    public interface INavigable
     {
+        void UseNavigator(Navigator navigator);
     }
 }

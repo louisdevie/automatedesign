@@ -9,10 +9,10 @@ namespace AutomateDesign.Core.Random
     internal interface IRandomProvider
     {
         /// <summary>
-        /// Génère un nombre aléatoire.
+        /// Génère un nombre aléatoire à 4 chiffres (en décimal).
         /// </summary>
-        /// <returns>Un entier 32-bits non signé.</returns>
-        public uint NextUInt();
+        /// <returns>Le nombre généré.</returns>
+        public uint FourDigitCode();
 
         /// <summary>
         /// Choisis un caractère aléatoire parmis une liste.

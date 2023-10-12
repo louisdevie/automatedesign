@@ -18,11 +18,9 @@ namespace AutomateDesign.Core.Random
         /// <param name="seed">La seed du générateur.</param>
         public BasicRandomProvider(int seed) : base(seed) { }
 
-        public uint NextUInt()
+        public uint FourDigitCode()
         {
-            byte[] buffer = new byte[4];
-            this.NextBytes(buffer);
-            return BitConverter.ToUInt32(buffer, 0);
+            return (uint)this.Next(0, 10000);
         }
 
         public char Pick(string allowed)

@@ -20,9 +20,29 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class PasswordResetView : Page
     {
-        public PasswordResetView()
+        #region Attributs
+        private string email;
+        private bool checkBox;
+        private MainWindow mainWindow;
+        #endregion
+
+        public PasswordResetView(MainWindow mainWindow)
         {
             InitializeComponent();
+            this.mainWindow = mainWindow;
+            this.email = string.Empty;
+            this.checkBox = false;
+        }
+
+        private void resetPasswordBUttonClick(object sender, RoutedEventArgs e)
+        {
+            this.checkBox = this.checkBoxButton.IsChecked.Value;
+            if (!this.checkBox ) {
+                this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
+            } else {
+                // TEMPORAIRE
+                //this.mainWindow.NavigateTo(new LoginView(mainWindow));
+            }
         }
     }
 }
