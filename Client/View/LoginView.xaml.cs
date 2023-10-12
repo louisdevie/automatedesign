@@ -1,7 +1,8 @@
-﻿using AutomateDesign.Client.Model.Network;
+﻿using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Helpers;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace AutomateDesign.Client.View
 {
@@ -15,6 +16,16 @@ namespace AutomateDesign.Client.View
         public string Email { get; set; }
         public string Password { get => this.passBox.Password; }
 
+        private bool IsFormEnabled
+        {
+            set
+            {
+                this.emailBox.IsEnabled = value;
+                this.passBox.IsEnabled = value;
+                this.signInButton.IsEnabled = value;
+            }
+        }
+
         public LoginView()
         {
             this.users = new UsersClient();
@@ -27,7 +38,22 @@ namespace AutomateDesign.Client.View
 
         private void ConnexionButtonClick(object sender, RoutedEventArgs e)
         {
-            this.users.sif
+            this.users.SignInAsync(this.Email, this.Password)
+            .ContinueWith(task => {
+                if (task.IsFaulted)
+                {
+                    ErrorMessageBox.Show(task.Exception?.InnerException);
+                    this.IsFormEnabled = true;
+                }
+                else
+                {
+                    this.Navigator.Session = new Session(task.Result, this.Email);
+                    this.Navigator.Go(new HomeView(), true);
+                }
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
+
+            this.IsFormEnabled = false;
         }
 
         private void passwordOulbieButtonClick(object sender, RoutedEventArgs e)

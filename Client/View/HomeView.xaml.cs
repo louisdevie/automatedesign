@@ -1,33 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using AutomateDesign.Client.View.Helpers;
 
 namespace AutomateDesign.Client.View
 {
     /// <summary>
     /// Logique d'interaction pour Page1.xaml
     /// </summary>
-    public partial class HomeView : Page
+    public partial class HomeView : NavigablePage
     {
-        #region Attributs
-        private MainWindow mainWindow;
-        #endregion
-
-        public HomeView(MainWindow mainWindow)
+        public HomeView()
         {
             InitializeComponent();
-            this.mainWindow = mainWindow;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
             }
             else
             {
-                throw new ResourceNotFoundException();
+                throw new ResourceNotFoundException("Utilisateur inconnu.");
             }
         }
 
@@ -66,7 +66,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
             }
             else
             {
-                throw new ResourceNotFoundException();
+                throw new ResourceNotFoundException("Utilisateur inconnu.");
             }
         }
 

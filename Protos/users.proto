@@ -28,7 +28,6 @@ message VerificationRequest {
 }
 
 message SignInReply {
-    int32 userId = 1;
     string token = 2;
 }
 

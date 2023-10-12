@@ -52,6 +52,14 @@
                      FontSize="18"  
                      Width="210"
                      />
+        <Button Grid.Row="1" Grid.Column="1" 
+            Content="Connexion" FontSize="18" 
+            HorizontalAlignment="Center" VerticalAlignment="Top" 
+            Margin="0,156,0,0" 
+            Click="ConnexionButtonClick" 
+            RenderTransformOrigin="0.474,-2.05"
+            x:Name="signInButton"
+            />
         <Button Grid.Column="1"  Grid.Row="2"
                 Background="Transparent" BorderThickness="0"
                 Content="Pas encore inscrit ?"
@@ -67,13 +75,7 @@
                 Click="passwordOulbieButtonClick"
                 />
 
-        <Button Grid.Row="1" Grid.Column="1" 
-                Content="Connexion" FontSize="18" 
-                HorizontalAlignment="Center" VerticalAlignment="Top" 
-                Margin="0,156,0,0" 
-                Click="ConnexionButtonClick" 
-                RenderTransformOrigin="0.474,-2.05"
-                />
+        
 
     </Grid>
 </my:NavigablePage>

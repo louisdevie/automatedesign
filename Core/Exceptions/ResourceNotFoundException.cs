@@ -1,9 +1,9 @@
-﻿namespace AutomateDesign.Core.Exceptions
-{
-    public class ResourceNotFoundException : Exception
-    {
-        public ResourceNotFoundException() { }
+﻿using Grpc.Core;
 
-        public ResourceNotFoundException(string message) : base(message) { }
+namespace AutomateDesign.Core.Exceptions
+{
+    public class ResourceNotFoundException : RpcException
+    {
+        public ResourceNotFoundException(string message) : base(new Status(StatusCode.NotFound, message)) { }
     }
 }

@@ -16,7 +16,7 @@ namespace AutomateDesign.Server.Services
 
         private static readonly string IUT_EMAIL_HOST = "iut-dijon.u-bourgogne.fr";
 
-        public UsersService(IUserDao userDao, IRegistrationDao registrationDao)
+        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao)
         {
             this.userDao = userDao;
             this.registrationDao = registrationDao;
@@ -79,7 +79,7 @@ namespace AutomateDesign.Server.Services
             Session session = new Session(user);
             this.sessionDao.Create(session);
 
-            return Task.FromResult(new SignInReply { UserId = user.Id, Token = session.Token });
+            return Task.FromResult(new SignInReply {  Token = session.Token });
         }
     }
 }
