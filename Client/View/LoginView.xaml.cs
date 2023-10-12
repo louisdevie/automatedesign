@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Client.View.Helpers;
+﻿using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Helpers;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,24 +10,24 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class LoginView : NavigablePage
     {
-        #region Attributs
-        private string email;
-        private string password;
-        #endregion
+        private UsersClient users;
+
+        public string Email { get; set; }
+        public string Password { get => this.passBox.Password; }
 
         public LoginView()
         {
-            InitializeComponent();
+            this.users = new UsersClient();
 
-            this.email = string.Empty;
-            this.password = string.Empty;
+            InitializeComponent();
+            DataContext = this;
+
+            this.Email = string.Empty;
         }
 
         private void ConnexionButtonClick(object sender, RoutedEventArgs e)
         {
-            this.email = emailBox.Text;
-            this.password = passBox.Password;
-            //this.mainWindow.NavigateTo(new HomeView(mainWindow));
+            this.users.sif
         }
 
         private void passwordOulbieButtonClick(object sender, RoutedEventArgs e)

@@ -33,5 +33,7 @@ namespace AutomateDesign.Client.Model.Network
                 }
             );
         }
+
+        public async Task<Sign>
     }
 }

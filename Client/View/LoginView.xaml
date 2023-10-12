@@ -38,6 +38,7 @@
                  Margin="158,54,0,0" 
                  TextWrapping="Wrap" FontSize="18" 
                  Width="210"
+                 Text="{Binding Path=Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  />
         <Label Grid.Row="1" Grid.Column="1" 
                Content="Mot de Passe :" FontSize="18" 
@@ -45,8 +46,7 @@
                Margin="28,100,0,0" 
                />
         <PasswordBox x:Name="passBox" 
-                     Grid.Row="1" Grid.Column="1" 
-                     DataContext="{}" 
+                     Grid.Row="1" Grid.Column="1"
                      HorizontalAlignment="Left" VerticalAlignment="Top"
                      Margin="158,104,0,0" 
                      FontSize="18"  
