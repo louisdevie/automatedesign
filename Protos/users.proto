@@ -43,6 +43,6 @@ message PasswordChangeRequest {
     string newPassword = 2;
     oneof authentication {
         string currentPassword = 3;
-        int32 secretCode = 4;
+        uint32 secretCode = 4;
     }
 }
