@@ -2,7 +2,9 @@
 using AutomateDesign.Protos;
 using AutomateDesign.Server.Data;
 using Grpc.Core;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Tls.Crypto;
+using System;
 using System.Text.RegularExpressions;
 
 namespace AutomateDesign.Server.Services
@@ -70,5 +72,19 @@ namespace AutomateDesign.Server.Services
             this.sessionDao.Create(session);
             return Task.FromResult(new SignInReply { UserId = user.Id, Token = session.Token });
         }
+
+        public override Task<Nothing> ChangePassword(NewPassword request, ServerCallContext context)
+        {
+            User user = this.userDao.ReadByEmail(request.Email);
+            if (request.Code != this.registrationDao.ReadById(user.Id).VerificationCode)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.InvalidArgument,
+                    "Code de vérification incorrecte."
+                ));
+            }
+            user.Password = HashedPassword.FromPlain(request.Password);
+            return Task.FromResult(new Nothing());
+        }        
     }
 }
