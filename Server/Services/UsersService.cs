@@ -24,16 +24,34 @@ namespace AutomateDesign.Server.Services
         public override Task<UserIdOnly> SignUp(EmailAndPassword request, ServerCallContext context)
         {
             User newUser = new(request.Email, HashedPassword.FromPlain(request.Password));
-            Registration registration = new(newUser);
 
             if (newUser.Email.Host != IUT_EMAIL_HOST)
             {
                 throw new InvalidResourceException("L'adresse mail doit être votre adresse IUT.");
             }
 
-            int userId = this.registrationDao.Create(registration).User.Id;
+            try
+            {
+                User existingUser = this.userDao.ReadByEmail(request.Email);
 
-            return Task.FromResult(new UserIdOnly { UserId = userId });
+                if (existingUser.IsVerified)
+                {
+                    throw new DuplicateResourceException("Cette adresse mail est déjà utilisée.");
+                }
+
+                // nouveau mot de passe, ancien id
+                newUser = newUser.WithId(existingUser.Id);
+                this.userDao.Update(newUser);
+            }
+            catch (ResourceNotFoundException)
+            {
+                newUser = this.userDao.Create(newUser);
+            }
+
+            Registration registration = new(newUser);
+            this.registrationDao.Create(registration);
+
+            return Task.FromResult(new UserIdOnly { UserId = newUser.Id });
         }
 
         public override Task<Nothing> VerifyUser(VerificationRequest request, ServerCallContext context)

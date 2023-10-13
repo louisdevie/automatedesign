@@ -50,7 +50,7 @@ namespace AutomateDesign.Client.Model.Network
             return reply.Token;
         }
 
-        public async Task ChangePassword(int userId, string newPassword, string currentPassword)
+        public async Task ChangePasswordAsync(int userId, string newPassword, string currentPassword)
         {
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);
@@ -65,7 +65,7 @@ namespace AutomateDesign.Client.Model.Network
             );
         }
 
-        public async Task ChangePasswordWithResetCode(int userId, string newPassword, uint resetCode)
+        public async Task ChangePasswordWithResetCodeAsync(int userId, string newPassword, uint resetCode)
         {
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);
@@ -80,7 +80,7 @@ namespace AutomateDesign.Client.Model.Network
             );
         }
 
-        public async Task<int> ResetPassword(string email)
+        public async Task<int> ResetPasswordAsync(string email)
         {
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);
@@ -92,7 +92,7 @@ namespace AutomateDesign.Client.Model.Network
             return reply.UserId;
         }
 
-        public async Task truc(int userId, uint resetCode)
+        public async Task CheckResetCodeAsync(int userId, uint resetCode)
         {
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);

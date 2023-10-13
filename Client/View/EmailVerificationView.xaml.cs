@@ -16,13 +16,16 @@ namespace AutomateDesign.Client.View
     {
         private UsersClient users;
         private int userToVerify;
+        private bool verifyingPasswordReset;
 
-        public EmailVerificationView(int userToVerify)
+        public EmailVerificationView(int userToVerify, bool verifyingPasswordReset)
         {
             this.users = new UsersClient();
             this.userToVerify = userToVerify;
+            this.verifyingPasswordReset = verifyingPasswordReset;
 
             InitializeComponent();
+
         }
 
         public bool IsFormEnabled
@@ -38,21 +41,40 @@ namespace AutomateDesign.Client.View
         {
             uint code = UInt32.Parse(this.codeVerifBox.Text);
 
-            this.users
-            .VerifyUserAsync(this.userToVerify, code)
-            .ContinueWith(task =>
+            if (this.verifyingPasswordReset)
             {
-                if (task.IsFaulted)
+                this.users.CheckResetCodeAsync(this.userToVerify, code)
+                .ContinueWith(task =>
                 {
-                    ErrorMessageBox.Show(task.Exception?.InnerException);
-                    this.IsFormEnabled = true;
-                }
-                else
+                    if (task.IsFaulted)
+                    {
+                        ErrorMessageBox.Show(task.Exception?.InnerException);
+                        this.IsFormEnabled = true;
+                    }
+                    else
+                    {
+                        // TODO: Navigation
+                    }
+                },
+                TaskScheduler.FromCurrentSynchronizationContext());
+            }
+            else
+            {
+                this.users.VerifyUserAsync(this.userToVerify, code)
+                .ContinueWith(task =>
                 {
-                    // TODO: Connexion auto
-                }
-            },
-            TaskScheduler.FromCurrentSynchronizationContext());
+                    if (task.IsFaulted)
+                    {
+                        ErrorMessageBox.Show(task.Exception?.InnerException);
+                        this.IsFormEnabled = true;
+                    }
+                    else
+                    {
+                        // TODO: Connexion auto
+                    }
+                },
+                TaskScheduler.FromCurrentSynchronizationContext());
+            }
 
             this.IsFormEnabled = false;
         }

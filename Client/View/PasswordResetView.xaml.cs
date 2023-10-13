@@ -1,47 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Helpers;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AutomateDesign.Client.View
 {
     /// <summary>
     /// Logique d'interaction pour PasswordResetView.xaml
     /// </summary>
-    public partial class PasswordResetView : Page
+    public partial class PasswordResetView : NavigablePage
     {
-        #region Attributs
-        private string email;
-        private bool checkBox;
-        private MainWindow mainWindow;
-        #endregion
+        private UsersClient users;
 
-        public PasswordResetView(MainWindow mainWindow)
+        public string Email { get; set; }
+
+        public PasswordResetView()
         {
+            this.users = new UsersClient();
+            this.Email = string.Empty;
+
             InitializeComponent();
-            this.mainWindow = mainWindow;
-            this.email = string.Empty;
-            this.checkBox = false;
+            DataContext = this;
+        }
+
+        private bool IsFormEnabled
+        {
+            set
+            {
+                this.emailBox.IsEnabled = value;
+                this.checkBoxButton.IsEnabled = value;
+                this.continueButton.IsEnabled = value;
+            }
         }
 
         private void resetPasswordBUttonClick(object sender, RoutedEventArgs e)
         {
-            this.checkBox = this.checkBoxButton.IsChecked.Value;
-            if (!this.checkBox ) {
+            if (!(this.checkBoxButton.IsChecked ?? false))
+            {
                 this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
-            } else {
-                // TEMPORAIRE
-                //this.mainWindow.NavigateTo(new LoginView(mainWindow));
+            } 
+            else
+            {
+                this.users.ResetPasswordAsync(this.Email)
+                .ContinueWith(task =>
+                {
+                    if (task.IsFaulted)
+                    {
+                        ErrorMessageBox.Show(task.Exception?.InnerException);
+                        this.IsEnabled = true;
+                    }
+                    else
+                    {
+                        this.Navigator.Go(new EmailVerificationView(task.Result, true));
+                    }
+                },
+                TaskScheduler.FromCurrentSynchronizationContext());
+
+                this.IsEnabled = false;
             }
         }
     }

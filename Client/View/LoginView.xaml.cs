@@ -43,7 +43,7 @@ namespace AutomateDesign.Client.View
                 if (task.IsFaulted)
                 {
                     ErrorMessageBox.Show(task.Exception?.InnerException);
-                    this.IsFormEnabled = true;
+                    this.IsEnabled = true;
                 }
                 else
                 {
@@ -53,12 +53,12 @@ namespace AutomateDesign.Client.View
             },
             TaskScheduler.FromCurrentSynchronizationContext());
 
-            this.IsFormEnabled = false;
+            this.IsEnabled = false;
         }
 
         private void passwordOulbieButtonClick(object sender, RoutedEventArgs e)
         {
-            //this.mainWindow.NavigateTo(new PasswordResetView(mainWindow));
+            this.Navigator.Go(new PasswordResetView());
         }
 
         private void pasInscritButtonClick(object sender, RoutedEventArgs e)

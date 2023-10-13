@@ -67,16 +67,16 @@ namespace AutomateDesign.Client.View
                     if (task.IsFaulted)
                     {
                         ErrorMessageBox.Show(task.Exception?.InnerException);
-                        this.IsFormEnabled = true;
+                        this.IsEnabled = true;
                     }
                     else
                     {
-                        this.Navigator.Go(new EmailVerificationView(task.Result));
+                        this.Navigator.Go(new EmailVerificationView(task.Result, false));
                     }
                 },
                 TaskScheduler.FromCurrentSynchronizationContext());
 
-                this.IsFormEnabled = false;
+                this.IsEnabled = false;
             }
         }
     }
