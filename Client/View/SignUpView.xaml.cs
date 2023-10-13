@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AutomateDesign.Client.View
 {
@@ -26,6 +27,8 @@ namespace AutomateDesign.Client.View
         private string passwordConf;
         private MainWindow mainWindow;
         private bool checkBox;
+        private bool isHandlingTextChanged;
+
         #endregion
 
         public SignUpView(MainWindow main)
@@ -37,6 +40,7 @@ namespace AutomateDesign.Client.View
             this.password = string.Empty;
             this.passwordConf = string.Empty;
             this.checkBox = false;
+            this.isHandlingTextChanged = false;
         }
 
         /// <summary>
@@ -58,6 +62,37 @@ namespace AutomateDesign.Client.View
             } else {
                 // TEMPORAIRE !
                 mainWindow.ChangementFenetre(new EmailVerificationView(mainWindow, true));
+            }
+        }
+
+        /// <summary>
+        /// Autocompletion de l'adresse
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AutocompletionEmailTextBox(object sender, TextChangedEventArgs e)
+        {
+            if (isHandlingTextChanged)
+            {
+                return; // Évitez de traiter l'événement lorsqu'il est déjà en cours de traitement.
+            }
+
+            if (emailBox.Text.Length > 0)
+            {
+                isHandlingTextChanged = true;
+
+                // Un caractère a été entré, vous pouvez maintenant exécuter votre fonction.
+                foreach (char c in emailBox.Text)
+                {
+                    if (c == '@')
+                    {
+                        this.email = emailBox.Text + "iut-dijon.u-bourgogne.fr";
+                        emailBox.Text = this.email;
+                        passBox.Focus();
+                    }
+                }
+
+                isHandlingTextChanged = false;
             }
         }
     }

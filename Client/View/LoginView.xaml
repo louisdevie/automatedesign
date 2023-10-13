@@ -35,8 +35,9 @@
                  Grid.Row="1" Grid.Column="1"
                  HorizontalAlignment="Left" VerticalAlignment="Top"
                  Margin="158,54,0,0" 
-                 TextWrapping="Wrap" FontSize="18" 
+                 FontSize="18" 
                  Width="210"
+                 TextChanged="AutocompletionEmailTextBox"
                  />
         <Label Grid.Row="1" Grid.Column="1" 
                Content="Mot de Passe :" FontSize="18" 

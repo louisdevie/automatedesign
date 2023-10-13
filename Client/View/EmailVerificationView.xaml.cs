@@ -50,7 +50,7 @@ namespace AutomateDesign.Client.View
         }
 
         /// <summary>
-        /// Verifie que les caractère entrer soient bien des chiffres et non des lettres
+        /// Verifie que les caractères entrés soient bien des chiffres et non des lettres
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
