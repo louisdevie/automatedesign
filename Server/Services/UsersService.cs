@@ -88,6 +88,28 @@ namespace AutomateDesign.Server.Services
             }
             user.Password = HashedPassword.FromPlain(request.Password);
             return Task.FromResult(new Nothing());
-        }        
+        }
+        public override Task<Nothing> VerifUser(VerificationEmailCode request, ServerCallContext context)
+        {
+            User user = this.userDao.ReadByEmail(request.Email);
+            Registration registration = this.registrationDao.ReadById(user.Id);
+
+            if (registration.Expired)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Le code de vérification est expiré."
+                ));
+            }
+
+            if (request.Code != registration.VerificationCode)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.InvalidArgument,
+                    "Le code de vérification est incorrect."
+                ));
+            }
+            return Task.FromResult(new Nothing());
+        }
     }
 }
