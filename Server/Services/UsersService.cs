@@ -2,6 +2,7 @@
 using AutomateDesign.Core.Users;
 using AutomateDesign.Protos;
 using AutomateDesign.Server.Data;
+using AutomateDesign.Server.Model;
 using Grpc.Core;
 using Org.BouncyCastle.Tls.Crypto;
 using System.Text.RegularExpressions;
@@ -13,14 +14,16 @@ namespace AutomateDesign.Server.Services
         private IUserDao userDao;
         private IRegistrationDao registrationDao;
         private ISessionDao sessionDao;
+        private MailService mailService;
 
         private static readonly string IUT_EMAIL_HOST = "iut-dijon.u-bourgogne.fr";
 
-        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao)
+        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao, MailService mailService)
         {
             this.userDao = userDao;
             this.registrationDao = registrationDao;
             this.sessionDao = sessionDao;
+            this.mailService = mailService;
         }
 
         public override Task<SignUpReply> SignUp(EmailAndPassword request, ServerCallContext context)
@@ -34,7 +37,17 @@ namespace AutomateDesign.Server.Services
             }
 
             int userId = this.registrationDao.Create(registration).User.Id;
-
+            #region Creation mail
+            string bodyMessage = "Votre code de vérification est le suivant : \n" + registration.VerificationCode;
+            List<string> destinataires = new List<string>();
+            destinataires.Add(newUser.Email.ToString());
+            MailData maildata = new MailData(destinataires, "Code de vérification", bodyMessage);
+            #endregion
+            Task.Run(() =>
+            {
+                this.mailService.SendAsync(maildata);
+            }); // lance la tache en arrière plan
+            ;
             return Task.FromResult(new SignUpReply { UserId = userId });
         }
 
