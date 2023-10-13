@@ -2,7 +2,7 @@
 
 namespace AutomateDesign.Client.Model.Network
 {
-    public class UsersClient: Client
+    public class UsersClient : Client
     {
         public async Task<int> SignUpAsync(string email, string password)
         {
@@ -10,7 +10,7 @@ namespace AutomateDesign.Client.Model.Network
             var client = new Users.UsersClient(channel);
 
             SignUpReply reply = await client.SignUpAsync(
-                new SignUpRequest
+                new EmailAndPassword
                 {
                     Email = email,
                     Password = password
@@ -20,18 +20,34 @@ namespace AutomateDesign.Client.Model.Network
             return reply.UserId;
         }
 
-        public async Task VerifyEmailAsync(int userId, uint verificationCode)
+        public async Task VerifyUserAsync(int userId, uint verificationCode)
         {
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);
 
-            await client.VerifyEmailAsync(
+            await client.VerifyUserAsync(
                 new VerificationRequest
                 {
                     UserId = userId,
                     SecretCode = verificationCode
                 }
             );
+        }
+
+        public async Task<string> SignInAsync(string email, string password)
+        {
+            using var channel = this.OpenChannel();
+            var client = new Users.UsersClient(channel);
+
+            SignInReply reply = await client.SignInAsync(
+                new EmailAndPassword
+                {
+                    Email = email,
+                    Password = password
+                }
+            );
+
+            return reply.Token;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace AutomateDesign.Client.View
             uint code = UInt32.Parse(this.codeVerifBox.Text);
 
             this.users
-            .VerifyEmailAsync(this.userToVerify, code)
+            .VerifyUserAsync(this.userToVerify, code)
             .ContinueWith(task =>
             {
                 if (task.IsFaulted)

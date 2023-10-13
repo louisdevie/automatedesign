@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutomateDesign.Client.Model;
+using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
@@ -7,13 +8,17 @@ namespace AutomateDesign.Client.View.Helpers
     public class Navigator
     {
         private Frame frame;
+        private Session? session;
         private Stack<object> history;
 
         private object Current { get => this.frame.Content; set => this.frame.Content = value; }
 
+        public Session? Session { get => this.session; set => this.session = value; }
+
         public Navigator(Frame frame, INavigable initialPage)
         {
             this.frame = frame;
+            this.session = null;
             initialPage.UseNavigator(this);
             this.Current = initialPage;
             this.history = new Stack<object>();

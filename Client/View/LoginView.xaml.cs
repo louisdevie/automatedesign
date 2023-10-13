@@ -1,6 +1,8 @@
-﻿using AutomateDesign.Client.View.Helpers;
+﻿using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Helpers;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace AutomateDesign.Client.View
 {
@@ -9,24 +11,49 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class LoginView : NavigablePage
     {
-        #region Attributs
-        private string email;
-        private string password;
-        #endregion
+        private UsersClient users;
+
+        public string Email { get; set; }
+        public string Password { get => this.passBox.Password; }
+
+        private bool IsFormEnabled
+        {
+            set
+            {
+                this.emailBox.IsEnabled = value;
+                this.passBox.IsEnabled = value;
+                this.signInButton.IsEnabled = value;
+            }
+        }
 
         public LoginView()
         {
-            InitializeComponent();
+            this.users = new UsersClient();
 
-            this.email = string.Empty;
-            this.password = string.Empty;
+            InitializeComponent();
+            DataContext = this;
+
+            this.Email = string.Empty;
         }
 
         private void ConnexionButtonClick(object sender, RoutedEventArgs e)
         {
-            this.email = emailBox.Text;
-            this.password = passBox.Password;
-            //this.mainWindow.NavigateTo(new HomeView(mainWindow));
+            this.users.SignInAsync(this.Email, this.Password)
+            .ContinueWith(task => {
+                if (task.IsFaulted)
+                {
+                    ErrorMessageBox.Show(task.Exception?.InnerException);
+                    this.IsFormEnabled = true;
+                }
+                else
+                {
+                    this.Navigator.Session = new Session(task.Result, this.Email);
+                    this.Navigator.Go(new HomeView(), true);
+                }
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
+
+            this.IsFormEnabled = false;
         }
 
         private void passwordOulbieButtonClick(object sender, RoutedEventArgs e)

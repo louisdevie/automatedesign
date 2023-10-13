@@ -69,7 +69,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
             }
             else
             {
-                throw new ResourceNotFoundException();
+                throw new ResourceNotFoundException("Aucune demande d'inscription trouvée pour cet utilisateur.");
             }
         }
     }
