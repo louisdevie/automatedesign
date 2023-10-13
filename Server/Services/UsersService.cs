@@ -121,8 +121,6 @@ namespace AutomateDesign.Server.Services
                         ));
                     }
 
-                    user.Password = HashedPassword.FromPlain(request.NewPassword);
-
                     // TODO: Ré-encrypter les documents de l'utilisateur !
 
                     break;
@@ -146,10 +144,10 @@ namespace AutomateDesign.Server.Services
                         ));
                     }
 
-                    user.Password = HashedPassword.FromPlain(request.NewPassword);
-
                     break;
             }
+
+            user.Password = HashedPassword.FromPlain(request.NewPassword);
 
             return Task.FromResult(new Nothing());
         }

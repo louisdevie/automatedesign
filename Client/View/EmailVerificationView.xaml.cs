@@ -53,7 +53,7 @@ namespace AutomateDesign.Client.View
                     }
                     else
                     {
-                        // TODO: Navigation
+                        this.Navigator.Go(new EditPasswordView(this.userToVerify, code));
                     }
                 },
                 TaskScheduler.FromCurrentSynchronizationContext());

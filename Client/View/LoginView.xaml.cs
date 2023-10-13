@@ -3,6 +3,7 @@ using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Helpers;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace AutomateDesign.Client.View
 {
@@ -12,34 +13,27 @@ namespace AutomateDesign.Client.View
     public partial class LoginView : NavigablePage
     {
         private UsersClient users;
+        private bool isHandlingTextChanged;
 
         public string Email { get; set; }
         public string Password { get => this.passBox.Password; }
 
-        private bool IsFormEnabled
-        {
-            set
-            {
-                this.emailBox.IsEnabled = value;
-                this.passBox.IsEnabled = value;
-                this.signInButton.IsEnabled = value;
-            }
-        }
-
         public LoginView()
         {
             this.users = new UsersClient();
+            this.isHandlingTextChanged = false;
+            this.Email = string.Empty;
 
             InitializeComponent();
             DataContext = this;
 
-            this.Email = string.Empty;
         }
 
         private void ConnexionButtonClick(object sender, RoutedEventArgs e)
         {
             this.users.SignInAsync(this.Email, this.Password)
-            .ContinueWith(task => {
+            .ContinueWith(task =>
+            {
                 if (task.IsFaulted)
                 {
                     ErrorMessageBox.Show(task.Exception?.InnerException);
@@ -66,6 +60,27 @@ namespace AutomateDesign.Client.View
             this.Navigator.Go(new SignUpView());
         }
 
+        /// <summary>
+        /// Autocompletion de l'adresse
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AutocompletionEmailTextBox(object sender, TextChangedEventArgs e)
+        {
+            if (e.Changes.Count > 0)
+            {
+                // Évitez de traiter l'événement lorsqu'il est déjà en cours de traitement.
+                if (isHandlingTextChanged) return;
+                isHandlingTextChanged = true;
+
+                if (this.Email[^1] == '@')
+                {
+                    this.Email += "iut-dijon.u-bourgogne.fr";
+                    passBox.Focus();
+                }
+
+                isHandlingTextChanged = false;
+            }
+        }
     }
 }
-    

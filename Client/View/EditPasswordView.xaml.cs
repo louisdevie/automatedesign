@@ -1,63 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Helpers;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AutomateDesign.Client.View
 {
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml
     /// </summary>
-    public partial class EditPasswordView : Page
+    public partial class EditPasswordView : NavigablePage
     {
-        #region Attributs
-        private string password;
-        private string passwordConf;
-        private MainWindow mainWindow;
-        private bool checkBox;
-        #endregion
+        private int userId;
+        private uint secretCode;
+        private UsersClient users;
+
+        public bool UserAgreement { get; set; }
+
+        public string Password => this.passBox.Password;
+
+        public string PasswordAgain => this.passBoxConf.Password;
 
         /// <summary>
         /// Envoyer False lors d'un premier appel a la page
         /// </summary>
-        public EditPasswordView(MainWindow main)
+        public EditPasswordView(int userId, uint secretCode)
         {
-            this.mainWindow = main;
-            DataContext = this;  
+            this.users = new UsersClient();
+            this.userId = userId;
+            this.secretCode = secretCode;
+
+            DataContext = this;
             InitializeComponent();
-            this.password = string.Empty;
-            this.passwordConf = string.Empty;
-            this.checkBox = false;
         }
 
-        /// <summary>
-        /// Boutton déclenchant la procedure d'inscription
-        /// Si le mot de passe est incorrect ne fait rien et l'indique à l'utilisateur sinon renvoie vers la page de vérification d'email
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ConfirmerInscriptionButtonClick(object sender, RoutedEventArgs e)
         {
-            this.password = passBox.Password;
-            this.passwordConf = passBoxConf.Password;
-            this.checkBox = this.checkBoxButton.IsChecked.Value;
-            if (password != passwordConf) {
+            if (this.Password != this.PasswordAgain)
+            {
                 this.messageErreurMDP.Visibility = Visibility.Visible;
-            } else if (!this.checkBox){
+            }
+            else if (!this.UserAgreement)
+            {
                 this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
-            } else {
-                // TEMPORAIRE !
-                mainWindow.ChangementFenetre(new LoginView(mainWindow));
+            }
+            else
+            {
+                this.users.ChangePasswordWithResetCodeAsync(this.userId, this.Password, this.secretCode)
+                .ContinueWith(task =>
+                {
+                    if (task.IsFaulted)
+                    {
+                        ErrorMessageBox.Show(task.Exception?.InnerException);
+                        this.IsEnabled = true;
+                    }
+                    else
+                    {
+                        this.Navigator.Go(new PasswordResetSuccessView());
+                    }
+                },
+                TaskScheduler.FromCurrentSynchronizationContext());
+
+                this.IsEnabled = false;
             }
         }
     }
