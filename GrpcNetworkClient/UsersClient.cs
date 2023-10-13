@@ -9,7 +9,7 @@ namespace AutomateDesign.Client.Model.Network
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);
 
-            SignUpReply reply = await client.SignUpAsync(
+            UserIdOnly reply = await client.SignUpAsync(
                 new EmailAndPassword
                 {
                     Email = email,
@@ -48,6 +48,62 @@ namespace AutomateDesign.Client.Model.Network
             );
 
             return reply.Token;
+        }
+
+        public async Task ChangePasswordAsync(int userId, string newPassword, string currentPassword)
+        {
+            using var channel = this.OpenChannel();
+            var client = new Users.UsersClient(channel);
+
+            await client.ChangePasswordAsync(
+                new PasswordChangeRequest
+                {
+                    UserId = userId,
+                    NewPassword = newPassword,
+                    CurrentPassword = currentPassword
+                }
+            );
+        }
+
+        public async Task ChangePasswordWithResetCodeAsync(int userId, string newPassword, uint resetCode)
+        {
+            using var channel = this.OpenChannel();
+            var client = new Users.UsersClient(channel);
+
+            await client.ChangePasswordAsync(
+                new PasswordChangeRequest
+                {
+                    UserId = userId,
+                    NewPassword = newPassword,
+                    SecretCode = resetCode
+                }
+            );
+        }
+
+        public async Task<int> ResetPasswordAsync(string email)
+        {
+            using var channel = this.OpenChannel();
+            var client = new Users.UsersClient(channel);
+
+            UserIdOnly reply = await client.ResetPasswordAsync(
+                new PasswordResetRequest { Email = email }
+            );
+
+            return reply.UserId;
+        }
+
+        public async Task CheckResetCodeAsync(int userId, uint resetCode)
+        {
+            using var channel = this.OpenChannel();
+            var client = new Users.UsersClient(channel);
+
+            await client.CheckResetCodeAsync(
+                new VerificationRequest
+                {
+                    UserId = userId,
+                    SecretCode= resetCode
+                }
+            );
         }
     }
 }

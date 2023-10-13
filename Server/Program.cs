@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using AutomateDesign.Server.Data.MariaDb;
 using AutomateDesign.Server.Data;
 using AutomateDesign.Server.Data.MariaDb.Implementations;
+using AutomateDesign.Server.Model;
+using EmailSender = AutomateDesign.Server.Model.EmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,11 @@ builder.Services.AddSingleton(new DatabaseConnector(dbSettings))
                 .AddScoped<IUserDao, UserDao>()
                 .AddScoped<IRegistrationDao, RegistrationDao>()
                 .AddScoped<ISessionDao, SessionDao>();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<EmailSender>();
+
+Template.TemplateDirectory = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "Templates");
 
 var app = builder.Build();
 

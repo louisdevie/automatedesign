@@ -2,9 +2,8 @@
 using AutomateDesign.Core.Users;
 using AutomateDesign.Protos;
 using AutomateDesign.Server.Data;
+using AutomateDesign.Server.Model;
 using Grpc.Core;
-using Org.BouncyCastle.Tls.Crypto;
-using System.Text.RegularExpressions;
 
 namespace AutomateDesign.Server.Services
 {
@@ -13,29 +12,61 @@ namespace AutomateDesign.Server.Services
         private IUserDao userDao;
         private IRegistrationDao registrationDao;
         private ISessionDao sessionDao;
+        private EmailSender emailSender;
 
         private static readonly string IUT_EMAIL_HOST = "iut-dijon.u-bourgogne.fr";
 
-        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao)
+        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao, EmailSender emailSender)
         {
             this.userDao = userDao;
             this.registrationDao = registrationDao;
             this.sessionDao = sessionDao;
+            this.emailSender = emailSender;
         }
 
-        public override Task<SignUpReply> SignUp(EmailAndPassword request, ServerCallContext context)
+        public override Task<UserIdOnly> SignUp(EmailAndPassword request, ServerCallContext context)
         {
             User newUser = new(request.Email, HashedPassword.FromPlain(request.Password));
-            Registration registration = new(newUser);
 
             if (newUser.Email.Host != IUT_EMAIL_HOST)
             {
                 throw new InvalidResourceException("L'adresse mail doit être votre adresse IUT.");
             }
 
-            int userId = this.registrationDao.Create(registration).User.Id;
+            try
+            {
+                User existingUser = this.userDao.ReadByEmail(request.Email);
 
-            return Task.FromResult(new SignUpReply { UserId = userId });
+                if (existingUser.IsVerified)
+                {
+                    throw new DuplicateResourceException("Cette adresse mail est déjà utilisée.");
+                }
+
+                // nouveau mot de passe, ancien id
+                newUser = newUser.WithId(existingUser.Id);
+                this.userDao.Update(newUser);
+            }
+            catch (ResourceNotFoundException)
+            {
+                newUser = this.userDao.Create(newUser);
+            }
+
+            Registration registration = new(newUser);
+            this.registrationDao.Create(registration);
+
+            Task.Run(() =>
+            {
+                this.emailSender.Send(
+                    new VerificationEmail(
+                        newUser.Email,
+                        "Code de vérification AutomateDesign",
+                        "sign_up_email.html",
+                        registration.VerificationCode
+                    )
+                );
+            });
+
+            return Task.FromResult(new UserIdOnly { UserId = newUser.Id });
         }
 
         public override Task<Nothing> VerifyUser(VerificationRequest request, ServerCallContext context)
@@ -76,10 +107,134 @@ namespace AutomateDesign.Server.Services
                 ));
             }
 
+            if (!user.IsVerified)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Utilisateur non vérifié."
+                ));
+            }
+
             Session session = new Session(user);
             this.sessionDao.Create(session);
 
-            return Task.FromResult(new SignInReply {  Token = session.Token });
+            return Task.FromResult(new SignInReply { Token = session.Token });
+        }
+
+        public override Task<Nothing> ChangePassword(PasswordChangeRequest request, ServerCallContext context)
+        {
+            User user = this.userDao.ReadById(request.UserId);
+
+            if (!user.IsVerified)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Utilisateur non vérifié."
+                ));
+            }
+
+            switch (request.AuthenticationCase)
+            {
+                case PasswordChangeRequest.AuthenticationOneofCase.CurrentPassword:
+                    if (!user.Password.Match(request.CurrentPassword))
+                    {
+                        throw new RpcException(new Status(
+                            StatusCode.InvalidArgument,
+                            "Le mot de passe actuel ne correspond pas."
+                        ));
+                    }
+
+                    // TODO: Ré-encrypter les documents de l'utilisateur !
+
+                    break;
+
+                case PasswordChangeRequest.AuthenticationOneofCase.SecretCode:
+                    Registration registration = this.registrationDao.ReadById(user.Id);
+
+                    if (registration.Expired)
+                    {
+                        throw new RpcException(new Status(
+                            StatusCode.FailedPrecondition,
+                            "Le code de vérification est expiré."
+                        ));
+                    }
+
+                    if (request.SecretCode != registration.VerificationCode)
+                    {
+                        throw new RpcException(new Status(
+                            StatusCode.InvalidArgument,
+                            "Le code de vérification est incorrect."
+                        ));
+                    }
+
+                    break;
+            }
+
+            user.Password = HashedPassword.FromPlain(request.NewPassword);
+
+            return Task.FromResult(new Nothing());
+        }
+
+        public override Task<Nothing> CheckResetCode(VerificationRequest request, ServerCallContext context)
+        {
+            Registration registration = this.registrationDao.ReadById(request.UserId);
+
+            if (!registration.User.IsVerified)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Utilisateur non vérifié."
+                ));
+            }
+
+            if (registration.Expired)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Le code de vérification est expiré."
+                ));
+            }
+
+            if (request.SecretCode != registration.VerificationCode)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.InvalidArgument,
+                    "Le code de vérification est incorrect."
+                ));
+            }
+
+            return Task.FromResult(new Nothing());
+        }
+
+        public override Task<UserIdOnly> ResetPassword(PasswordResetRequest request, ServerCallContext context)
+        {
+            User user = this.userDao.ReadByEmail(request.Email);
+
+            if (!user.IsVerified)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Utilisateur non vérifié."
+                ));
+            }
+
+            Registration registration = new(user);
+
+            this.registrationDao.Create(registration);
+
+            Task.Run(() =>
+            {
+                this.emailSender.Send(
+                    new VerificationEmail(
+                        user.Email,
+                        "Code de vérification AutomateDesign",
+                        "reset_password_email.html",
+                        registration.VerificationCode
+                    )
+                );
+            });
+
+            return Task.FromResult(new UserIdOnly { UserId = user.Id });
         }
     }
 }

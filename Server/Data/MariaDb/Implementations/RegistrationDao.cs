@@ -14,33 +14,14 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
 
         public Registration Create(Registration registration)
         {
-            User user;
-            try
-            {
-                user = this.userDao.ReadByEmail(registration.User.Email.Address);
-
-                if (user.IsVerified)
-                {
-                    throw new DuplicateResourceException("Cette adresse mail est déjà utilisée.");
-                }
-
-                // nouveau mot de passe, ancien id
-                user = registration.User.WithId(user.Id);
-                this.userDao.Update(user);
-            }
-            catch (ResourceNotFoundException)
-            {
-                user = this.userDao.Create(registration.User);
-            }
-
             using var connection = this.Connect();
 
             connection.ExecuteNonQuery(
                 "REPLACE INTO `Registration`(`UserId`, `VerificationCode`, `Expiration`) VALUES (?, ?, ?)",
-                user.Id, registration.VerificationCode, registration.Expiration
+                registration.User.Id, registration.VerificationCode, registration.Expiration
             );
 
-            return registration.WithUser(user);
+            return registration;
         }
 
         public void Delete(int userId)

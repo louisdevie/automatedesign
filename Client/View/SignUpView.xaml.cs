@@ -14,10 +14,12 @@ namespace AutomateDesign.Client.View
     public partial class SignUpView : NavigablePage
     {
         private UsersClient users;
+        private bool isHandlingTextChanged;
 
         public SignUpView()
         {
             this.users = new UsersClient();
+            this.isHandlingTextChanged = false;
 
             InitializeComponent();
         }
@@ -67,16 +69,39 @@ namespace AutomateDesign.Client.View
                     if (task.IsFaulted)
                     {
                         ErrorMessageBox.Show(task.Exception?.InnerException);
-                        this.IsFormEnabled = true;
+                        this.IsEnabled = true;
                     }
                     else
                     {
-                        this.Navigator.Go(new EmailVerificationView(task.Result));
+                        this.Navigator.Go(new EmailVerificationView(task.Result, false));
                     }
                 },
                 TaskScheduler.FromCurrentSynchronizationContext());
 
-                this.IsFormEnabled = false;
+                this.IsEnabled = false;
+            }
+        }
+
+        /// <summary>
+        /// Autocompletion de l'adresse
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AutocompletionEmailTextBox(object sender, TextChangedEventArgs e)
+        {
+            if (e.Changes.Count > 0)
+            {
+                // Évitez de traiter l'événement lorsqu'il est déjà en cours de traitement.
+                if (isHandlingTextChanged) return;
+                isHandlingTextChanged = true;
+
+                if (emailBox.Text[^1] == '@')
+                {
+                    emailBox.Text += "iut-dijon.u-bourgogne.fr";
+                    passBox.Focus();
+                }
+
+                isHandlingTextChanged = false;
             }
         }
     }
