@@ -6,11 +6,14 @@ option csharp_namespace = "AutomateDesign.Protos";
 import "helpers.proto";
 
 service Users {
-    rpc SignUp (EmailAndPassword) returns (SignUpReply);
+    rpc SignUp (EmailAndPassword) returns (UserIdOnly);
     rpc VerifyUser (VerificationRequest) returns (Nothing);
+
     rpc SignIn (EmailAndPassword) returns (SignInReply);
-    rpc VerifUser (VerificationEmailCode) returns (Nothing);
-    rpc ChangePassword (NewPassword) returns (Nothing);
+
+    rpc ChangePassword (PasswordChangeRequest) returns (Nothing);
+    rpc ResetPassword (PasswordResetRequest) returns (UserIdOnly);
+    rpc CheckResetCode (VerificationRequest) returns (Nothing);
 }
 
 message EmailAndPassword {
@@ -18,7 +21,7 @@ message EmailAndPassword {
     string password = 2;
 }
 
-message SignUpReply {
+message UserIdOnly {
     int32 userId = 1;
 }
 
@@ -32,13 +35,15 @@ message SignInReply {
     string token = 2;
 }
 
-message VerificationEmailCode {
-    string Email = 1;
-    int32 code = 2;
+message PasswordResetRequest {
+    string email = 1;
 }
 
-message NewPassword {
-    string Email = 1;
-    string password = 2;
-    int32 code = 3;
+message PasswordChangeRequest {
+    int32 userId = 1;
+    string newPassword = 2;
+    oneof authentication {
+        string currentPassword = 3;
+        int32 secretCode = 4;
+    }
 }

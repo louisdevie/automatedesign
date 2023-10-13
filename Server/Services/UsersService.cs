@@ -2,10 +2,6 @@
 using AutomateDesign.Protos;
 using AutomateDesign.Server.Data;
 using Grpc.Core;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Tls.Crypto;
-using System;
-using System.Text.RegularExpressions;
 
 namespace AutomateDesign.Server.Services
 {
@@ -22,14 +18,14 @@ namespace AutomateDesign.Server.Services
             this.sessionDao = sessionDao;
         }
 
-        public override Task<SignUpReply> SignUp(EmailAndPassword request, ServerCallContext context)
+        public override Task<UserIdOnly> SignUp(EmailAndPassword request, ServerCallContext context)
         {
             User newUser = new(request.Email, HashedPassword.FromPlain(request.Password));
             Registration registration = new(newUser);
 
             int userId = this.registrationDao.Create(registration).User.Id;
 
-            return Task.FromResult(new SignUpReply { UserId = userId });
+            return Task.FromResult(new UserIdOnly { UserId = userId });
         }
 
         public override Task<Nothing> VerifyUser(VerificationRequest request, ServerCallContext context)
@@ -76,23 +72,73 @@ namespace AutomateDesign.Server.Services
             return Task.FromResult(new SignInReply { UserId = user.Id, Token = session.Token });
         }
 
-        public override Task<Nothing> ChangePassword(NewPassword request, ServerCallContext context)
+        public override Task<Nothing> ChangePassword(PasswordChangeRequest request, ServerCallContext context)
         {
-            User user = this.userDao.ReadByEmail(request.Email);
-            if (request.Code != this.registrationDao.ReadById(user.Id).VerificationCode)
+            User user = this.userDao.ReadById(request.UserId);
+
+            if (!user.IsVerified)
             {
                 throw new RpcException(new Status(
-                    StatusCode.InvalidArgument,
-                    "Code de vérification incorrecte."
+                    StatusCode.FailedPrecondition,
+                    "Utilisateur non vérifié."
                 ));
             }
-            user.Password = HashedPassword.FromPlain(request.Password);
+
+            switch (request.AuthenticationCase)
+            {
+                case PasswordChangeRequest.AuthenticationOneofCase.CurrentPassword:
+                    if (!user.Password.Match(request.CurrentPassword))
+                    {
+                        throw new RpcException(new Status(
+                            StatusCode.InvalidArgument,
+                            "Le mot de passe actuel ne correspond pas."
+                        ));
+                    }
+
+                    user.Password = HashedPassword.FromPlain(request.NewPassword);
+
+                    // TODO: Ré-encrypter les documents de l'utilisateur !
+
+                    break;
+
+                case PasswordChangeRequest.AuthenticationOneofCase.SecretCode:
+                    Registration registration = this.registrationDao.ReadById(user.Id);
+
+                    if (registration.Expired)
+                    {
+                        throw new RpcException(new Status(
+                            StatusCode.FailedPrecondition,
+                            "Le code de vérification est expiré."
+                        ));
+                    }
+
+                    if (request.SecretCode != registration.VerificationCode)
+                    {
+                        throw new RpcException(new Status(
+                            StatusCode.InvalidArgument,
+                            "Le code de vérification est incorrect."
+                        ));
+                    }
+
+                    user.Password = HashedPassword.FromPlain(request.NewPassword);
+
+                    break;
+            }
+
             return Task.FromResult(new Nothing());
         }
-        public override Task<Nothing> VerifUser(VerificationEmailCode request, ServerCallContext context)
+
+        public override Task<Nothing> CheckResetCode(VerificationRequest request, ServerCallContext context)
         {
-            User user = this.userDao.ReadByEmail(request.Email);
-            Registration registration = this.registrationDao.ReadById(user.Id);
+            Registration registration = this.registrationDao.ReadById(request.UserId);
+
+            if (!registration.User.IsVerified)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Utilisateur non vérifié."
+                ));
+            }
 
             if (registration.Expired)
             {
@@ -102,14 +148,34 @@ namespace AutomateDesign.Server.Services
                 ));
             }
 
-            if (request.Code != registration.VerificationCode)
+            if (request.SecretCode != registration.VerificationCode)
             {
                 throw new RpcException(new Status(
                     StatusCode.InvalidArgument,
                     "Le code de vérification est incorrect."
                 ));
             }
+
             return Task.FromResult(new Nothing());
+        }
+
+        public override Task<UserIdOnly> ResetPassword(PasswordResetRequest request, ServerCallContext context)
+        {
+            User user = this.userDao.ReadByEmail(request.Email);
+
+            if (!user.IsVerified)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Utilisateur non vérifié."
+                ));
+            }
+
+            Registration registration = new(user);
+
+            int userId = this.registrationDao.Create(registration).User.Id;
+
+            return Task.FromResult(new UserIdOnly { UserId = userId });
         }
     }
 }
