@@ -2,6 +2,7 @@
 using AutomateDesign.Core.Users;
 using AutomateDesign.Protos;
 using AutomateDesign.Server.Data;
+using AutomateDesign.Server.Model;
 using Grpc.Core;
 
 namespace AutomateDesign.Server.Services
@@ -11,14 +12,16 @@ namespace AutomateDesign.Server.Services
         private IUserDao userDao;
         private IRegistrationDao registrationDao;
         private ISessionDao sessionDao;
+        private EmailSender emailSender;
 
         private static readonly string IUT_EMAIL_HOST = "iut-dijon.u-bourgogne.fr";
 
-        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao)
+        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao, EmailSender emailSender)
         {
             this.userDao = userDao;
             this.registrationDao = registrationDao;
             this.sessionDao = sessionDao;
+            this.emailSender = emailSender;
         }
 
         public override Task<UserIdOnly> SignUp(EmailAndPassword request, ServerCallContext context)
@@ -50,6 +53,18 @@ namespace AutomateDesign.Server.Services
 
             Registration registration = new(newUser);
             this.registrationDao.Create(registration);
+
+            Task.Run(() =>
+            {
+                this.emailSender.Send(
+                    new VerificationEmail(
+                        newUser.Email,
+                        "Code de vérification AutomateDesign",
+                        "sign_up_email.html",
+                        registration.VerificationCode
+                    )
+                );
+            });
 
             return Task.FromResult(new UserIdOnly { UserId = newUser.Id });
         }
@@ -92,10 +107,18 @@ namespace AutomateDesign.Server.Services
                 ));
             }
 
+            if (!user.IsVerified)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.FailedPrecondition,
+                    "Utilisateur non vérifié."
+                ));
+            }
+
             Session session = new Session(user);
             this.sessionDao.Create(session);
 
-            return Task.FromResult(new SignInReply {  Token = session.Token });
+            return Task.FromResult(new SignInReply { Token = session.Token });
         }
 
         public override Task<Nothing> ChangePassword(PasswordChangeRequest request, ServerCallContext context)
@@ -197,9 +220,21 @@ namespace AutomateDesign.Server.Services
 
             Registration registration = new(user);
 
-            int userId = this.registrationDao.Create(registration).User.Id;
+            this.registrationDao.Create(registration);
 
-            return Task.FromResult(new UserIdOnly { UserId = userId });
+            Task.Run(() =>
+            {
+                this.emailSender.Send(
+                    new VerificationEmail(
+                        user.Email,
+                        "Code de vérification AutomateDesign",
+                        "reset_password_email.html",
+                        registration.VerificationCode
+                    )
+                );
+            });
+
+            return Task.FromResult(new UserIdOnly { UserId = user.Id });
         }
     }
 }

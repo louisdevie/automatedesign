@@ -27,4 +27,13 @@
 		<Protobuf Include="../Protos/users.proto" GrpcServices="Server" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Templates\reset_password_email.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Templates\sign_up_email.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

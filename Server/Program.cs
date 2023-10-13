@@ -4,15 +4,13 @@ using AutomateDesign.Server.Data.MariaDb;
 using AutomateDesign.Server.Data;
 using AutomateDesign.Server.Data.MariaDb.Implementations;
 using AutomateDesign.Server.Model;
-using MailService = AutomateDesign.Server.Services.MailService;
+using EmailSender = AutomateDesign.Server.Model.EmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddGrpc();
-builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
-builder.Services.AddTransient<MailService>();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -29,6 +27,11 @@ builder.Services.AddSingleton(new DatabaseConnector(dbSettings))
                 .AddScoped<IUserDao, UserDao>()
                 .AddScoped<IRegistrationDao, RegistrationDao>()
                 .AddScoped<ISessionDao, SessionDao>();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<EmailSender>();
+
+Template.TemplateDirectory = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "Templates");
 
 var app = builder.Build();
 
