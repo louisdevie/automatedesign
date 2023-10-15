@@ -63,7 +63,7 @@ namespace AutomateDesign.Client.View
                     }
                     else
                     {
-                        this.Navigator.Go(new EmailVerificationSuccessView(new PasswordResetVerification()));
+                        this.Navigator.Go(new EmailVerificationSuccessView(new PasswordResetVerification(this.userId)));
                     }
                 },
                 TaskScheduler.FromCurrentSynchronizationContext());

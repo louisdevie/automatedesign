@@ -40,7 +40,7 @@ namespace AutomateDesign.Client.View
                    }
                    else
                    {
-                       this.Navigator.Go(new EmailVerificationView(task.Result, new PasswordResetVerification()));
+                       this.Navigator.Go(new EmailVerificationView(new PasswordResetVerification(task.Result)));
                    }
                },
                TaskScheduler.FromCurrentSynchronizationContext());
@@ -52,6 +52,11 @@ namespace AutomateDesign.Client.View
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
             this.Navigator.Back();
+        }
+
+        public override void OnWentBackToThis()
+        {
+            this.IsEnabled = true;
         }
     }
 }

@@ -2,6 +2,7 @@
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
+using Grpc.Core;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,21 +39,42 @@ namespace AutomateDesign.Client.View
 
         private void SignInButtonClick(object sender, RoutedEventArgs e)
         {
+            TaskScheduler ts = TaskScheduler.FromCurrentSynchronizationContext();
+
             this.users.SignInAsync(this.Email, this.Password)
             .ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {
-                    ErrorMessageBox.Show(task.Exception?.InnerException);
-                    this.IsEnabled = true;
+                    if (task.Exception?.InnerException is RpcException rpce && rpce.StatusCode == StatusCode.FailedPrecondition)
+                    {
+                        this.users.SignUpAsync(this.Email, this.Password)
+                        .ContinueWith(task =>
+                        {
+                            if (task.IsFaulted)
+                            {
+                                ErrorMessageBox.Show(task.Exception?.InnerException);
+                                this.IsEnabled = true;
+                            }
+                            else
+                            {
+                                this.Navigator.Go(new EmailVerificationView(new SignUpEmailVerification(this.Email, this.Password, task.Result)));
+                            }
+                        },
+                        ts);
+                    }
+                    else
+                    {
+                        ErrorMessageBox.Show(task.Exception?.InnerException);
+                        this.IsEnabled = true;
+                    }
                 }
                 else
                 {
                     this.Navigator.Session = new Session(task.Result, this.Email);
                     this.Navigator.Go(new HomeView(), true);
                 }
-            },
-            TaskScheduler.FromCurrentSynchronizationContext());
+            }, ts);
 
             this.IsEnabled = false;
         }

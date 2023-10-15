@@ -9,6 +9,6 @@ namespace AutomateDesign.Client.Model
 
         public abstract string SuccessMessage { get; }
 
-        public abstract Task SendVerificationRequest(UsersClient client, int userId, uint secretCode);
+        public abstract Task SendVerificationRequest(UsersClient client, uint secretCode);
     }
 }

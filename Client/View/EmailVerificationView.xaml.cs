@@ -18,13 +18,11 @@ namespace AutomateDesign.Client.View
     public partial class EmailVerificationView : NavigablePage
     {
         private UsersClient users;
-        private int userToVerify;
         private Verification verification;
 
-        public EmailVerificationView(int userToVerify, Verification verification)
+        public EmailVerificationView(Verification verification)
         {
             this.users = new UsersClient();
-            this.userToVerify = userToVerify;
             this.verification = verification;
 
             InitializeComponent();
@@ -57,7 +55,7 @@ namespace AutomateDesign.Client.View
         {
             uint code = UInt32.Parse(this.codeVerifBox.Text);
 
-            this.verification.SendVerificationRequest(this.users, this.userToVerify, code)
+            this.verification.SendVerificationRequest(this.users, code)
             .ContinueWith(task =>
             {
                 if (task.IsFaulted)
@@ -65,9 +63,9 @@ namespace AutomateDesign.Client.View
                     ErrorMessageBox.Show(task.Exception?.InnerException);
                     this.IsEnabled = true;
                 }
-                else if (this.verification is PasswordResetVerification)
+                else if (this.verification is PasswordResetVerification prv)
                 {
-                    this.Navigator.Go(new EditPasswordView(this.userToVerify, code));
+                    this.Navigator.Go(new EditPasswordView(prv.UserToVerify, code));
                 }
                 else if (this.verification is SignUpEmailVerification)
                 {

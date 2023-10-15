@@ -5,6 +5,7 @@ namespace AutomateDesign.Client.Model
 {
     public class SignUpEmailVerification : Verification
     {
+        private int userId;
         private string signUpEmail;
         private string signUpPassword;
 
@@ -16,15 +17,16 @@ namespace AutomateDesign.Client.Model
 
         public override string SuccessMessage => "Votre adresse mail a bien été vérifiée ! Vous pouvez maintenant utiliser AutomateDesign.";
 
-        public SignUpEmailVerification(string signUpEmail, string signUpPassword)
+        public SignUpEmailVerification(string signUpEmail, string signUpPassword, int userId)
         {
             this.signUpEmail = signUpEmail;
             this.signUpPassword = signUpPassword;
+            this.userId = userId;
         }
 
-        public override Task SendVerificationRequest(UsersClient client, int userId, uint verificationCode)
+        public override Task SendVerificationRequest(UsersClient client, uint verificationCode)
         {
-            return client.VerifyUserAsync(userId, verificationCode);
+            return client.VerifyUserAsync(this.userId, verificationCode);
         }
     }
 }

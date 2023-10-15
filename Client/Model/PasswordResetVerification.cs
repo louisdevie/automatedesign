@@ -5,13 +5,22 @@ namespace AutomateDesign.Client.Model
 {
     public class PasswordResetVerification : Verification
     {
+        private int userToVerify;
+
+        public int UserToVerify => this.userToVerify;
+
+        public PasswordResetVerification(int userToVerify)
+        {
+            this.userToVerify = userToVerify;
+        }
+
         public override string Title => "Vérification par mail";
 
         public override string SuccessMessage => "Votre mot de passe à bien été changé.";
 
-        public override Task SendVerificationRequest(UsersClient client, int userId, uint secretCode)
+        public override Task SendVerificationRequest(UsersClient client, uint secretCode)
         {
-            return client.CheckResetCodeAsync(userId, secretCode);
+            return client.CheckResetCodeAsync(this.userToVerify, secretCode);
         }
     }
 }

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{588C7ABC-DEB3-4581-BFCB-B5EAB4D29D72}"
 	ProjectSection(SolutionItems) = preProject
-		helpers.proto = helpers.proto
+		Protos\helpers.proto = Protos\helpers.proto
 		Protos\users.proto = Protos\users.proto
 	EndProjectSection
 EndProject
@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientNetwork", "GrpcNetworkClient\ClientNetwork.csproj", "{C68C0105-5470-4813-96AF-C1DEAE772765}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientNetwork", "GrpcNetworkClient\ClientNetwork.csproj", "{C68C0105-5470-4813-96AF-C1DEAE772765}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
