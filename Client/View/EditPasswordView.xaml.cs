@@ -1,5 +1,8 @@
-﻿using AutomateDesign.Client.Model.Network;
+﻿using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -34,11 +37,15 @@ namespace AutomateDesign.Client.View
             InitializeComponent();
         }
 
-        private void ConfirmerInscriptionButtonClick(object sender, RoutedEventArgs e)
+        private void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (this.Password != this.PasswordAgain)
+            if (String.IsNullOrEmpty(this.Password))
             {
-                this.messageErreurMDP.Visibility = Visibility.Visible;
+                MessageBox.Show("Veuillez saisir un mot de passe", "Erreur");
+            }
+            else if (this.Password != this.PasswordAgain)
+            {
+                MessageBox.Show("Les mots de passe ne correspondent pas", "Erreur");
             }
             else if (!this.UserAgreement)
             {
@@ -56,13 +63,18 @@ namespace AutomateDesign.Client.View
                     }
                     else
                     {
-                        this.Navigator.Go(new PasswordResetSuccessView());
+                        this.Navigator.Go(new EmailVerificationSuccessView(new PasswordResetVerification()));
                     }
                 },
                 TaskScheduler.FromCurrentSynchronizationContext());
 
                 this.IsEnabled = false;
             }
+        }
+
+        private void BackButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Navigator.Back();
         }
     }
 }

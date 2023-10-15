@@ -65,6 +65,10 @@ namespace AutomateDesign.Core.Users
             {
                 throw new InvalidResourceException("L'adresse mail n'est pas valide.");
             }
+            catch (FormatException)
+            {
+                throw new InvalidResourceException("L'adresse mail n'est pas valide.");
+            }
         }
 
         /// <summary>

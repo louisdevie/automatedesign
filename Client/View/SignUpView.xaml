@@ -4,94 +4,112 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AutomateDesign.Client.View"
-      xmlns:my="clr-namespace:AutomateDesign.Client.View.Helpers"
+      xmlns:my="clr-namespace:AutomateDesign.Client.View.Controls"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="550" d:DesignWidth="400"
       Title="SignUpView">
 
-    <Grid>
+    <Grid Margin="40">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="1" 
-                   HorizontalAlignment="Center" VerticalAlignment="Top"
-                   Margin="0,40,0,0" 
-                   TextWrapping="Wrap" Text="PAGE D'INSCRIPTION" 
-                   FontSize="25" 
-                   />
+        <Label Grid.Row="0"
+               Content="Inscription"
+               VerticalAlignment="Center"
+               Style="{StaticResource Title}"
+               />
 
-        <Label Grid.Row="1" Grid.Column="1" 
-               Content="Adresse Mail : " 
-               FontSize="18" 
-               HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="33,30,0,0" 
+        <Label Grid.Row="1"
+               Content="Adresse mail"
+               VerticalAlignment="Bottom"
+               Style="{StaticResource InputLabel}"
                />
         <TextBox x:Name="emailBox"
-                 Grid.Row="1" Grid.Column="1" 
-                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                 Margin="158,34,0,0" 
-                 FontSize="18"  
-                 Width="210" 
-                 TextChanged="AutocompletionEmailTextBox"
+                 Grid.Row="2"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                 Style="{StaticResource TextInput}"
                  />
-        <Label Grid.Row="1" Grid.Column="1" 
-               Content="Mot de Passe :" 
-               FontSize="18" 
-               HorizontalAlignment="Left" VerticalAlignment="Top"
-               Margin="28,76,0,0" 
+        
+        <Label Grid.Row="3" 
+               Content="Mot de passe" 
+               Style="{StaticResource InputLabel}"
+               VerticalAlignment="Bottom"
                />
         <PasswordBox x:Name="passBox"
-                     Grid.Row="1" Grid.Column="1" 
-                     DataContext="{}" 
-                     HorizontalAlignment="Left" 
-                     Margin="158,80,0,0" VerticalAlignment="Top" 
-                     FontSize="18" 
-                     Width="210"
+                     Grid.Row="4"
+                     VerticalAlignment="Top"
+                     Style="{StaticResource PasswordInput}"
                      />
-        <Label Grid.Row="1" Grid.ColumnSpan="2"
-               Content="Confirmer Mot de Passe :" 
-               FontSize="18" 
-               HorizontalAlignment="Left" VerticalAlignment="Top" 
-               Margin="144,126,0,0" 
+        
+        <Label Grid.Row="5"
+               Content="Confirmer le mot de passe" 
+               VerticalAlignment="Bottom"
+               Style="{StaticResource InputLabel}"
                />
         <PasswordBox x:Name="passBoxConf"
-                     Grid.Row="1" Grid.Column="1" 
-                     HorizontalAlignment="Left" VerticalAlignment="Top"
-                     Margin="158,130,0,0" 
-                     FontSize="18"  
-                     Width="210"
+                     Grid.Row="6"
+                     VerticalAlignment="Top"
+                     Style="{StaticResource PasswordInput}"
                      />
-        <CheckBox x:Name="checkBoxButton" 
-                  Grid.Column="1" Grid.Row="1" 
-                  FontSize="16" 
-                  Content="" 
-                  HorizontalAlignment="Left" VerticalAlignment="Top" 
-                  Margin="10,186,0,0" RenderTransformOrigin="0.427,1.885"
-                  />
-        <TextBlock x:Name="checkBoxText"
-                   Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
-                   FontSize="16" 
-                   HorizontalAlignment="Left"  VerticalAlignment="Top"
-                   Margin="35,172,0,0" 
-                   Height="Auto" Width="355"
-                   TextWrapping="Wrap" Text="Vos données seront perdues en cas de réinitialisation de votre mot de passe." 
-                   />
 
-        <Button Grid.Row="2" Grid.Column="1" 
-                Content="Confirmer"
-                x:Name="signUpButton"
-                FontSize="18" 
-                HorizontalAlignment="Center" VerticalAlignment="Top"
-                Margin="0,28,0,0"  
-                Click="ConfirmerInscriptionButtonClick"
-                />
+        <StackPanel Grid.Row="7"
+              Background="#ffecb3"
+              Margin="0 16 0 0"
+              Orientation="Vertical">
+
+            <TextBlock x:Name="checkBoxText"
+                       Margin="10 10 10 0"
+                       Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
+                       FontSize="16"
+                       TextWrapping="Wrap"
+                       >
+                Attention! Si vous oubliez votre mot de passe, vos données seront perdues.
+            </TextBlock>
+
+            <CheckBox x:Name="checkBoxButton" 
+                      Grid.Column="0" Grid.Row="1" 
+                      Margin="10 4 10 10"
+                      FontSize="16"
+                      VerticalContentAlignment="Center"
+                      Style="{StaticResource CheckBoxInput}"
+                      HorizontalAlignment="Left">
+                <Label Content="J'ai compris"
+                       FontStyle="Italic"
+                       VerticalAlignment="Top"
+                       FontSize="16"
+                       />
+            </CheckBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="8"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom">
+
+            <Button Content="Retour"
+                    Margin="0 0 16 0"
+                    x:Name="backButton"
+                    Click="BackButtonClick"
+                    Style="{StaticResource NormalButton}"
+                    />
+            
+            <Button Content="Suivant"
+                    x:Name="signUpButton"
+                    Click="ContinueButtonClick"
+                    Style="{StaticResource AccentedButton}"
+                    />
+        </StackPanel>
     </Grid>
 </my:NavigablePage>
