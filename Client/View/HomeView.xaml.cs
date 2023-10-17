@@ -22,6 +22,16 @@ namespace AutomateDesign.Client.View
             items = new List<Automate>();
             items.Add(new Automate("auto1", "16/10/2023"));
             items.Add(new Automate("auto2", "17/10/2023"));
+            items.Add(new Automate("auto3", "18/10/2023"));
+            items.Add(new Automate("auto4", "18/10/2023"));
+            items.Add(new Automate("auto5", "18/10/2023"));
+            items.Add(new Automate("auto6", "18/10/2023"));
+            items.Add(new Automate("auto7", "18/10/2023"));
+            items.Add(new Automate("auto8", "18/10/2023"));
+            items.Add(new Automate("auto9", "18/10/2023"));
+            items.Add(new Automate("auto10", "18/10/2023"));
+            items.Add(new Automate("auto11", "18/10/2023"));
+
             AumateList.ItemsSource = items;
            
         }

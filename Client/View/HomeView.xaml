@@ -34,9 +34,16 @@
 
             <Button Content="Profil" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,50,0"/>
 
-        </Grid>    
-                       
-            <ItemsControl x:Name="AumateList" ItemsSource="{Binding MyItems}" Grid.Row="1">
+        </Grid>
+        <ScrollViewer PanningMode="VerticalOnly" Grid.Row="1">
+            <ItemsControl x:Name="AumateList">
+                
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Grid.Row="0" MaxWidth="500">
@@ -59,17 +66,7 @@
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>        
-
-   
-
-
-
-
-
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
-
-
-
-
 </my:NavigablePage>
