@@ -34,24 +34,12 @@
 
             <Button Content="Profil" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,50,0"/>
 
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            
-            
-            <ItemsControl ItemsSource="{Binding MyItems}">
+        </Grid>    
+                       
+            <ItemsControl x:Name="AumateList" ItemsSource="{Binding MyItems}" Grid.Row="1">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Grid.Row="0">
+                        <Grid Grid.Row="0" MaxWidth="500">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*"/>
                                 <RowDefinition Height="*"/>
@@ -62,19 +50,18 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Name="btn1" Width="auto" Height="auto" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,20,0">
+                            <Button Name="btn1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,20,0">
                                 <Image Source="./Images/AutomateEx.png"></Image>
                             </Button>
-                            <TextBlock FontSize="25" Text="NomAutomate" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
-                            <TextBlock FontSize="25" Text="date" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0"/>
+                            <TextBlock FontSize="25" Text="{Binding Name}" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
+                            <TextBlock FontSize="25" Text="{Binding Date}" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0"/>
                             <Button Content="..." Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="20,20,20,20"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            
+            </ItemsControl>        
 
-        </Grid>
+   
 
 
 
