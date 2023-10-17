@@ -85,6 +85,24 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
+            <Canvas Grid.Column="1" Background="Gray">
+                <Label Content="Elements :" 
+                       FontSize="20"
+                       Canvas.Left="75" Canvas.Top="10" 
+                       />
+                <StackPanel Name="StackPanelElements"
+                            Height="868" Width="230" 
+                            Canvas.Left="10" Canvas.Top="52" 
+                            HorizontalAlignment="Center" VerticalAlignment="Top"
+                            Orientation="Vertical"
+                            >
+                    <Label Content="Element Temporaire"/>
+                    <Label Content="Element Temporaire"/>
+                    <Label Content="Element Temporaire"/>
+                    <Label Content="Element Temporaire"/>
+                    <Label Content="Element Temporaire"/>
+                </StackPanel>
+            </Canvas>
         </Grid>
     </Grid>
 </my:NavigablePage>
