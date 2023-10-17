@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace AutomateDesign.Client.Model
 {
     /// <summary>
-    /// Structure d'un etat de l'automate
+    /// Structure d'un State de l'automate
     /// </summary>
-    public class Etat : Objet
+    public class State : Objet
     {
         #region Attributs
         private int id;
@@ -25,7 +25,7 @@ namespace AutomateDesign.Client.Model
         public List<Transition> TransitionsSortantes { get => this.transitionsSortantes; set => this.transitionsSortantes = value; }
         #endregion
 
-        public Etat(int id)
+        public State(int id)
         {
             this.id = id;
             this.name = string.Empty;
