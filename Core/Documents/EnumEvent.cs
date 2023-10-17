@@ -4,24 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutomateDesign.Client.Model
+namespace AutomateDesign.Core.Documents
 {
-    public class EnumEvent : Event
+    public class EnumEvent : IEvent
     {
         #region Attributs
+
         private int id;
         private string name;
+
         #endregion
 
         #region Properties
-        public int Id { get => this.id; }
+
+        public int Id => this.id;
+
         public string Name { get => this.name; set => this.name = value; }
+
+        public int Order => 0;
+
         #endregion
 
-        public EnumEvent(int id)
+        public EnumEvent(int id, string name)
         {
             this.id = id;
-            this.name = string.Empty;
+            this.name = name;
         }
 
     }
