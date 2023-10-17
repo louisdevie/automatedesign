@@ -1,4 +1,6 @@
-﻿using AutomateDesign.Client.Model.Network;
+﻿using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +14,7 @@ namespace AutomateDesign.Client.View
     public partial class PasswordResetView : NavigablePage
     {
         private UsersClient users;
+        private EmailInputHelper emailInputHelper;
 
         public string Email { get; set; }
 
@@ -21,44 +24,39 @@ namespace AutomateDesign.Client.View
             this.Email = string.Empty;
 
             InitializeComponent();
+            this.emailInputHelper = new(this.emailBox);
             DataContext = this;
         }
 
-        private bool IsFormEnabled
+        private void ResetPasswordButtonClick(object sender, RoutedEventArgs e)
         {
-            set
-            {
-                this.emailBox.IsEnabled = value;
-                this.checkBoxButton.IsEnabled = value;
-                this.continueButton.IsEnabled = value;
-            }
+            this.users.ResetPasswordAsync(this.Email)
+               .ContinueWith(task =>
+               {
+                   if (task.IsFaulted)
+                   {
+                       ErrorMessageBox.Show(task.Exception?.InnerException);
+                       this.IsEnabled = true;
+                   }
+                   else
+                   {
+                       this.Navigator.Go(new EmailVerificationView(new PasswordResetVerification(task.Result)));
+                   }
+               },
+               TaskScheduler.FromCurrentSynchronizationContext());
+
+            this.IsEnabled = false;
+
         }
 
-        private void resetPasswordBUttonClick(object sender, RoutedEventArgs e)
+        private void BackButtonClick(object sender, RoutedEventArgs e)
         {
-            if (!(this.checkBoxButton.IsChecked ?? false))
-            {
-                this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
-            } 
-            else
-            {
-                this.users.ResetPasswordAsync(this.Email)
-                .ContinueWith(task =>
-                {
-                    if (task.IsFaulted)
-                    {
-                        ErrorMessageBox.Show(task.Exception?.InnerException);
-                        this.IsEnabled = true;
-                    }
-                    else
-                    {
-                        this.Navigator.Go(new EmailVerificationView(task.Result, true));
-                    }
-                },
-                TaskScheduler.FromCurrentSynchronizationContext());
+            this.Navigator.Back();
+        }
 
-                this.IsEnabled = false;
-            }
+        public override void OnWentBackToThis()
+        {
+            this.IsEnabled = true;
         }
     }
 }

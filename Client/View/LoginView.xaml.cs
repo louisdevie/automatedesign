@@ -1,9 +1,12 @@
 ﻿using AutomateDesign.Client.Model;
 using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
+using Grpc.Core;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace AutomateDesign.Client.View
 {
@@ -13,7 +16,7 @@ namespace AutomateDesign.Client.View
     public partial class LoginView : NavigablePage
     {
         private UsersClient users;
-        private bool isHandlingTextChanged;
+        private EmailInputHelper emailInputHelper;
 
         public string Email { get; set; }
         public string Password { get => this.passBox.Password; }
@@ -21,65 +24,76 @@ namespace AutomateDesign.Client.View
         public LoginView()
         {
             this.users = new UsersClient();
-            this.isHandlingTextChanged = false;
             this.Email = string.Empty;
 
             InitializeComponent();
+            this.emailInputHelper = new(this.emailBox);
+            this.emailInputHelper.AfterAutocompletion += this.EmailInputHelper_AfterAutocompletion;
             DataContext = this;
-
         }
 
-        private void ConnexionButtonClick(object sender, RoutedEventArgs e)
+        private void EmailInputHelper_AfterAutocompletion()
         {
+            this.passBox.Focus();
+        }
+
+        private void SignInButtonClick(object sender, RoutedEventArgs e)
+        {
+            TaskScheduler ts = TaskScheduler.FromCurrentSynchronizationContext();
+
             this.users.SignInAsync(this.Email, this.Password)
             .ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {
-                    ErrorMessageBox.Show(task.Exception?.InnerException);
-                    this.IsEnabled = true;
+                    if (task.Exception?.InnerException is RpcException rpce && rpce.StatusCode == StatusCode.FailedPrecondition)
+                    {
+                        this.users.SignUpAsync(this.Email, this.Password)
+                        .ContinueWith(task =>
+                        {
+                            if (task.IsFaulted)
+                            {
+                                ErrorMessageBox.Show(task.Exception?.InnerException);
+                                this.IsEnabled = true;
+                            }
+                            else
+                            {
+                                this.Navigator.Go(new EmailVerificationView(new SignUpEmailVerification(this.Email, this.Password, task.Result)));
+                            }
+                        },
+                        ts);
+                    }
+                    else
+                    {
+                        ErrorMessageBox.Show(task.Exception?.InnerException);
+                        this.IsEnabled = true;
+                    }
                 }
                 else
                 {
                     this.Navigator.Session = new Session(task.Result, this.Email);
                     this.Navigator.Go(new HomeView(), true);
                 }
-            },
-            TaskScheduler.FromCurrentSynchronizationContext());
+            }, ts);
 
             this.IsEnabled = false;
         }
 
-        private void passwordOulbieButtonClick(object sender, RoutedEventArgs e)
+        private void PasswordForgottenButtonClick(object sender, RoutedEventArgs e)
         {
             this.Navigator.Go(new PasswordResetView());
         }
 
-        private void pasInscritButtonClick(object sender, RoutedEventArgs e)
+        private void NoAccountButtonClick(object sender, RoutedEventArgs e)
         {
             this.Navigator.Go(new SignUpView());
         }
 
-        /// <summary>
-        /// Autocompletion de l'adresse
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AutocompletionEmailTextBox(object sender, TextChangedEventArgs e)
+        private void PasswordBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Changes.Count > 0)
+            if (e.Key == Key.Enter)
             {
-                // Évitez de traiter l'événement lorsqu'il est déjà en cours de traitement.
-                if (isHandlingTextChanged) return;
-                isHandlingTextChanged = true;
-
-                if (this.Email[^1] == '@')
-                {
-                    this.Email += "iut-dijon.u-bourgogne.fr";
-                    passBox.Focus();
-                }
-
-                isHandlingTextChanged = false;
+                this.SignInButtonClick(sender, e);
             }
         }
     }

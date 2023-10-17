@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Client.View.Helpers;
+﻿using AutomateDesign.Client.View.Controls;
+using AutomateDesign.Client.View.Navigation;
 
 namespace AutomateDesign.Client.View
 {
@@ -7,6 +8,11 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class HomeView : NavigablePage
     {
+        public override WindowPreferences Preferences => new(
+            WindowPreferences.WindowSize.FullScreen,
+            WindowPreferences.ResizeMode.Resizeable
+        );
+
         public HomeView()
         {
             InitializeComponent();

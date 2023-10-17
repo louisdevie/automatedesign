@@ -3,3 +3,12 @@ syntax = "proto3";
 package AutomateDesign;
 
 message Nothing { }
+
+message EmailAndPassword {
+    string email = 1;
+    string password = 2;
+}
+
+message UserIdOnly {
+    int32 userId = 1;
+}

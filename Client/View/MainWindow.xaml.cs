@@ -1,4 +1,4 @@
-﻿using AutomateDesign.Client.View.Helpers;
+﻿using AutomateDesign.Client.View.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace AutomateDesign.Client.View
         {
             InitializeComponent();
 
-            this.navigator = new(this.frame, new LoginView());
+            this.navigator = new(this, this.frame, new LoginView());
         }
     }
 }

@@ -1,11 +1,14 @@
-﻿using AutomateDesign.Client.Model.Network;
+﻿using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
-using AutomateDesign.Core.Users;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace AutomateDesign.Client.View
 {
@@ -15,68 +18,63 @@ namespace AutomateDesign.Client.View
     public partial class EmailVerificationView : NavigablePage
     {
         private UsersClient users;
-        private int userToVerify;
-        private bool verifyingPasswordReset;
+        private Verification verification;
 
-        public EmailVerificationView(int userToVerify, bool verifyingPasswordReset)
+        public EmailVerificationView(Verification verification)
         {
             this.users = new UsersClient();
-            this.userToVerify = userToVerify;
-            this.verifyingPasswordReset = verifyingPasswordReset;
+            this.verification = verification;
 
             InitializeComponent();
 
+            this.titleLabel.Text = this.verification.Title;
         }
 
-        public bool IsFormEnabled
+        public override void OnNavigatedToThis(bool clearedHistory)
         {
-            set
-            {
-                this.codeVerifBox.IsEnabled = value;
-                this.confirmButton.IsEnabled = value;
-            }
+            FormattedText formattedText = new(
+                "0000", CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                new Typeface(
+                    this.codeVerifBox.FontFamily,
+                    this.codeVerifBox.FontStyle,
+                    this.codeVerifBox.FontWeight,
+                    this.codeVerifBox.FontStretch
+                ),
+                this.codeVerifBox.FontSize, Brushes.Black,
+                VisualTreeHelper.GetDpi(this).PixelsPerDip
+            );
+            this.codeVerifBox.Width = formattedText.Width + 24;
         }
 
-        private void ConfirmerVerifButtonClick(object sender, RoutedEventArgs e)
+        public override void OnWentBackToThis()
+        {
+            this.Navigator.Back();
+        }
+
+        private void VerifyCode()
         {
             uint code = UInt32.Parse(this.codeVerifBox.Text);
 
-            if (this.verifyingPasswordReset)
+            this.verification.SendVerificationRequest(this.users, code)
+            .ContinueWith(task =>
             {
-                this.users.CheckResetCodeAsync(this.userToVerify, code)
-                .ContinueWith(task =>
+                if (task.IsFaulted)
                 {
-                    if (task.IsFaulted)
-                    {
-                        ErrorMessageBox.Show(task.Exception?.InnerException);
-                        this.IsFormEnabled = true;
-                    }
-                    else
-                    {
-                        this.Navigator.Go(new EditPasswordView(this.userToVerify, code));
-                    }
-                },
-                TaskScheduler.FromCurrentSynchronizationContext());
-            }
-            else
-            {
-                this.users.VerifyUserAsync(this.userToVerify, code)
-                .ContinueWith(task =>
+                    ErrorMessageBox.Show(task.Exception?.InnerException);
+                    this.IsEnabled = true;
+                }
+                else if (this.verification is PasswordResetVerification prv)
                 {
-                    if (task.IsFaulted)
-                    {
-                        ErrorMessageBox.Show(task.Exception?.InnerException);
-                        this.IsFormEnabled = true;
-                    }
-                    else
-                    {
-                        // TODO: Connexion auto
-                    }
-                },
-                TaskScheduler.FromCurrentSynchronizationContext());
-            }
+                    this.Navigator.Go(new EditPasswordView(prv.UserToVerify, code));
+                }
+                else if (this.verification is SignUpEmailVerification)
+                {
+                    this.Navigator.Go(new EmailVerificationSuccessView(this.verification));
+                }
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
 
-            this.IsFormEnabled = false;
+            this.IsEnabled = false;
         }
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace AutomateDesign.Client.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void NumbersOnly(object sender, TextCompositionEventArgs e)
         {
             foreach (char c in e.Text)
             {
@@ -96,6 +94,17 @@ namespace AutomateDesign.Client.View
             }
         }
 
+        private void CodeInputTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (this.codeVerifBox.Text.Length == 4)
+            {
+                this.VerifyCode();
+            }
+        }
 
+        private void BackButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Navigator.Back();
+        }
     }
 }

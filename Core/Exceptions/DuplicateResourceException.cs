@@ -1,9 +1,10 @@
-﻿namespace AutomateDesign.Core.Exceptions
-{
-    public class DuplicateResourceException : Exception
-    {
-        public DuplicateResourceException() : base() { }
+﻿using Grpc.Core;
 
-        public DuplicateResourceException(string message) : base(message) { }
+namespace AutomateDesign.Core.Exceptions
+{
+    public class DuplicateResourceException : RpcException
+    {
+        public DuplicateResourceException(string message)
+        : base(new Status(StatusCode.AlreadyExists, message)) { }
     }
 }

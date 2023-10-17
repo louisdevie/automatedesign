@@ -92,6 +92,8 @@ namespace AutomateDesign.Server.Services
             registration.User.IsVerified = true;
             this.userDao.Update(registration.User);
 
+            this.registrationDao.Delete(registration.User.Id);
+
             return Task.FromResult(new Nothing());
         }
 
@@ -166,6 +168,8 @@ namespace AutomateDesign.Server.Services
                             "Le code de vérification est incorrect."
                         ));
                     }
+
+                    this.registrationDao.Delete(user.Id);
 
                     break;
             }

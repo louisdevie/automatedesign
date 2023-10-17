@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using AutomateDesign.Client.Model;
 using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 
 namespace AutomateDesign.Client.View
@@ -14,25 +16,20 @@ namespace AutomateDesign.Client.View
     public partial class SignUpView : NavigablePage
     {
         private UsersClient users;
-        private bool isHandlingTextChanged;
+        private EmailInputHelper emailInputHelper;
 
         public SignUpView()
         {
             this.users = new UsersClient();
-            this.isHandlingTextChanged = false;
 
             InitializeComponent();
+            this.emailInputHelper = new(this.emailBox);
+            this.emailInputHelper.AfterAutocompletion += this.EmailInputHelper_AfterAutocompletion;
         }
 
-        private bool IsFormEnabled
+        private void EmailInputHelper_AfterAutocompletion()
         {
-            set
-            {
-                this.signUpButton.IsEnabled = value;
-                this.emailBox.IsEnabled = value;
-                this.passBox.IsEnabled = value;
-                this.passBoxConf.IsEnabled = value;
-            }
+            passBox.Focus();
         }
 
         /// <summary>
@@ -41,7 +38,7 @@ namespace AutomateDesign.Client.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ConfirmerInscriptionButtonClick(object sender, RoutedEventArgs e)
+        private void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
             string email = emailBox.Text;
             string password = passBox.Password;
@@ -73,7 +70,7 @@ namespace AutomateDesign.Client.View
                     }
                     else
                     {
-                        this.Navigator.Go(new EmailVerificationView(task.Result, false));
+                        this.Navigator.Go(new EmailVerificationView(new SignUpEmailVerification(email, password, task.Result)));
                     }
                 },
                 TaskScheduler.FromCurrentSynchronizationContext());
@@ -82,27 +79,14 @@ namespace AutomateDesign.Client.View
             }
         }
 
-        /// <summary>
-        /// Autocompletion de l'adresse
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AutocompletionEmailTextBox(object sender, TextChangedEventArgs e)
+        private void BackButtonClick(object sender, RoutedEventArgs e)
         {
-            if (e.Changes.Count > 0)
-            {
-                // Évitez de traiter l'événement lorsqu'il est déjà en cours de traitement.
-                if (isHandlingTextChanged) return;
-                isHandlingTextChanged = true;
+            this.Navigator.Back();
+        }
 
-                if (emailBox.Text[^1] == '@')
-                {
-                    emailBox.Text += "iut-dijon.u-bourgogne.fr";
-                    passBox.Focus();
-                }
-
-                isHandlingTextChanged = false;
-            }
+        public override void OnWentBackToThis()
+        {
+            this.IsEnabled = true;
         }
     }
 }
