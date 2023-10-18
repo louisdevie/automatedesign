@@ -1,14 +1,15 @@
-﻿using System.Reflection.Metadata;
+﻿using AutomateDesign.Core.Documents;
+using System.Reflection.Metadata;
 
 namespace AutomateDesign.Server.Data
 {
     public interface IAutomateDao
     {
-        public Document Create(Document document);
+        public DocumentCrypte Create(DocumentCrypte document);
 
-        public Document ReadById(int id);
+        public DocumentCrypte ReadById(int id);
 
-        public void Update(Document document);
+        public void Update(DocumentCrypte document);
 
         public void Delete(int id);
     }
