@@ -10,6 +10,6 @@ namespace AutomateDesign.Server.Data
 
         public void Update(Document document);
 
-        public void DeleteById(int id);
+        public void Delete(int id);
     }
 }
