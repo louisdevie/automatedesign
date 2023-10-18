@@ -23,6 +23,7 @@ message VerificationRequest {
 
 message SignInReply {
     string token = 2;
+    int32 userId = 3;
 }
 
 message PasswordResetRequest {

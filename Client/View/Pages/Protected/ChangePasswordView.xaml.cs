@@ -12,26 +12,22 @@ namespace AutomateDesign.Client.View
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml
     /// </summary>
-    public partial class EditPasswordView : NavigablePage
+    public partial class ChangePasswordView : NavigablePage
     {
-        private int userId;
-        private uint secretCode;
         private UsersClient users;
 
-        public bool UserAgreement { get; set; }
+        public string CurrentPassword => this.currentPasswordBox.Password;
 
-        public string Password => this.passBox.Password;
+        public string NewPassword => this.newPasswordBox.Password;
 
-        public string PasswordAgain => this.passBoxConf.Password;
+        public string NewPasswordAgain => this.newPasswordAgainBox.Password;
 
         /// <summary>
         /// Envoyer False lors d'un premier appel a la page
         /// </summary>
-        public EditPasswordView(int userId, uint secretCode)
+        public ChangePasswordView()
         {
             this.users = new UsersClient();
-            this.userId = userId;
-            this.secretCode = secretCode;
 
             DataContext = this;
             InitializeComponent();
@@ -39,21 +35,21 @@ namespace AutomateDesign.Client.View
 
         private void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (String.IsNullOrEmpty(this.Password))
+            if (String.IsNullOrEmpty(this.CurrentPassword))
             {
-                MessageBox.Show("Veuillez saisir un mot de passe", "Erreur");
+                MessageBox.Show("Veuillez saisir votre mot de passe actuel", "Erreur");
             }
-            else if (this.Password != this.PasswordAgain)
+            else if (String.IsNullOrEmpty(this.NewPassword))
+            {
+                MessageBox.Show("Veuillez saisir un nouveau mot de passe", "Erreur");
+            }
+            else if (this.NewPassword != this.NewPasswordAgain)
             {
                 MessageBox.Show("Les mots de passe ne correspondent pas", "Erreur");
             }
-            else if (!this.UserAgreement)
-            {
-                this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
-            }
             else
             {
-                this.users.ChangePasswordWithResetCodeAsync(this.userId, this.Password, this.secretCode)
+                this.users.ChangePasswordAsync(this.Navigator.Session!.UserId, this.NewPassword, this.CurrentPassword)
                 .ContinueWith(task =>
                 {
                     if (task.IsFaulted)
@@ -63,7 +59,7 @@ namespace AutomateDesign.Client.View
                     }
                     else
                     {
-                        this.Navigator.Go(new EmailVerificationSuccessView(new PasswordResetVerification(this.userId)));
+                        this.Navigator.Go(new EmailVerificationSuccessView(new PasswordChangeVerification()));
                     }
                 },
                 TaskScheduler.FromCurrentSynchronizationContext());
@@ -74,7 +70,7 @@ namespace AutomateDesign.Client.View
 
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
-            this.Navigator.Back();
+            this.Navigator.Window.Close();
         }
     }
 }

@@ -1,0 +1,132 @@
+﻿<my:NavigablePage x:Class="AutomateDesign.Client.View.EditAutomateView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AutomateDesign.Client.View"
+      xmlns:my="clr-namespace:AutomateDesign.Client.View.Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="1000" d:DesignWidth="1900"
+      Title="EditAutomateView">
+
+    <Grid Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+              Background="LightBlue"
+              >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="80"/>
+            </Grid.ColumnDefinitions>
+
+
+            <ToggleButton x:Name="BurgerButton" 
+                          Grid.Column="0"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Height="50" Width="50"
+                          Content="☰"
+                          Click="BurgerToggleButton_Click"
+                          />
+            <Canvas x:Name="BurgerMenu" 
+                    Background="LightGray" 
+                    VerticalAlignment="Top" 
+                    Margin="15,60,65,0"
+                    >
+                <StackPanel Height="Auto" Width="Auto"
+                            Orientation="Vertical">
+                    <Button Content="Ouvrir" />
+                    <Button Content=" Enregistrer " />
+                    <Button Content="Importer" />
+                    <Button Content="Exporter" />
+                </StackPanel>
+            </Canvas>
+
+            <Button Name="AddStateButton"
+                    Content="Etat"
+                    VerticalAlignment="Center" HorizontalAlignment="Left"
+                    Height="50" Width="50"
+                    Margin="10,0,0,0"
+                    Grid.Column="1" 
+                    />
+            <Button Name="AddTransButton"
+                    Content="Transition"
+                    VerticalAlignment="Center" HorizontalAlignment="Left"
+                    Height="50" Width="50"
+                    Margin="70,0,0,0"
+                    Grid.Column="1" 
+                    />
+            <Button Name="AddStartStateButton"
+                    Content="Etat de départ"
+                    VerticalAlignment="Center" HorizontalAlignment="Left"
+                    Height="50" Width="50"
+                    Margin="130,0,0,0"
+                    Grid.Column="1" 
+                    />
+            <Button Name="AddEndStateButton"
+                Content="Etat d'arrivée"
+                VerticalAlignment="Center" HorizontalAlignment="Left"
+                Height="50" Width="50"
+                Margin="190,0,0,0"
+                Grid.Column="1" 
+                />
+
+            <Button Name="ProfilButton"
+                    Content="Profil" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="50" Width="50"
+                    Grid.Column="2" Click="CliclProfilButton"
+                    />
+            <Canvas x:Name="ProfilMenu" 
+                    VerticalAlignment="Top" HorizontalAlignment="Right" 
+                    Margin="0,2,150,0" 
+                    Grid.Column="1"
+                    >
+                <StackPanel Height="Auto" Width="Auto"
+                Orientation="Vertical">
+                    <Label Name="emailLabel" 
+                           Background="LightGray" 
+                           Content="_ici_ton_mail" 
+                           />
+                    <Button Content=" Changer mot de passe " 
+                            Click="ChangePwdButton" 
+                            />
+                    <Button Content="Se Déconecter" 
+                            Click="LogOutButton" 
+                            />
+                </StackPanel>
+            </Canvas>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="250"/>
+            </Grid.ColumnDefinitions>
+            <Canvas Grid.Column="1"
+                    Background="Gray"
+                    >
+                <Label Content="Elements :" 
+                       FontSize="20"
+                       Width="Auto" Height="Auto"
+                       Grid.Column="1"
+                       Canvas.Left="10" Canvas.Top="10" 
+                       />
+                <StackPanel Name="StackPanelElements"
+                            Height="910" Width="230" 
+                            Canvas.Left="10" Canvas.Top="52" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Orientation="Vertical"
+                            >
+                    <Label Content="Element Temporaire"/>
+                    <Label Content="Element Temporaire"/>
+                    <Label Content="Element Temporaire"/>
+                    <Label Content="Element Temporaire"/>
+                    <Label Content="Element Temporaire"/>
+                </StackPanel>
+            </Canvas>
+        </Grid>
+    </Grid>
+</my:NavigablePage>
