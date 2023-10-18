@@ -1,7 +1,9 @@
-﻿using AutomateDesign.Client.View.Controls;
+﻿using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Navigation;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace AutomateDesign.Client.View
@@ -11,6 +13,7 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class HomeView : NavigablePage
     {
+        private UsersClient users;
         private List<Automate> items;
         public override WindowPreferences Preferences => new(
             WindowPreferences.WindowSize.FullScreen,
@@ -19,6 +22,8 @@ namespace AutomateDesign.Client.View
 
         public HomeView()
         {
+            this.users = new UsersClient();
+
             InitializeComponent();
             items = new List<Automate>
             {
@@ -85,7 +90,13 @@ namespace AutomateDesign.Client.View
 
         private void SignOut(object sender, RoutedEventArgs e)
         {
-
+            this.users.DisconnectAsync(this.Navigator.Session!.Token)
+            .ContinueWith(task =>
+            {
+                this.Navigator.Session = null;
+                this.Navigator.Go(new LoginView());
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
         }
     }
 
