@@ -103,5 +103,15 @@ namespace AutomateDesign.Client.Model.Network
                 }
             );
         }
+
+        public async Task DisconnectAsync(string token)
+        {
+            using var channel = this.OpenChannel();
+            var client = new Users.UsersClient(channel);
+
+            await client.DisconnectAsync(
+                new SessionUser { Session = token }
+            );
+        }
     }
 }

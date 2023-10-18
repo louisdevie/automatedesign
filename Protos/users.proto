@@ -14,6 +14,8 @@ service Users {
     rpc ChangePassword (PasswordChangeRequest) returns (Nothing);
     rpc ResetPassword (PasswordResetRequest) returns (UserIdOnly);
     rpc CheckResetCode (VerificationRequest) returns (Nothing);
+
+    rpc Disconnect (SessionUser) returns (Nothing);
 }
 
 message VerificationRequest {
@@ -37,4 +39,8 @@ message PasswordChangeRequest {
         string currentPassword = 3;
         uint32 secretCode = 4;
     }
+}
+
+message SessionUser{
+    string Session = 1; 
 }

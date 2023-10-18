@@ -34,10 +34,11 @@ namespace AutomateDesign.Client.View.Navigation
             switch (this.WindowSizePreference)
             {
                 case WindowSize.Small:
-                    window.Width = 800;
-                    window.Height = 600;
-                    window.Left = (SystemParameters.PrimaryScreenWidth - 800) / 2;
-                    window.Top = (SystemParameters.PrimaryScreenHeight - 600) / 2;
+                    window.Width = 400;
+                    window.Height = 550;
+                    window.Left = (SystemParameters.PrimaryScreenWidth - 400) / 2;
+                    window.Top = (SystemParameters.PrimaryScreenHeight - 550) / 2;
+                    window.WindowState = WindowState.Normal;
                     break;
 
                 case WindowSize.FullScreen:
