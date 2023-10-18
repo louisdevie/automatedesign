@@ -240,5 +240,13 @@ namespace AutomateDesign.Server.Services
 
             return Task.FromResult(new UserIdOnly { UserId = user.Id });
         }
+
+        public override Task<Nothing> Disconnect(SessionUser request, ServerCallContext context)
+        {
+
+            sessionDao.Delete(request.Session);
+            
+            return Task.FromResult(new Nothing());
+        }
     }
 }
