@@ -31,19 +31,36 @@ namespace AutomateDesign.Client.View
         {
             InitializeComponent();
             BurgerMenu.Visibility = Visibility.Collapsed;
-
+            ProfilMenu.Visibility = Visibility.Collapsed;
         }
 
         private void BurgerToggleButton_Click(object sender, RoutedEventArgs e)
         {
-            if (BurgerMenu.Visibility == Visibility.Visible)
+            
+        }
+
+        private void CliclProfilButton(object sender, RoutedEventArgs e)
+        {
+            if (ProfilMenu.Visibility == Visibility.Visible)
             {
-                BurgerMenu.Visibility = Visibility.Collapsed;
+                ProfilMenu.Visibility = Visibility.Collapsed;
             }
             else
             {
-                BurgerMenu.Visibility = Visibility.Visible;
+                //this.emailLabel.Content = this.Navigator.Session.UserEmail.Split('@')[0];
+                this.emailLabel.Content = "automate.design";
+                ProfilMenu.Visibility = Visibility.Visible;
             }
+        }
+
+        private void LogOutButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ChangePwdButton(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
