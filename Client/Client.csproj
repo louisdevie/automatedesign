@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="View\Images\AutomateEx.png" />
+    <None Remove="View\Images\ExAutomate.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Remove="HomeView.xaml" />
     <Page Remove="LoginView.xaml" />
     <Page Remove="ResetPasswordView.xaml" />
@@ -23,6 +28,18 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\GrpcNetworkClient\ClientNetwork.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="View\Images\AutomateEx.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="View\Images\ExAutomate.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
