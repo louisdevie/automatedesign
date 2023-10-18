@@ -1,17 +1,15 @@
-﻿namespace AutomateDesign.Server.Data
+﻿using System.Reflection.Metadata;
+
+namespace AutomateDesign.Server.Data
 {
     public interface IAutomateDao
     {
-        public Session Create(Session session);
+        public Document Create(Document document);
 
-        public Session ReadByToken(string token);
+        public Document ReadById(int id);
 
-        /// <summary>
-        /// Mets à jour la date de dernière utilisation.
-        /// </summary>
-        /// <param name="session">La session à mettre à jour.</param>
-        public void UpdateLastUse(Session session);
+        public void Update(Document document);
 
-        public void Delete(string token);
+        public void DeleteById(int id);
     }
 }
