@@ -50,10 +50,10 @@
                            Content="_ici_ton_mail" 
                            />
                     <Button Content=" Changer mot de passe " 
-                            Click="ChangePwdButton" 
+                            Click="ChangePassword" 
                             />
                     <Button Content="Se Déconecter" 
-                            Click="LogOutButton" 
+                            Click="SignOut" 
                             />
                 </StackPanel>
             </Canvas>
@@ -69,7 +69,7 @@
                 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Grid.Row="0" MaxWidth="500">
+                        <Grid MaxWidth="500">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*"/>
                                 <RowDefinition Height="*"/>
@@ -81,7 +81,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Button Name="btn1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,20,0">
-                                <Image Source="./Images/AutomateEx.png"></Image>
+                                <Image Source="pack://application:,,,/View/Images/AutomateEx.png"></Image>
                             </Button>
                             <TextBlock FontSize="25" Text="{Binding Name}" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
                             <TextBlock FontSize="25" Text="{Binding Date}" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0"/>

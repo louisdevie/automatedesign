@@ -31,7 +31,6 @@ namespace AutomateDesign.Client.View
 
             DataContext = this;
             InitializeComponent();
-
         }
 
         private void ContinueButtonClick(object sender, RoutedEventArgs e)

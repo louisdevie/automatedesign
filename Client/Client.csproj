@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Resource Include="View\Images\AutomateEx.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 

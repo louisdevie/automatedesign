@@ -20,26 +20,28 @@ namespace AutomateDesign.Client.View
         public HomeView()
         {
             InitializeComponent();
-            items = new List<Automate>();
-            items.Add(new Automate("auto1", "16/10/2023"));
-            items.Add(new Automate("auto2", "17/10/2023"));
-            items.Add(new Automate("auto3", "18/10/2023"));
-            items.Add(new Automate("auto4", "18/10/2023"));
-            items.Add(new Automate("auto5", "18/10/2023"));
-            items.Add(new Automate("auto6", "18/10/2023"));
-            items.Add(new Automate("auto7", "18/10/2023"));
-            items.Add(new Automate("auto8", "18/10/2023"));
-            items.Add(new Automate("auto9", "18/10/2023"));
-            items.Add(new Automate("auto10", "18/10/2023"));
-            items.Add(new Automate("auto11", "18/10/2023"));
+            items = new List<Automate>
+            {
+                new Automate("auto1", "16/10/2023"),
+                new Automate("auto2", "17/10/2023"),
+                new Automate("auto3", "18/10/2023"),
+                new Automate("auto4", "18/10/2023"),
+                new Automate("auto5", "18/10/2023"),
+                new Automate("auto6", "18/10/2023"),
+                new Automate("auto7", "18/10/2023"),
+                new Automate("auto8", "18/10/2023"),
+                new Automate("auto9", "18/10/2023"),
+                new Automate("auto10", "18/10/2023"),
+                new Automate("auto11", "18/10/2023")
+            };
 
             AumateList.ItemsSource = items;
-           
+
         }
 
         private void HaveFocusRecherche(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            if (this.TextBoxRecherche.Text == "Rechercher") 
+            if (this.TextBoxRecherche.Text == "Rechercher")
             {
                 this.TextBoxRecherche.Text = "";
             }
@@ -47,7 +49,8 @@ namespace AutomateDesign.Client.View
 
         private void LostFocusRecherche(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.TextBoxRecherche.Text == "") {
+            if (this.TextBoxRecherche.Text == "")
+            {
                 this.TextBoxRecherche.Focus();
                 this.TextBoxRecherche.Text = "Rechercher";
             }
@@ -71,6 +74,19 @@ namespace AutomateDesign.Client.View
                 ProfilMenu.Visibility = Visibility.Visible;
             }
         }
+
+        private void ChangePassword(object sender, RoutedEventArgs e)
+        {
+            ChangePasswordPopup popup = new(this.Navigator.Session!);
+            popup.Owner = this.Navigator.Window;
+
+            popup.ShowDialog();
+        }
+
+        private void SignOut(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
     public class Automate
@@ -79,11 +95,12 @@ namespace AutomateDesign.Client.View
         private string date;
         public string Name { get => this.name; set => this.name = value; }
         public string Date { get => this.date; set => this.date = value; }
-        public Automate(string name, string date) {
+        public Automate(string name, string date)
+        {
             this.name = name;
             this.date = date;
         }
 
-     
+
     }
 }

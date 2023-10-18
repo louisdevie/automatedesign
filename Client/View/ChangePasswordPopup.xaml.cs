@@ -15,6 +15,8 @@ namespace AutomateDesign.Client.View
 
         public ChangePasswordPopup(Session session)
         {
+            InitializeComponent();
+
             this.navigator = new(this, this.daFrame, new ChangePasswordView());
             this.navigator.Session = session;
         }
