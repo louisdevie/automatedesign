@@ -18,7 +18,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="500"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="500"/>
+                <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
 
             <Button Content="L" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
@@ -32,8 +32,31 @@
             />
             <Button Content="X" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="479,0,0,0"/>
 
-            <Button Content="Profil" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,50,0"/>
-
+            <Button Name="ProfilButton"
+                    Content="Profil" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="50" Width="50"
+                    Grid.Column="2" Click="CliclProfilButton"
+                    />  
+            <Canvas x:Name="ProfilMenu" 
+                    VerticalAlignment="Top" HorizontalAlignment="Right" 
+                    Margin="0,2,150,0" 
+                    Grid.Column="1"
+                    >   
+                <StackPanel Height="Auto" Width="Auto"
+                            Orientation="Vertical">
+                    <Label Name="emailLabel" 
+                           Background="LightGray" 
+                           Content="_ici_ton_mail" 
+                           />
+                    <Button Content=" Changer mot de passe " 
+                            Click="ChangePwdButton" 
+                            />
+                    <Button Content="Se Déconecter" 
+                            Click="LogOutButton" 
+                            />
+                </StackPanel>
+            </Canvas>
         </Grid>
         <ScrollViewer PanningMode="VerticalOnly" Grid.Row="1">
             <ItemsControl x:Name="AumateList">

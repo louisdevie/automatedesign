@@ -2,6 +2,7 @@
 using AutomateDesign.Client.View.Navigation;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 
 namespace AutomateDesign.Client.View
 {
@@ -55,6 +56,20 @@ namespace AutomateDesign.Client.View
         private void InitializationAutomate()
         {
 
+        }
+
+        private void CliclProfilButton(object sender, RoutedEventArgs e)
+        {
+            if (ProfilMenu.Visibility == Visibility.Visible)
+            {
+                ProfilMenu.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                //this.emailLabel.Content = this.Navigator.Session.UserEmail.Split('@')[0];
+                this.emailLabel.Content = "automate.design";
+                ProfilMenu.Visibility = Visibility.Visible;
+            }
         }
     }
 
