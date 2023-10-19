@@ -1,4 +1,5 @@
 ﻿using AutomateDesign.Client.View.Controls;
+using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Client.View.Navigation;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,11 @@ namespace AutomateDesign.Client.View
         private void ChangePwdButton(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void AddStateButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.diagramEditor.AddShape(new DiagramState());
         }
     }
 }

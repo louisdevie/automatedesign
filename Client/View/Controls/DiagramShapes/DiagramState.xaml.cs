@@ -1,5 +1,4 @@
-﻿using AutomateDesign.Client.View.Navigation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,22 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Controls.DiagramShapes
 {
     /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
+    /// Logique d'interaction pour DiagramState.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DiagramState : DiagramShape
     {
-        private Navigator navigator;
-
-        public MainWindow()
+        public DiagramState()
         {
             InitializeComponent();
-
-            this.navigator = new(this, this.frame, new EditAutomateView());
         }
     }
 }

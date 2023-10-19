@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace AutomateDesign.Client.Model
+namespace AutomateDesign.Client.Model.Verifications
 {
     internal class PasswordChangeVerification : Verification
     {

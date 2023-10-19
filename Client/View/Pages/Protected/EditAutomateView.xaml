@@ -9,7 +9,7 @@
       d:DesignHeight="1000" d:DesignWidth="1900"
       Title="EditAutomateView">
 
-    <Grid Background="LightGray">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
@@ -22,7 +22,6 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
-
 
             <ToggleButton x:Name="BurgerButton" 
                           Grid.Column="0"
@@ -51,6 +50,7 @@
                     Height="50" Width="50"
                     Margin="10,0,0,0"
                     Grid.Column="1" 
+                    Click="AddStateButtonClick"
                     />
             <Button Name="AddTransButton"
                     Content="Transition"
@@ -105,7 +105,10 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
-            <Canvas Grid.Column="1"
+
+            <my:DiagramEditor Grid.Column="0" x:Name="diagramEditor"></my:DiagramEditor>
+
+                <Canvas Grid.Column="1"
                     Background="Gray"
                     >
                 <Label Content="Elements :" 
