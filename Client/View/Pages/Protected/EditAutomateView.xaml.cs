@@ -5,6 +5,8 @@ using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Core.Documents;
+using AutomateDesign.Client.View.Controls;
+using AutomateDesign.Client.View.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +58,6 @@ namespace AutomateDesign.Client.View
 
         private void BurgerToggleButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)
