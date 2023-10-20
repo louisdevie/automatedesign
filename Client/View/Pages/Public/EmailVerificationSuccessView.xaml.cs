@@ -1,9 +1,9 @@
-﻿using AutomateDesign.Client.Model;
+﻿using AutomateDesign.Client.Model.Verifications;
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Controls;
-using System.Diagnostics.Eventing.Reader;
 using System.Threading.Tasks;
 using System.Windows;
+using AutomateDesign.Client.Model;
 
 namespace AutomateDesign.Client.View
 {

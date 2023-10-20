@@ -37,6 +37,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="View\Helpers\SuggestionInputDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="View\Images\ExAutomate.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

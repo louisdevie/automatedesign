@@ -1,4 +1,4 @@
-﻿using AutomateDesign.Client.Model;
+﻿using AutomateDesign.Client.Model.Verifications;
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;

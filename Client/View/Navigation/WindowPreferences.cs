@@ -4,6 +4,11 @@ namespace AutomateDesign.Client.View.Navigation
 {
     public class WindowPreferences
     {
+        private const double SMALL_WINDOW_WIDTH = 400;
+        private const double SMALL_WINDOW_HEIGHT = 600;
+        private const double LARGE_WINDOW_DEFAULT_WIDTH = 1200;
+        private const double LARGE_WINDOW_DEFAULT_HEIGHT = 700;
+
         public enum WindowSize { NoPreference, Small, FullScreen }
 
         public enum ResizeMode { NoPreference, Resizeable, MinimizeOnly, NoResize }
@@ -29,19 +34,28 @@ namespace AutomateDesign.Client.View.Navigation
             this.windowTitle = windowTitle;
         }
 
+        private static void ResizeWindow(Window window, double width, double height, bool recenter)
+        {
+            window.Width = width;
+            window.Height = height;
+            if (recenter)
+            {
+                window.Left = (SystemParameters.PrimaryScreenWidth - width) / 2;
+                window.Top = (SystemParameters.PrimaryScreenHeight - height) / 2;
+            }
+        }
+
         public void ApplyTo(Window window)
         {
             switch (this.WindowSizePreference)
             {
                 case WindowSize.Small:
-                    window.Width = 400;
-                    window.Height = 550;
-                    window.Left = (SystemParameters.PrimaryScreenWidth - 400) / 2;
-                    window.Top = (SystemParameters.PrimaryScreenHeight - 550) / 2;
+                    ResizeWindow(window, SMALL_WINDOW_WIDTH, SMALL_WINDOW_HEIGHT, true);
                     window.WindowState = WindowState.Normal;
                     break;
 
                 case WindowSize.FullScreen:
+                    ResizeWindow(window, LARGE_WINDOW_DEFAULT_WIDTH, LARGE_WINDOW_DEFAULT_HEIGHT, false);
                     window.WindowState = WindowState.Maximized;
                     break;
             }

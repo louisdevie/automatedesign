@@ -16,7 +16,7 @@ namespace AutomateDesign.Core.Documents
 
         public IEnumerable<State> States => this.states;
 
-        public IEnumerable<IEvent> Events => this.enumEvents;
+        public IEnumerable<EnumEvent> Events => this.enumEvents;
 
         public IEnumerable<Transition> Transitions => this.transitions;
 
