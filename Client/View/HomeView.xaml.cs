@@ -71,6 +71,16 @@ namespace AutomateDesign.Client.View
                 ProfilMenu.Visibility = Visibility.Visible;
             }
         }
+
+        private void ChangePwdButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void LogOutButton(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
     public class Automate
