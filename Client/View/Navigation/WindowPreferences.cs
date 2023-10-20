@@ -37,7 +37,7 @@ namespace AutomateDesign.Client.View.Navigation
         private static void ResizeWindow(Window window, double width, double height, bool recenter)
         {
             window.Width = width;
-            window.Height = width;
+            window.Height = height;
             if (recenter)
             {
                 window.Left = (SystemParameters.PrimaryScreenWidth - width) / 2;

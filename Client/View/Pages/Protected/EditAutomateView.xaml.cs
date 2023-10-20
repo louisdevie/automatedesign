@@ -5,8 +5,6 @@ using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Core.Documents;
-using AutomateDesign.Client.View.Controls;
-using AutomateDesign.Client.View.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

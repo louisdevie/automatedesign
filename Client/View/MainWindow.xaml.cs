@@ -14,7 +14,7 @@ namespace AutomateDesign.Client.View
         {
             InitializeComponent();
 
-            this.navigator = new(this, this.frame, new EditAutomateView());
+            this.navigator = new(this, this.frame, new LoginView());
         }
     }
 }
