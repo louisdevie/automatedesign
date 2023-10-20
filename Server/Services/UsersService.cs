@@ -120,7 +120,7 @@ namespace AutomateDesign.Server.Services
             Session session = new Session(user);
             this.sessionDao.Create(session);
 
-            return Task.FromResult(new SignInReply { Token = session.Token });
+            return Task.FromResult(new SignInReply { Token = session.Token, UserId = user.Id });
         }
 
         public override Task<Nothing> ChangePassword(PasswordChangeRequest request, ServerCallContext context)
@@ -175,6 +175,7 @@ namespace AutomateDesign.Server.Services
             }
 
             user.Password = HashedPassword.FromPlain(request.NewPassword);
+            this.userDao.Update(user);
 
             return Task.FromResult(new Nothing());
         }
@@ -239,6 +240,14 @@ namespace AutomateDesign.Server.Services
             });
 
             return Task.FromResult(new UserIdOnly { UserId = user.Id });
+        }
+
+        public override Task<Nothing> Disconnect(SessionUser request, ServerCallContext context)
+        {
+
+            sessionDao.Delete(request.Session);
+            
+            return Task.FromResult(new Nothing());
         }
     }
 }

@@ -65,7 +65,7 @@ namespace AutomateDesign.Client.View
                 }
                 else if (this.verification is PasswordResetVerification prv)
                 {
-                    this.Navigator.Go(new EditPasswordView(prv.UserToVerify, code));
+                    this.Navigator.Go(new EditPasswordView(prv, prv.UserToVerify, code));
                 }
                 else if (this.verification is SignUpEmailVerification)
                 {

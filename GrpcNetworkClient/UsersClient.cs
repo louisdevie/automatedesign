@@ -34,20 +34,18 @@ namespace AutomateDesign.Client.Model.Network
             );
         }
 
-        public async Task<string> SignInAsync(string email, string password)
+        public async Task<SignInReply> SignInAsync(string email, string password)
         {
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);
 
-            SignInReply reply = await client.SignInAsync(
+            return await client.SignInAsync(
                 new EmailAndPassword
                 {
                     Email = email,
                     Password = password
                 }
             );
-
-            return reply.Token;
         }
 
         public async Task ChangePasswordAsync(int userId, string newPassword, string currentPassword)
@@ -103,6 +101,16 @@ namespace AutomateDesign.Client.Model.Network
                     UserId = userId,
                     SecretCode= resetCode
                 }
+            );
+        }
+
+        public async Task DisconnectAsync(string token)
+        {
+            using var channel = this.OpenChannel();
+            var client = new Users.UsersClient(channel);
+
+            await client.DisconnectAsync(
+                new SessionUser { Session = token }
             );
         }
     }

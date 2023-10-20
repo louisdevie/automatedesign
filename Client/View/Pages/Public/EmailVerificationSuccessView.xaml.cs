@@ -23,16 +23,26 @@ namespace AutomateDesign.Client.View
             InitializeComponent();
             this.successMessage.Text = this.verification.SuccessMessage;
 
-            if (this.verification is SignUpEmailVerification signUpEmailVerification)
+            if (this.verification is SignUpEmailVerification)
             {
                 this.continueButton.Content = "Commencer";
                 this.continueButton.Click += this.AutoSignIn;
             }
-            else
+            else if (this.verification is PasswordResetVerification)
             {
                 this.continueButton.Content = "Connexion";
                 this.continueButton.Click += this.BackToSignIn;
             }
+            else if (this.verification is PasswordChangeVerification)
+            {
+                this.continueButton.Content = "Terminer";
+                this.continueButton.Click += this.CloseWindow;
+            }
+        }
+
+        private void CloseWindow(object sender, RoutedEventArgs e)
+        {
+            this.Navigator.Window.Close();
         }
 
         private void BackToSignIn(object sender, RoutedEventArgs e)
@@ -54,7 +64,7 @@ namespace AutomateDesign.Client.View
                     }
                     else
                     {
-                        this.Navigator.Session = new Session(task.Result, verif.SignUpEmail);
+                        this.Navigator.Session = new Session(task.Result.Token, task.Result.UserId, verif.SignUpEmail);
                         this.Navigator.Go(new HomeView(), true);
                     }
                 },

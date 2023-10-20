@@ -27,6 +27,8 @@ namespace AutomateDesign.Client.View.Navigation
 
         public Session? Session { get => this.session; set => this.session = value; }
 
+        public Window Window => this.window;
+
 #pragma warning disable CS8618 // `current` est bien assigné
         public Navigator(Window window, Frame frame, INavigable initialPage)
         {

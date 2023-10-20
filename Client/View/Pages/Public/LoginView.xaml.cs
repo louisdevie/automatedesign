@@ -2,6 +2,7 @@
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
+using AutomateDesign.Client.View.Navigation;
 using Grpc.Core;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,6 +21,8 @@ namespace AutomateDesign.Client.View
 
         public string Email { get; set; }
         public string Password { get => this.passBox.Password; }
+
+        public override WindowPreferences Preferences => new(WindowPreferences.WindowSize.Small, WindowPreferences.ResizeMode.MinimizeOnly);
 
         public LoginView()
         {
@@ -71,7 +74,7 @@ namespace AutomateDesign.Client.View
                 }
                 else
                 {
-                    this.Navigator.Session = new Session(task.Result, this.Email);
+                    this.Navigator.Session = new Session(task.Result.Token, task.Result.UserId, this.Email);
                     this.Navigator.Go(new HomeView(), true);
                 }
             }, ts);
