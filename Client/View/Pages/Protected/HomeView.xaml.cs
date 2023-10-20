@@ -15,6 +15,7 @@ namespace AutomateDesign.Client.View
     {
         private UsersClient users;
         private List<Automate> items;
+
         public override WindowPreferences Preferences => new(
             WindowPreferences.WindowSize.FullScreen,
             WindowPreferences.ResizeMode.Resizeable
