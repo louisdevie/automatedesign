@@ -1,0 +1,49 @@
+﻿<Window x:Class="AutomateDesign.Client.View.Helpers.InputDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutomateDesign.Client.View.Helpers"
+        mc:Ignorable="d"
+        Title="Input Dialog"
+        Height="200" Width="300" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Enter a value:"
+                   Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"
+                   x:Name="prompt"
+                   Style="{StaticResource Prompt}"
+                   VerticalAlignment="Bottom"/>
+
+        <TextBox x:Name="inputTextBox"
+                 Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
+                 Style="{StaticResource TextInput}"
+                 VerticalAlignment="Top"/>
+        
+        <Button x:Name="okButton"
+                Content="OK"
+                Click="OkButtonClick"
+                Style="{StaticResource AccentedButton}"
+                Grid.Column="2" Grid.Row="2"
+                VerticalAlignment="Bottom"/>
+
+        <Button x:Name="cancelButton"
+                Content="Annuler"
+                Click="CancelButtonClick"
+                Style="{StaticResource NormalButton}"
+                Grid.Column="1" Grid.Row="2"
+                Margin="0 0 16 0"
+                VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

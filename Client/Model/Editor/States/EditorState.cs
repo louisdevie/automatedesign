@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace AutomateDesign.Client.Model.Editor.States
 {
-    public abstract class State
+    public abstract class EditorState
     {
         public abstract string Description { get; }
 
-        public abstract State Next(Event e);
+        public abstract EditorState Next(EditorEvent e);
 
-        public abstract void Action(Event e, EditorContext ctx);
+        public abstract void Action(EditorEvent e, EditorContext ctx);
     }
 }

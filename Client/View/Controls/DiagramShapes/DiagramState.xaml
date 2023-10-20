@@ -18,8 +18,13 @@
         <Ellipse Fill="White"
                  StrokeThickness="2"
                  Stroke="Black"
-                 Cursor="SizeAll"
+                 x:Name="mainShape"
                  Grid.Row="0" Grid.Column="0"/>
+
+        <TextBlock Text="{Binding Path=Name}"
+                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="16"
+                   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
 
     </Grid>
 </local:DiagramShape>

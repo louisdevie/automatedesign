@@ -13,6 +13,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0"
               Background="LightBlue"
@@ -57,8 +58,10 @@
                     VerticalAlignment="Center" HorizontalAlignment="Left"
                     Height="50" Width="50"
                     Margin="70,0,0,0"
-                    Grid.Column="1" 
+                    Grid.Column="1"
+                    Click="AddTransitionButtonClick"
                     />
+            
             <Button Name="AddStartStateButton"
                     Content="Etat de départ"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
@@ -131,5 +134,10 @@
                 </StackPanel>
             </Canvas>
         </Grid>
+
+        <StatusBar Grid.Row="2" FontSize="14" Padding="10 4">
+            <StatusBarItem x:Name="status" HorizontalAlignment="Left"/>
+        </StatusBar>
+        
     </Grid>
 </my:NavigablePage>

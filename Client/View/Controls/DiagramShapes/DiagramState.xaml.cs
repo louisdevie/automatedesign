@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutomateDesign.Core.Documents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,26 @@ namespace AutomateDesign.Client.View.Controls.DiagramShapes
     /// </summary>
     public partial class DiagramState : DiagramShape
     {
-        public DiagramState()
+        private State model;
+        private HashSet<DiagramTransition> attachedTransitions;
+
+        public State Model => this.model;
+
+        public IEnumerable<DiagramTransition> AttachedTransitions => this.attachedTransitions;
+
+        public override Shape MainShape => this.mainShape;
+
+        public DiagramState(State model)
         {
+            this.model = model;
+            this.attachedTransitions = new();
+
+            DataContext = this.model;
             InitializeComponent();
         }
+
+        public void AttachTransition(DiagramTransition transition) => this.attachedTransitions.Add(transition);
+
+        public void DetachTransition(DiagramTransition transition) => this.attachedTransitions.Remove(transition);
     }
 }
