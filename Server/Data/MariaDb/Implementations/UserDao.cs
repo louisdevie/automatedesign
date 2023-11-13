@@ -9,6 +9,11 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
     {
         public UserDao(DatabaseConnector connector) : base(connector) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public User Create(User user)
         {
             using MySqlConnection connection = Connect();
