@@ -1,7 +1,7 @@
 ﻿using AutomateDesign.Client.Model.Network;
 using System.Threading.Tasks;
 
-namespace AutomateDesign.Client.Model
+namespace AutomateDesign.Client.Model.Verifications
 {
     public abstract class Verification
     {
