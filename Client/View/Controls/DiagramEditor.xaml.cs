@@ -52,7 +52,7 @@ namespace AutomateDesign.Client.View.Controls
         public void AddShape(DiagramTransition transition)
         {
             this.AddShape((DiagramShape)transition);
-            Canvas.SetZIndex(transition, -1);
+            Panel.SetZIndex(transition, -1);
             transition.Reattach(this);
         }
 
@@ -109,7 +109,7 @@ namespace AutomateDesign.Client.View.Controls
         private void CanvasMouseMove(object sender, MouseEventArgs e)
         {
             if (!this.selectionMode
-                && sender is DiagramShape draggableControl
+                && sender is DiagramState draggableControl
                 && this.isDragging
                 && this.originTT is not null
                 && this.clickPosition is not null)
@@ -119,13 +119,10 @@ namespace AutomateDesign.Client.View.Controls
                 transform.X = this.originTT.X + (currentPosition.X - this.clickPosition.Value.X);
                 transform.Y = this.originTT.Y + (currentPosition.Y - this.clickPosition.Value.Y);
                 draggableControl.RenderTransform = new TranslateTransform(transform.X, transform.Y);
-                
-                if (draggableControl is DiagramState state)
+
+                foreach (var transition in draggableControl.AttachedTransitions)
                 {
-                    foreach (var transition in state.AttachedTransitions)
-                    {
-                        transition.Redraw();
-                    }
+                    transition.Redraw();
                 }
             }
         }

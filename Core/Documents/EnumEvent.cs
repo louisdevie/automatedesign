@@ -23,6 +23,8 @@ namespace AutomateDesign.Core.Documents
 
         public int Order => 0;
 
+        public string DisplayName => this.Name;
+
         #endregion
 
         public EnumEvent(int id, string name)

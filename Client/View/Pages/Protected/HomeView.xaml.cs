@@ -27,6 +27,7 @@ namespace AutomateDesign.Client.View
             InitializeComponent();
             items = new List<Automate>
             {
+                new Automate("new", ""),
                 new Automate("auto1", "16/10/2023"),
                 new Automate("auto2", "17/10/2023"),
                 new Automate("auto3", "18/10/2023"),
@@ -64,6 +65,11 @@ namespace AutomateDesign.Client.View
         private void InitializationAutomate()
         {
 
+        }
+
+        private void NewDocumentClick(object sender, RoutedEventArgs e)
+        {
+            this.Navigator.Go(new EditAutomateView());
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)

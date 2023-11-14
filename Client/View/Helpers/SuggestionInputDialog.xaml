@@ -27,7 +27,7 @@
                    VerticalAlignment="Bottom"/>
 
         <ComboBox x:Name="inputComboBox"
-                  IsEditable="True"
+                  IsEditable="True" ItemsSource="{Binding Path=Suggestions}"
                   Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
                   VerticalAlignment="Top"/>
         

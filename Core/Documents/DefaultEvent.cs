@@ -3,5 +3,7 @@
     public class DefaultEvent : IEvent
     {
         public int Order => 1_000_000_000;
+
+        public string DisplayName => "*";
     }
 }

@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace AutomateDesign.Client.View.Helpers
 {
-    internal class ErrorMessageBox
+    internal static class ErrorMessageBox
     {
         public static void Show(Exception? error)
         {
