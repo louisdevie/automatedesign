@@ -9,55 +9,13 @@
       d:DesignHeight="1000" d:DesignWidth="1900"
       Title="HomeView">
 
+    <!--Page-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="500"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="80"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Content="L" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
-            <TextBox 
-                x:Name="TextBoxRecherche"
-                Grid.Column="0" 
-                Width="auto" Height="auto" MaxLength="50"
-                VerticalAlignment="Center" 
-                Text="Rechercher" 
-                GotKeyboardFocus="HaveFocusRecherche" LostFocus="LostFocusRecherche" Margin="26,0,26,0"
-            />
-            <Button Content="X" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="479,0,0,0"/>
-
-            <Button Name="ProfilButton"
-                    Content="Profil" 
-                    HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Height="50" Width="50"
-                    Grid.Column="2" Click="CliclProfilButton"
-                    />  
-            <Canvas x:Name="ProfilMenu" 
-                    VerticalAlignment="Top" HorizontalAlignment="Right" 
-                    Margin="0,2,150,0" 
-                    Grid.Column="1"
-                    >   
-                <StackPanel Height="Auto" Width="Auto"
-                            Orientation="Vertical">
-                    <Label Name="emailLabel" 
-                           Background="LightGray" 
-                           Content="_ici_ton_mail" 
-                           />
-                    <Button Content=" Changer mot de passe " 
-                            Click="ChangePwdButton" 
-                            />
-                    <Button Content="Se Déconecter" 
-                            Click="LogOutButton" 
-                            />
-                </StackPanel>
-            </Canvas>
-        </Grid>
+        <!--Zone principale-->
         <ScrollViewer PanningMode="VerticalOnly" Grid.Row="1">
             <ItemsControl x:Name="AumateList">
                 
@@ -91,5 +49,51 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+        <!--Barre du haut-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="80"/>
+            </Grid.ColumnDefinitions>
+            <!--Zone de recherche--> 
+            <Button Content="L" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBox 
+                x:Name="TextBoxRecherche"
+                Grid.Column="0" 
+                Width="auto" Height="auto" MaxLength="50"
+                VerticalAlignment="Center" 
+                Text="Rechercher" 
+                GotKeyboardFocus="HaveFocusRecherche" LostFocus="LostFocusRecherche" Margin="26,0,26,0"
+            />
+            <Button Content="X" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="479,0,0,0"/>
+            
+            <!--Menu du profil-->
+            <Button Name="ProfilButton"
+                    Content="Profil" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="50" Width="50"
+                    Grid.Column="2" Click="CliclProfilButton"
+                    />
+            <Canvas x:Name="ProfilMenu" 
+                    VerticalAlignment="Top" HorizontalAlignment="Right" 
+                    Margin="0,65,55,0" 
+                    Grid.Column="1"
+                    >   
+                <StackPanel Height="Auto" Width="Auto"
+                            Orientation="Vertical">
+                    <Label Name="emailLabel" 
+                           Background="LightGray" 
+                           Content="_ici_ton_mail" 
+                           />
+                    <Button Content=" Changer mot de passe " 
+                            Click="ChangePwdButton" 
+                            />
+                    <Button Content="Se Déconecter" 
+                            Click="LogOutButton" 
+                            />
+                </StackPanel>
+            </Canvas>
+        </Grid>
     </Grid>
 </my:NavigablePage>
