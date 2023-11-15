@@ -35,5 +35,7 @@
             this.name = name;
             this.kind = kind;
         }
+
+        public State() { }
     }
 }
