@@ -24,13 +24,10 @@
 
   <ItemGroup>
     <Folder Include="ClientNetwork\" />
-    <Folder Include="Client\" />
-    <Folder Include="Core\" />
     <Folder Include="Server\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\Client.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\GrpcNetworkClient\ClientNetwork.csproj" />
     <ProjectReference Include="..\Server\Server.csproj" />
