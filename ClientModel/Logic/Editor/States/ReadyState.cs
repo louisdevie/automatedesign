@@ -1,11 +1,11 @@
-﻿using AutomateDesign.Core.Documents;
-using System;
-
-namespace AutomateDesign.Client.Model.Editor.States
+﻿namespace AutomateDesign.Client.Model.Logic.Editor.States
 {
+    /// <summary>
+    /// Aucune action n'est en cours.
+    /// </summary>
     public class ReadyState : EditorState
     {
-        public override string Description => "Prêt";
+        public override string StatusMessage => "Prêt";
 
         public override void Action(EditorEvent e, EditorContext ctx)
         {
@@ -26,8 +26,8 @@ namespace AutomateDesign.Client.Model.Editor.States
             switch (e)
             {
                 case EditorEvent.CreateTransition:
-                    return new NewTransitionSelectFirstState();
-                
+                    return new NewTransitionSelectStartState();
+
                 default:
                     return this;
             }

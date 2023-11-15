@@ -1,9 +1,11 @@
 ﻿using AutomateDesign.Client.Model.Verifications;
-using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Controls;
 using System.Threading.Tasks;
 using System.Windows;
 using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.Model.Logic;
+using AutomateDesign.Client.Model.Logic.Verifications;
 
 namespace AutomateDesign.Client.View
 {

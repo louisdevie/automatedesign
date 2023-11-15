@@ -4,8 +4,14 @@ using System.Windows;
 
 namespace AutomateDesign.Client.View.Helpers
 {
+    /// <summary>
+    /// Permet d'afficher une boîte de dialogue en cas d'erreur.
+    /// </summary>
     internal static class ErrorMessageBox
     {
+        /// <summary>
+        /// Affiche une boîte de dialogue pour une erreur.
+        /// </summary>
         public static void Show(Exception? error)
         {
             string message;

@@ -1,5 +1,5 @@
-﻿using AutomateDesign.Client.Model.Editor;
-using AutomateDesign.Client.Model.Editor.States;
+﻿using AutomateDesign.Client.Model.Logic.Editor;
+using AutomateDesign.Client.Model.Logic.Editor.States;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Client.View.Helpers;
@@ -30,7 +30,7 @@ namespace AutomateDesign.Client.View
         private EditorContext context;
 
         public override WindowPreferences Preferences => new(
-            WindowPreferences.WindowSize.FullScreen,
+            WindowPreferences.WindowSize.Large,
             WindowPreferences.ResizeMode.Resizeable
         );
 
@@ -147,7 +147,7 @@ namespace AutomateDesign.Client.View
 
         public void OnStateChange(EditorState state)
         {
-            this.status.Content = state.Description;
+            this.status.Content = state.StatusMessage;
         }
 
         public void OnCreateTransition(Transition transition)

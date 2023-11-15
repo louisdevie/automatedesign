@@ -1,6 +1,5 @@
 ﻿using AutomateDesign.Client.Model;
 using AutomateDesign.Client.Model.Verifications;
-using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using AutomateDesign.Client.Model.Network;
 
 namespace AutomateDesign.Client.View
 {

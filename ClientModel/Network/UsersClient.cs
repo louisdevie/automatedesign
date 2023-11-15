@@ -2,7 +2,7 @@
 
 namespace AutomateDesign.Client.Model.Network
 {
-    public class UsersClient : Client
+    public class UsersClient : Client, IUsersClient
     {
         public async Task<int> SignUpAsync(string email, string password)
         {
@@ -99,7 +99,7 @@ namespace AutomateDesign.Client.Model.Network
                 new VerificationRequest
                 {
                     UserId = userId,
-                    SecretCode= resetCode
+                    SecretCode = resetCode
                 }
             );
         }

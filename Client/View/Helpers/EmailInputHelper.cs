@@ -3,6 +3,9 @@ using System.Windows.Controls;
 
 namespace AutomateDesign.Client.View.Helpers
 {
+    /// <summary>
+    /// Classe qui peut être attachée à une <see cref="TextBox"/> pour compléter automatiquement les e-mails.
+    /// </summary>
     public class EmailInputHelper
     {
         private TextBox input;
@@ -10,15 +13,24 @@ namespace AutomateDesign.Client.View.Helpers
 
         public delegate void AutocompletionEventHandler();
 
+        /// <summary>
+        /// Déclenché quand l'email à été complété.
+        /// </summary>
         public event AutocompletionEventHandler? AfterAutocompletion;
 
-        public EmailInputHelper(TextBox emailInput)
+        private EmailInputHelper(TextBox emailInput)
         {
             this.input = emailInput;
             this.isHandlingTextChanged = false;
 
             this.input.TextChanged += this.EmailAutocompletion;
         }
+
+        /// <summary>
+        /// Attache une instance de cette classe à une <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="emailInput"></param>
+        public static void AttachTo(TextBox emailInput) => new EmailInputHelper(emailInput);
 
         private void EmailAutocompletion(object sender, TextChangedEventArgs e)
         {

@@ -6,7 +6,7 @@ namespace AutomateDesign.Client.View
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INavigationContainer
     {
         private Navigator navigator;
 
@@ -14,7 +14,21 @@ namespace AutomateDesign.Client.View
         {
             InitializeComponent();
 
-            this.navigator = new(this, this.frame, new LoginView());
+            this.navigator = new(this, new LoginView());
+        }
+
+        public Window Window => this;
+
+        public void ApplyPreferences(WindowPreferences preferences)
+        {
+            preferences.ApplySize(this);
+            preferences.ApplyResizeMode(this);
+            preferences.ApplyTitleTo(this);
+        }
+
+        public void ChangeContent(INavigable value)
+        {
+            this.frame.Content = value;
         }
     }
 }

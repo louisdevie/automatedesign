@@ -7,7 +7,7 @@ using System.Windows.Shapes;
 namespace AutomateDesign.Client.View.Controls.DiagramShapes
 {
     /// <summary>
-    /// Logique d'interaction pour DiagramTransition.xaml
+    /// Une transition du diagramme.
     /// </summary>
     public partial class DiagramTransition : DiagramShape
     {
@@ -51,7 +51,7 @@ namespace AutomateDesign.Client.View.Controls.DiagramShapes
             return size;
         }
 
-        public void Redraw()
+        private void Redraw()
         {
             if (this.start is not null && this.end is not null)
             {
@@ -66,6 +66,11 @@ namespace AutomateDesign.Client.View.Controls.DiagramShapes
                     (this.line.Y1 + this.line.Y2 - labelSize.Height) /2
                 );
             }
+        }
+
+        public override void OnMovement()
+        {
+            this.Redraw();
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using AutomateDesign.Client.Model.Verifications;
-using AutomateDesign.Client.Model.Network;
-using AutomateDesign.Client.View.Controls;
+﻿using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.Model.Logic.Verifications;
 
 namespace AutomateDesign.Client.View
 {

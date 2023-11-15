@@ -9,7 +9,7 @@ using System.Windows.Shapes;
 namespace AutomateDesign.Client.View.Controls
 {
     /// <summary>
-    /// Logique d'interaction pour DiagramEditor.xaml
+    /// Un canvas sur lequel ont peut placer des éléments de diagramme.
     /// </summary>
     public partial class DiagramEditor : UserControl
     {
@@ -44,9 +44,9 @@ namespace AutomateDesign.Client.View.Controls
         {
             this.frontCanvas.Children.Add(shape);
             shape.ChangeMode(this.selectionMode);
-            shape.MouseLeftButtonDown += this.CanvasMouseLeftButtonDown;
-            shape.MouseLeftButtonUp += this.CanvasMouseLeftButtonUp;
-            shape.MouseMove += this.CanvasMouseMove;
+            shape.MouseLeftButtonDown += this.ShapeMouseLeftButtonDown;
+            shape.MouseLeftButtonUp += this.ShapeMouseLeftButtonUp;
+            shape.MouseMove += this.ShapeMouseMove;
         }
 
         public void AddShape(DiagramTransition transition)
@@ -68,7 +68,10 @@ namespace AutomateDesign.Client.View.Controls
             return null;
         }
 
-        private void CanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// Gère l'enfoncement du bouton gauche sur les éléments du diagramme.
+        /// </summary>
+        private void ShapeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is DiagramShape shape)
             {
@@ -86,7 +89,10 @@ namespace AutomateDesign.Client.View.Controls
             }
         }
 
-        private void CanvasMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// Gère le relâchement du bouton gauche sur les éléments du diagramme.
+        /// </summary>
+        private void ShapeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             this.isDragging = false;
             if (sender is DiagramShape shape)
@@ -106,7 +112,10 @@ namespace AutomateDesign.Client.View.Controls
             }
         }
 
-        private void CanvasMouseMove(object sender, MouseEventArgs e)
+        /// <summary>
+        /// Gère les mouvements de souris sur les éléments du diagramme.
+        /// </summary>
+        private void ShapeMouseMove(object sender, MouseEventArgs e)
         {
             if (!this.selectionMode
                 && sender is DiagramState draggableControl
@@ -119,11 +128,7 @@ namespace AutomateDesign.Client.View.Controls
                 transform.X = this.originTT.X + (currentPosition.X - this.clickPosition.Value.X);
                 transform.Y = this.originTT.Y + (currentPosition.Y - this.clickPosition.Value.Y);
                 draggableControl.RenderTransform = new TranslateTransform(transform.X, transform.Y);
-
-                foreach (var transition in draggableControl.AttachedTransitions)
-                {
-                    transition.Redraw();
-                }
+                draggableControl.OnMovement();               
             }
         }
     }

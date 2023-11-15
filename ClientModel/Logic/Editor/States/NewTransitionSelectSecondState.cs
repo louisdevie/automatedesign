@@ -1,17 +1,21 @@
-﻿using AutomateDesign.Core.Documents;
+﻿using AutomateDesign.Client.Model.Logic.Editor;
+using AutomateDesign.Core.Documents;
 
-namespace AutomateDesign.Client.Model.Editor.States
+namespace AutomateDesign.Client.Model.Logic.Editor.States
 {
-    internal class NewTransitionSelectSecondState : EditorState
+    /// <summary>
+    /// On attends que l'état de fin soit choisi pour ajouter une transition.
+    /// </summary>
+    internal class NewTransitionSelectEndState : EditorState
     {
         private State firstState;
 
-        public NewTransitionSelectSecondState(State firstState)
+        public NewTransitionSelectEndState(State firstState)
         {
             this.firstState = firstState;
         }
 
-        public override string Description => "Sélectionnez un état d'arrivée";
+        public override string StatusMessage => "Sélectionnez un état d'arrivée";
 
         public override void Action(EditorEvent e, EditorContext ctx)
         {

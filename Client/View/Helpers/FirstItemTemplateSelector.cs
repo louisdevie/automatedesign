@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace AutomateDesign.Client.View.Helpers
 {
+    /// <summary>
+    /// Permet de changer le modèle du premier élément d'un conteneur.
+    /// </summary>
     public class FirstItemTemplateSelector : DataTemplateSelector
     {
         private DataTemplate? defaultTemplate, firstItemTemplate;

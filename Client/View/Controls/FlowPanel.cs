@@ -4,18 +4,25 @@ using System.Windows;
 
 namespace AutomateDesign.Client.View.Controls
 {
+    /// <summary>
+    /// Un panneau qui arrange ses enfants dans des colonnes de taille égale.
+    /// Les colonnes ont une largeur minimum et le panel utilise le plus de colonnes possible.
+    /// C'est l'équivalent d'un <see cref="WrapPanel"/>, mais qui utilise toute la largeur disponible.
+    /// </summary>
     public class FlowPanel : Panel
     {
-        public FlowPanel()
-        {
-        }
-
+        /// <summary>
+        /// La taille minimum des colonnes.
+        /// </summary>
         public double MinimumColumnWidth
         {
             get { return (double)GetValue(MinimumColumnWidthProperty); }
             set { SetValue(MinimumColumnWidthProperty, value); }
         }
 
+        /// <summary>
+        /// La taille minimum des colonnes.
+        /// </summary>
         public static readonly DependencyProperty MinimumColumnWidthProperty
             = DependencyProperty.Register(
                 "MinimumColumnWidth",

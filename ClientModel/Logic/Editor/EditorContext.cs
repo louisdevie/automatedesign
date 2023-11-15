@@ -1,19 +1,25 @@
-﻿using AutomateDesign.Client.Model.Editor.States;
+﻿using AutomateDesign.Client.Model.Logic.Editor.States;
 using AutomateDesign.Core.Documents;
-using System;
 
-namespace AutomateDesign.Client.Model.Editor
+namespace AutomateDesign.Client.Model.Logic.Editor
 {
     public class EditorContext
     {
-        #region Attributes
+        #region State
 
         private EditorState state;
-        private Document document;
-        private IEditorUI editorUI;
-        private bool selectionModeEnabled;
 
         #endregion
+
+        #region Observable
+
+        private List<IModificationsObserver> observers;
+
+        #endregion
+
+        private Document document;
+        private IEditorUI editorUI;
+        private EditorMode mode;
 
         #region Properties
 
