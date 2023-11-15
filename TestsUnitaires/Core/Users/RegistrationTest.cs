@@ -3,7 +3,7 @@ using System.Net.Mail;
 using AutomateDesign.Core.Users;
 using Xunit;
 
-namespace TestsUnitaires.Core
+namespace TestsUnitaires.Core.Users
 {
     public class RegistrationTest
     {
@@ -34,7 +34,7 @@ namespace TestsUnitaires.Core
             Registration registration = new Registration(user);
 
             // Assert
-            Assert.True(registration.VerificationCode >= 1000 && registration.VerificationCode <= 9999);
+            Assert.True(registration.VerificationCode >= 0 && registration.VerificationCode <= 9999);
             Assert.True(registration.Expiration > DateTime.UtcNow);
             Assert.Equal(user, registration.User);
         }

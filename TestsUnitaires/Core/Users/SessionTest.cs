@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestsUnitaires.Core
+namespace TestsUnitaires.Core.Users
 {
     public class SessionTest
     {

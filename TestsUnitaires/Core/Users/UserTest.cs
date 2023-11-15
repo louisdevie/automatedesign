@@ -3,7 +3,7 @@ using AutomateDesign.Core.Users;
 using System.Net.Mail;
 using Xunit;
 
-namespace TestsUnitaires.Core
+namespace TestsUnitaires.Core.Users
 {
     public class UserTests
     {

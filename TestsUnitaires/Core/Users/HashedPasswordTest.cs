@@ -2,7 +2,7 @@
 using System.Linq;
 using AutomateDesign.Core.Users;
 
-namespace TestsUnitaires.Core
+namespace TestsUnitaires.Core.Users
 {
     public class HashedPasswordTest
     {
