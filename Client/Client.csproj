@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClientModel\ClientModel.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\GrpcNetworkClient\ClientNetwork.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,6 +9,8 @@ namespace AutomateDesign.Client.Model.Logic.Verifications
     {
         private int userToVerify;
 
+        public int UserToVerify => this.userToVerify;
+
         public PasswordResetVerification(int userToVerify)
         : base(
               title: "Vérification par mail",

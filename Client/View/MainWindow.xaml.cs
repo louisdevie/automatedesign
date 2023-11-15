@@ -1,4 +1,6 @@
-﻿using AutomateDesign.Client.View.Navigation;
+﻿using AutomateDesign.Client.DependencyInjection;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.View.Navigation;
 using System.Windows;
 
 namespace AutomateDesign.Client.View
@@ -12,6 +14,8 @@ namespace AutomateDesign.Client.View
 
         public MainWindow()
         {
+            DependencyContainer.Current.Register<IUsersClient>(new UsersClient());
+
             InitializeComponent();
 
             this.navigator = new(this, new LoginView());

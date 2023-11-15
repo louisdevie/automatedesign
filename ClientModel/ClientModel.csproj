@@ -17,6 +17,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Core\Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Protobuf Include="../Protos/helpers.proto" GrpcServices="Client" />
 		<Protobuf Include="../Protos/users.proto" GrpcServices="Client" />
 	</ItemGroup>
