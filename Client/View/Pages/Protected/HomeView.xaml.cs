@@ -1,10 +1,12 @@
 ﻿using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Navigation;
+using AutomateDesign.Core.Documents;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace AutomateDesign.Client.View
 {
@@ -14,7 +16,9 @@ namespace AutomateDesign.Client.View
     public partial class HomeView : NavigablePage
     {
         private UsersClient users;
-        private List<Automate> items;
+        private DocumentCrypte document;
+        private List<DocumentCrypte> items;
+
         public override WindowPreferences Preferences => new(
             WindowPreferences.WindowSize.FullScreen,
             WindowPreferences.ResizeMode.Resizeable
@@ -25,19 +29,9 @@ namespace AutomateDesign.Client.View
             this.users = new UsersClient();
 
             InitializeComponent();
-            items = new List<Automate>
+            items = new List<DocumentCrypte>
             {
-                new Automate("auto1", "16/10/2023"),
-                new Automate("auto2", "17/10/2023"),
-                new Automate("auto3", "18/10/2023"),
-                new Automate("auto4", "18/10/2023"),
-                new Automate("auto5", "18/10/2023"),
-                new Automate("auto6", "18/10/2023"),
-                new Automate("auto7", "18/10/2023"),
-                new Automate("auto8", "18/10/2023"),
-                new Automate("auto9", "18/10/2023"),
-                new Automate("auto10", "18/10/2023"),
-                new Automate("auto11", "18/10/2023")
+                new DocumentCrypte()
             };
 
             AumateList.ItemsSource = items;
@@ -98,18 +92,33 @@ namespace AutomateDesign.Client.View
             },
             TaskScheduler.FromCurrentSynchronizationContext());
         }
-    }
-
-    public class Automate
-    {
-        private string name;
-        private string date;
-        public string Name { get => this.name; set => this.name = value; }
-        public string Date { get => this.date; set => this.date = value; }
-        public Automate(string name, string date)
+        /// <summary>
+        /// Ouvre un menu déroulant des options
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonSettings(object sender, RoutedEventArgs e)
         {
-            this.name = name;
-            this.date = date;
+            Button btn = (Button)sender;
+            btn.ContextMenu.IsOpen = true;
+        }
+
+        private void DeleteClick(object sender, RoutedEventArgs e)
+        {
+            // Afficher une boîte de dialogue de confirmation
+            MessageBoxResult result = MessageBox.Show("Voulez-vous vraiment supprimer cet automate ?", "Confirmation de suppression", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // Supprimer l'élément
+                this.users.DeleteAutomateAsync(document.IdDoc);
+            }
+        }
+
+
+        private void EditClick(object sender, RoutedEventArgs e)
+        {
+            // Logique de modification ici
         }
 
 

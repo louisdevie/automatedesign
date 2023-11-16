@@ -85,7 +85,17 @@
                             </Button>
                             <TextBlock FontSize="25" Text="{Binding Name}" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
                             <TextBlock FontSize="25" Text="{Binding Date}" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0"/>
-                            <Button Content="..." Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="20,20,20,20"/>
+
+                            <Button Content="..." Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="20,20,20,20" Click="ButtonSettings">
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Supprimer" Click="DeleteClick"/>
+                                        <MenuItem Header="Modifier" Click="EditClick"/>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+
+
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
