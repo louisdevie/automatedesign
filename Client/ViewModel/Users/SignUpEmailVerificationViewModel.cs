@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace AutomateDesign.Client.ViewModel.Users
 {
     /// <summary>
-    /// Le modèle-vue de 
+    /// Le modèle-vue d'une vérification d'email à l'inscription.
     /// </summary>
     public class SignUpEmailVerificationViewModel : VerificationBaseViewModel
     {

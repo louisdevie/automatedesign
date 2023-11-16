@@ -9,25 +9,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.Model.Logic.Verifications;
+using AutomateDesign.Client.ViewModel.Users;
 
 namespace AutomateDesign.Client.View
 {
     /// <summary>
     /// Logique d'interaction pour EmailVerificationView.xaml
     /// </summary>
-    public partial class EmailVerificationView : NavigablePage
+    public partial class EmailVerificationView : NavigablePage, IVerificationHandler
     {
-        private UsersClient users;
-        private Verification verification;
+        private VerificationBaseViewModel viewModel;
 
-        public EmailVerificationView(Verification verification)
+        public EmailVerificationView(VerificationBaseViewModel verification)
         {
-            this.users = new UsersClient();
-            this.verification = verification;
+            this.viewModel = verification;
 
+            this.DataContext = this.viewModel;
             InitializeComponent();
-
-            this.titleLabel.Text = this.verification.Title;
         }
 
         public override void OnNavigatedToThis(bool clearedHistory)
@@ -51,30 +49,20 @@ namespace AutomateDesign.Client.View
             this.Navigator.Back();
         }
 
-        private void VerifyCode()
+        private async void VerifyCode()
         {
-            uint code = UInt32.Parse(this.codeVerifBox.Text);
-
-            this.verification.SendVerificationRequest(this.users, code)
-            .ContinueWith(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    ErrorMessageBox.Show(task.Exception?.InnerException);
-                    this.IsEnabled = true;
-                }
-                else if (this.verification is PasswordResetVerification prv)
-                {
-                    this.Navigator.Go(new EditPasswordView(prv, prv.UserToVerify, code));
-                }
-                else if (this.verification is SignUpEmailVerification)
-                {
-                    this.Navigator.Go(new EmailVerificationSuccessView(this.verification));
-                }
-            },
-            TaskScheduler.FromCurrentSynchronizationContext());
-
             this.IsEnabled = false;
+
+            try
+            {
+                await this.viewModel.SendVerificationRequestAsync();
+                viewModel.DispatchHandler(this);
+            }
+            catch (Exception error)
+            {
+                ErrorMessageBox.Show(error);
+                this.IsEnabled = true;
+            }
         }
 
         /// <summary>
@@ -105,6 +93,16 @@ namespace AutomateDesign.Client.View
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
             this.Navigator.Back();
+        }
+
+        public void Handle(SignUpEmailVerification verification)
+        {
+            this.Navigator.Go(new EmailVerificationSuccessView(this.viewModel));
+        }
+
+        public void Handle(PasswordResetVerification verification)
+        {
+            this.Navigator.Go(new NewPasswordView(this.viewModel, verification.UserToVerify, this.viewModel.CodeValue));
         }
     }
 }

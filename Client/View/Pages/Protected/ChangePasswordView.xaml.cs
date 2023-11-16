@@ -1,11 +1,10 @@
-﻿using AutomateDesign.Client.Model.Verifications;
-using AutomateDesign.Client.View.Controls;
+﻿using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.ViewModel.Users;
 
 namespace AutomateDesign.Client.View
 {
@@ -14,57 +13,57 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class ChangePasswordView : NavigablePage
     {
-        private UsersClient users;
-
-        public string CurrentPassword => this.currentPasswordBox.Password;
-
-        public string NewPassword => this.newPasswordBox.Password;
-
-        public string NewPasswordAgain => this.newPasswordAgainBox.Password;
+        private ChangePasswordViewModel viewModel;
 
         /// <summary>
         /// Envoyer False lors d'un premier appel a la page
         /// </summary>
-        public ChangePasswordView()
+        public ChangePasswordView(ChangePasswordViewModel viewModel)
         {
-            this.users = new UsersClient();
+            this.viewModel = viewModel;
 
             DataContext = this;
             InitializeComponent();
+
+            this.viewModel.CurrentPassword.Bind(this.currentPasswordBox);
+            this.viewModel.Password.Bind(this.newPasswordBox);
+            this.viewModel.Password.Bind(this.newPasswordAgainBox);
         }
 
-        private void ContinueButtonClick(object sender, RoutedEventArgs e)
+        private async void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (String.IsNullOrEmpty(this.CurrentPassword))
+            if (this.viewModel.CurrentPassword.Password != string.Empty)
             {
                 MessageBox.Show("Veuillez saisir votre mot de passe actuel", "Erreur");
             }
-            else if (String.IsNullOrEmpty(this.NewPassword))
+            else if (!this.viewModel.PasswordsNotEmpty)
             {
                 MessageBox.Show("Veuillez saisir un nouveau mot de passe", "Erreur");
             }
-            else if (this.NewPassword != this.NewPasswordAgain)
+            else if (!this.viewModel.PasswordsMatch)
             {
                 MessageBox.Show("Les mots de passe ne correspondent pas", "Erreur");
             }
             else
             {
-                this.users.ChangePasswordAsync(this.Navigator.Session!.UserId, this.NewPassword, this.CurrentPassword)
-                .ContinueWith(task =>
-                {
-                    if (task.IsFaulted)
-                    {
-                        ErrorMessageBox.Show(task.Exception?.InnerException);
-                        this.IsEnabled = true;
-                    }
-                    else
-                    {
-                        this.Navigator.Go(new EmailVerificationSuccessView(new PasswordChangeVerification()));
-                    }
-                },
-                TaskScheduler.FromCurrentSynchronizationContext());
-
                 this.IsEnabled = false;
+
+                try
+                {
+                    await this.viewModel.ChangePasswordAsync();
+                    this.Navigator.Go(
+                        new EmailVerificationSuccessView(
+                            successMessage: "Votre mot de passe à bien été changé.",
+                            continuationText: "Terminer",
+                            continuationAction: (sender, e) => this.Navigator.Window.Close()
+                        )
+                    );
+                }
+                catch (Exception error)
+                {
+                    ErrorMessageBox.Show(error);
+                    this.IsEnabled = true;
+                }
             }
         }
 

@@ -7,11 +7,17 @@ namespace AutomateDesign.Core.Documents
     /// </summary>
     public class Document
     {
+        private DocumentHeader header;
         private List<State> states;
         private List<EnumEvent> enumEvents;
         private List<Transition> transitions;
 
         private State? initialState;
+
+        /// <summary>
+        /// Les métadonnées de l'automate.
+        /// </summary>
+        public DocumentHeader Header => this.header;
 
         /// <summary>
         /// Les différents états.
@@ -33,6 +39,19 @@ namespace AutomateDesign.Core.Documents
         /// </summary>
         public Document()
         {
+            this.header = new DocumentHeader("");
+            this.states = new List<State>();
+            this.enumEvents = new List<EnumEvent>();
+            this.transitions = new List<Transition>();
+        }
+
+        /// <summary>
+        /// Crée un automate vide à partir des métadonnées fournies.
+        /// </summary>
+        /// <param name="header"></param>
+        public Document(DocumentHeader header)
+        {
+            this.header = header;
             this.states = new List<State>();
             this.enumEvents = new List<EnumEvent>();
             this.transitions = new List<Transition>();

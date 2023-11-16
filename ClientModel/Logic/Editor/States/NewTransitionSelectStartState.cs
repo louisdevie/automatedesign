@@ -11,9 +11,6 @@
         {
             switch (evt)
             {
-                case EditorEvent.SelectState selectState:
-                    ctx.StartDrawingTransition(selectState.state);
-                    break;
             }
         }
 
@@ -21,9 +18,6 @@
         {
             switch (evt)
             {
-                case EditorEvent.SelectState selectState:
-                    return new NewTransitionSelectSecondState(selectState.state);
-
                 default:
                     return this;
             }

@@ -14,6 +14,11 @@ namespace AutomateDesign.Client.ViewModel.Users
     {
         private Session session;
 
+        /// <summary>
+        /// L'addresse mail de l'utilisateur.
+        /// </summary>
+        public string UserEmail => this.session.UserEmail;
+
         public SessionViewModel(Session session)
         {
             this.session = session;

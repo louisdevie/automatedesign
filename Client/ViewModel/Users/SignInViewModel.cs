@@ -1,4 +1,5 @@
 ﻿using AutomateDesign.Client.Model.Logic;
+using AutomateDesign.Client.Model.Logic.Verifications;
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Protos;
 using System;
@@ -49,6 +50,16 @@ namespace AutomateDesign.Client.ViewModel.Users
         {
             var result = await Users.SignInAsync(this.email, this.passwordInput.Password);
             return new Session(result.Token, result.UserId, this.email);
+        }
+
+        public async Task<SignUpEmailVerificationViewModel> RetryEmailVerificationAsync()
+        {
+            int userId = await Users.SignUpAsync(this.email, this.Password.Password);
+            return new SignUpEmailVerificationViewModel(
+                new SignUpEmailVerification(userId),
+                this.email,
+                this.Password.Password
+            );
         }
 
         /// <summary>

@@ -9,12 +9,19 @@
 
         public override void Action(EditorEvent evt, EditorContext ctx)
         {
-            throw new NotImplementedException();
+            switch (evt)
+            {
+
+            }
         }
 
         public override EditorState Next(EditorEvent evt)
         {
-            throw new NotImplementedException();
+            switch (evt)
+            {
+                default:
+                    return this;
+            }
         }
     }
 }

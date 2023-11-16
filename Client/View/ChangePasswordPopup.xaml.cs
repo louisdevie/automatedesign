@@ -1,5 +1,6 @@
 ﻿using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Client.View.Navigation;
+using AutomateDesign.Client.ViewModel.Users;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -13,11 +14,11 @@ namespace AutomateDesign.Client.View
     {
         private Navigator navigator;
 
-        public ChangePasswordPopup(Session session)
+        public ChangePasswordPopup(Session? session, ChangePasswordViewModel viewModel)
         {
             InitializeComponent();
 
-            this.navigator = new(this, new ChangePasswordView());
+            this.navigator = new(this, new ChangePasswordView(viewModel));
             this.navigator.Session = session;
 
             WindowPreferences.ApplySize(WindowPreferences.WindowSize.Small, this);

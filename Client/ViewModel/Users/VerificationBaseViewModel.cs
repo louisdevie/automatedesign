@@ -26,11 +26,19 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// </summary>
         protected abstract Verification Verification { get; }
 
+        /// <inheritdoc cref="Verification.Title"/>
         public string Title => this.Verification.Title;
 
+        /// <inheritdoc cref="Verification.SuccessMessage"/>
         public string SuccessMessage => this.Verification.SuccessMessage;
 
+        /// <inheritdoc cref="Verification.Continuation"/>
         public string Continuation => this.Verification.Continuation;
+
+        /// <summary>
+        /// La valeur du code de vérification.
+        /// </summary>
+        public uint CodeValue => this.code;
 
         /// <summary>
         /// Envoie une requête pour effectuer la vérification.

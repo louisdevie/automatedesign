@@ -29,8 +29,9 @@ namespace AutomateDesign.Client.View.Helpers
         /// <summary>
         /// Attache une instance de cette classe à une <see cref="TextBox"/>.
         /// </summary>
-        /// <param name="emailInput"></param>
-        public static void AttachTo(TextBox emailInput) => new EmailInputHelper(emailInput);
+        /// <param name="emailInput">Le champ d'email.</param>
+        /// <returns>L'instance créée et attachée.</returns>
+        public static EmailInputHelper AttachTo(TextBox emailInput) => new EmailInputHelper(emailInput);
 
         private void EmailAutocompletion(object sender, TextChangedEventArgs e)
         {

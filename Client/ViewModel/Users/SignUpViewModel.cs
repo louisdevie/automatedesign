@@ -14,6 +14,7 @@ namespace AutomateDesign.Client.ViewModel.Users
     public class SignUpViewModel : NewPasswordBaseViewModel
     {
         private string email;
+        private bool warningRead;
 
         /// <summary>
         /// L'adresse mail de l'utilisateur.
@@ -24,6 +25,16 @@ namespace AutomateDesign.Client.ViewModel.Users
             set
             {
                 this.email = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public bool WarningRead
+        {
+            get => this.warningRead;
+            set
+            {
+                this.warningRead = value;
                 this.NotifyPropertyChanged();
             }
         }

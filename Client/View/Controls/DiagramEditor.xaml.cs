@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Client.View.Controls.DiagramShapes;
+﻿using AutomateDesign.Client.Model.Logic.Editor;
+using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Core.Documents;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,15 +18,15 @@ namespace AutomateDesign.Client.View.Controls
         private Point? clickPosition;
         private TranslateTransform? originTT;
         private DiagramShape? clickedOn;
-        private bool selectionMode;
+        private EditorMode mode;
 
-        public bool SelectionMode
+        public EditorMode Mode
         {
-            get => this.selectionMode;
+            get => this.mode;
             set
             {
-                this.selectionMode = value;
-                foreach (var child in this.frontCanvas.Children) (child as DiagramShape)?.ChangeMode(selectionMode);
+                this.mode = value;
+                foreach (var child in this.frontCanvas.Children) (child as DiagramShape)?.ChangeMode(mode);
             }
         }
 
@@ -37,13 +38,13 @@ namespace AutomateDesign.Client.View.Controls
             this.isDragging = false;
 
             InitializeComponent();
-            this.SelectionMode = false;
+            this.Mode = EditorMode.Move;
         }
 
         public void AddShape(DiagramShape shape)
         {
             this.frontCanvas.Children.Add(shape);
-            shape.ChangeMode(this.selectionMode);
+            shape.ChangeMode(this.mode);
             shape.MouseLeftButtonDown += this.ShapeMouseLeftButtonDown;
             shape.MouseLeftButtonUp += this.ShapeMouseLeftButtonUp;
             shape.MouseMove += this.ShapeMouseMove;
@@ -75,16 +76,18 @@ namespace AutomateDesign.Client.View.Controls
         {
             if (sender is DiagramShape shape)
             {
-                if (this.selectionMode)
+                switch (this.mode)
                 {
-                    this.clickedOn = shape;
-                }
-                else
-                {
-                    this.originTT = shape.RenderTransform as TranslateTransform ?? new TranslateTransform();
-                    this.isDragging = true;
-                    this.clickPosition = e.GetPosition(this);
-                    shape.CaptureMouse();
+                    case EditorMode.Move:
+                        this.originTT = shape.RenderTransform as TranslateTransform ?? new TranslateTransform();
+                        this.isDragging = true;
+                        this.clickPosition = e.GetPosition(this);
+                        shape.CaptureMouse();
+                        break;
+
+                    case EditorMode.Select:
+                        this.clickedOn = shape;
+                        break;
                 }
             }
         }
@@ -97,17 +100,19 @@ namespace AutomateDesign.Client.View.Controls
             this.isDragging = false;
             if (sender is DiagramShape shape)
             {
-                if (this.selectionMode)
+                switch (this.mode)
                 {
-                    if (shape == this.clickedOn)
-                    {
-                        this.OnShapeSelected?.Invoke(shape);
-                    }
-                    this.clickedOn = null;
-                }
-                else
-                {
-                    shape.ReleaseMouseCapture();
+                    case EditorMode.Move:
+                        shape.ReleaseMouseCapture();
+                        break;
+
+                    case EditorMode.Select:
+                        if (shape == this.clickedOn)
+                        {
+                            this.OnShapeSelected?.Invoke(shape);
+                        }
+                        this.clickedOn = null;
+                        break;
                 }
             }
         }
@@ -117,7 +122,7 @@ namespace AutomateDesign.Client.View.Controls
         /// </summary>
         private void ShapeMouseMove(object sender, MouseEventArgs e)
         {
-            if (!this.selectionMode
+            if (this.mode == EditorMode.Move
                 && sender is DiagramState draggableControl
                 && this.isDragging
                 && this.originTT is not null

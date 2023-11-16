@@ -1,6 +1,4 @@
-﻿using AutomateDesign.Core.Documents;
-using AutomateDesign.Core.Exceptions;
-using AutomateDesign.Core.Users;
+﻿using AutomateDesign.Core.Exceptions;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -10,7 +8,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
     {
         public AutomateDao(DatabaseConnector connector) : base(connector) { }
 
-        public DocumentCrypte Create(DocumentCrypte document)
+        public byte[] Create(byte[] document)
         {
             using MySqlConnection connection = Connect();
 
@@ -21,7 +19,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
             return document.WithId(connection.GetLastInsertId());
         }
 
-        private static DocumentCrypte Hydrate(MySqlDataReader result)
+        private static byte[] Hydrate(MySqlDataReader result)
         {
             byte[] document = new byte[32];
             result.GetBytes("document", 0, document, 0, 32);

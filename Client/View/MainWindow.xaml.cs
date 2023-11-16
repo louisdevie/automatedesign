@@ -18,7 +18,7 @@ namespace AutomateDesign.Client.View
 
             InitializeComponent();
 
-            this.navigator = new(this, new LoginView());
+            this.navigator = new(this, new SignInView());
         }
 
         public Window Window => this;

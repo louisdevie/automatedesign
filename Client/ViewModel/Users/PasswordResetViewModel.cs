@@ -1,5 +1,4 @@
-﻿using AutomateDesign.Client.Model.Network;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace AutomateDesign.Client.ViewModel.Users
 {
@@ -10,6 +9,19 @@ namespace AutomateDesign.Client.ViewModel.Users
     {
         private int userId;
         private uint verficationCode;
+        private bool userAgreement;
+
+        /// <summary>
+        /// Si l'utilisateur est bien d'accord pour réeinitialiser son mot de passe.
+        /// </summary>
+        public bool UserAgreement
+        {
+            get => this.userAgreement;
+            set {
+                this.userAgreement = value;
+                this.NotifyPropertyChanged();
+            }
+        }
 
         public PasswordResetViewModel(int userId, uint verificationCode)
         {

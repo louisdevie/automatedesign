@@ -96,7 +96,7 @@
             </Canvas>
         </Grid>
         <ScrollViewer PanningMode="VerticalOnly" Grid.Row="1">
-            <ItemsControl x:Name="AumateList" ItemTemplateSelector="{StaticResource ItemTemplateSelector}">
+            <ItemsControl x:Name="AumateList" ItemTemplateSelector="{StaticResource ItemTemplateSelector}" ItemsSource="{Binding Path=Documents}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <my:FlowPanel MinimumColumnWidth="350"/>

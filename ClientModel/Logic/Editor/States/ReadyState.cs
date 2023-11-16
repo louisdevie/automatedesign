@@ -11,13 +11,7 @@
         {
             switch (e)
             {
-                case EditorEvent.CreateState:
-                    ctx.CreateState();
-                    break;
-
-                case EditorEvent.CreateTransition:
-                    ctx.EnterSelectionMode();
-                    break;
+                
             }
         }
 
@@ -25,9 +19,6 @@
         {
             switch (e)
             {
-                case EditorEvent.CreateTransition:
-                    return new NewTransitionSelectStartState();
-
                 default:
                     return this;
             }
