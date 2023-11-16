@@ -1,4 +1,5 @@
 ﻿using AutomateDesign.Core.Documents;
+using AutomateDesign.Server.EncryptedData;
 using System.Reflection.Metadata;
 
 namespace AutomateDesign.Server.Data
@@ -6,24 +7,37 @@ namespace AutomateDesign.Server.Data
     public interface IDocumentDao
     {
         /// <summary>
-        /// Enregistre un nouveau document.
+        /// Enregistre un nouveal automate.
         /// </summary>
-        /// <param name="userId">L'identifiant de l'utilisateur à qui appartient le document.</param>
-        /// <param name="document">Le document chiffré.</param>
-        /// <returns>L'identifiant du nouveau document.</returns>
-        public int Create(int userId, byte[] document);
+        /// <param name="userId">L'identifiant de l'utilisateur à qui appartient l'automate.</param>
+        /// <param name="documentChunks">Les morceux de l'automate chiffré.</param>
+        /// <returns>L'identifiant du nouvel automate.</returns>
+        public int CreateAsync(int userId, IAsyncChunkSource documentChunks);
 
         /// <summary>
-        /// Lis le document correspondant à l'identifiant
+        /// Récupère l'automate correspondant à un identifiant.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public byte[] ReadById(int id);
+        /// <param name="documentId">L'identifiant de l'automate à lire.</param>
+        /// <returns>L'automate chiffré.</returns>
+        public IAsyncChunkSource ReadById(int documentId);
 
-        public 
+        /// <summary>
+        /// Récupère tous les automates d'un utilisateur.
+        /// </summary>
+        /// <returns>Les métadonnées des automates. Chaque morceau doit correspondre à un automate.</returns>
+        public IAsyncChunkSource ReadAllHeaders();
 
-        public void Update(int id, byte[] document);
+        /// <summary>
+        /// Enregistre un automate existant.
+        /// </summary>
+        /// <param name="documentId">L'identifiant de l'automate à mettre à jour.</param>
+        /// <param name="documentChunks">Les morceux de l'automate chiffré.</param>
+        public void Update(int documentId, IAsyncChunkSource documentChunks);
 
-        public void Delete(int id);
+        /// <summary>
+        /// Supprimme un automate.
+        /// </summary>
+        /// <param name="documentId">L'identifiant de l'automate à supprimmer.</param>
+        public void Delete(int documentId);
     }
 }
