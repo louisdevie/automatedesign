@@ -113,5 +113,16 @@ namespace AutomateDesign.Client.Model.Network
                 new SessionUser { Session = token }
             );
         }
+
+        public async Task DeleteAutomateAsync(int idAutomate)
+        {
+            using var channel = this.OpenChannel();
+            var client = new Users.UsersClient(channel);
+
+            await client.DeleteAutomateAsync(
+                new AutomateId { Id = idAutomate }
+            );
+        }
+
     }
 }
