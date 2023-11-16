@@ -1,5 +1,4 @@
-﻿using AutomateDesign.Client.Model.Verifications;
-using AutomateDesign.Client.View.Controls;
+﻿using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 using System;
 using System.Globalization;

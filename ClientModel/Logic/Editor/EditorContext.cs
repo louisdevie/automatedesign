@@ -3,11 +3,44 @@ using AutomateDesign.Core.Documents;
 
 namespace AutomateDesign.Client.Model.Logic.Editor
 {
+    /// <summary>
+    /// Enveloppe un automate et gére les modifications qui lui sont apportées.
+    /// </summary>
     public class EditorContext
     {
         #region State
 
         private EditorState state;
+
+        private EditorState State
+        {
+            get => this.state;
+            set
+            {
+                if (value != this.state)
+                {
+                    this.state = value;
+                    this.EditorStateChanged?.Invoke(this.state);
+                }
+            }
+        }
+
+        public delegate void EditorStateChangedEventHandler(EditorState state);
+
+        /// <summary>
+        /// Déclenché quand l'état de l'éditeur change.
+        /// </summary>
+        public event EditorStateChangedEventHandler? EditorStateChanged;
+
+        /// <summary>
+        /// Gère un évènement d'édition.
+        /// </summary>
+        /// <param name="e"></param>
+        public void HandleEvent(EditorEvent e)
+        {
+            this.State.Action(e, this);
+            this.State = this.State.Next(e);
+        }
 
         #endregion
 
@@ -15,81 +48,40 @@ namespace AutomateDesign.Client.Model.Logic.Editor
 
         private List<IModificationsObserver> observers;
 
+        /// <summary>
+        /// Commence à observer les modifications apportées à l'automate.
+        /// </summary>
+        /// <param name="observer">L'objet qui va observer les modifications.</param>
+        public void AddModificationObserver(IModificationsObserver observer) => this.observers.Add(observer);
+
+        /// <summary>
+        /// Arrête d'observer les modifications apportées à l'automate.
+        /// </summary>
+        /// <param name="observer">L'objet qui observait les modifications.</param>
+        public void RemoveModificationObserver(IModificationsObserver observer) => this.observers.Remove(observer);
+
         #endregion
 
         private Document document;
         private IEditorUI editorUI;
         private EditorMode mode;
 
-        #region Properties
-
         public Document Document => this.document;
 
-        public bool SelectionModeEnabled => this.selectionModeEnabled;
+        public EditorMode Mode => this.mode;
 
-        #endregion
-
-        #region Constructors
-
-        public EditorContext(IEditorUI editor, Document document)
+        /// <summary>
+        /// Crée un nouveau contexte d'édition.
+        /// </summary>
+        /// <param name="document">L'automate à éditer.</param>
+        /// <param name="editor">Un élément de l'IHM permettant de demander des informations à l'utilisateur.</param>
+        public EditorContext(Document document, IEditorUI editor)
         {
             this.state = new ReadyState();
             this.document = document;
             this.editorUI = editor;
-            this.editorUI.OnStateChange(this.state);
+            this.observers = new();
         }
-
-        #endregion
-
-        #region Event handling
-
-        public void HandleEvent(EditorEvent e)
-        {
-            this.state.Action(e, this);
-            this.state = this.state.Next(e);
-            this.editorUI.OnStateChange(this.state);
-        }
-
-        #endregion
-
-        #region Actions
-
-        public void CreateState()
-        {
-            if (this.editorUI.AskNewStateName(out string name))
-            {
-                State state = this.document.CreateState(name);
-                this.editorUI.OnCreateState(state);
-            }
-        }
-
-        internal void EnterSelectionMode()
-        {
-            this.selectionModeEnabled = true;
-            this.editorUI.OnModeChange(this.selectionModeEnabled);
-        }
-
-        internal void ExitSelectionMode()
-        {
-            this.selectionModeEnabled = false;
-            this.editorUI.OnModeChange(this.selectionModeEnabled);
-        }
-
-        internal void StartDrawingTransition(State startState)
-        {
-            this.editorUI.ShowTransitionGhost(startState);
-        }
-
-        internal void CreateTransition(State startState, State endState)
-        {
-            if (this.editorUI.ChooseEvent(out IEvent evt))
-            {
-                Transition transition = this.document.CreateTransition(startState, endState, evt);
-                this.editorUI.OnCreateTransition(transition);
-            }
-        }
-
-        #endregion
     }
 }
 

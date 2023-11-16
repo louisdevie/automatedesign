@@ -25,7 +25,7 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche représentant l'opération.</returns>
         public async Task SignOutAsync()
         {
-            await Users.DisconnectAsync();
+            await Users.DisconnectAsync(this.session.Token);
         }
 
         /// <summary>

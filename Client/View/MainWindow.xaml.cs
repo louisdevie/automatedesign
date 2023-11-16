@@ -14,7 +14,7 @@ namespace AutomateDesign.Client.View
 
         public MainWindow()
         {
-            DependencyContainer.Current.Register<IUsersClient>(new UsersClient());
+            DependencyContainer.Current.RegisterSingleton<IUsersClient>(new UsersClient());
 
             InitializeComponent();
 

@@ -1,9 +1,12 @@
 ﻿namespace AutomateDesign.Core.Documents
 {
-    public class DefaultEvent : IEvent
+    /// <summary>
+    /// L'évènement « autres », qui représente tous les évènements non précisés.
+    /// </summary>
+    public class DefaultEvent : Event
     {
-        public int Order => 1_000_000_000;
+        public override int Order => 1_000_000_000; // traité en dernier
 
-        public string DisplayName => "*";
+        public override string DisplayName => "*";
     }
 }

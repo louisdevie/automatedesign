@@ -3,7 +3,7 @@
     /// <summary>
     /// Observe les modifications apportées à l'automate.
     /// </summary>
-    internal interface IModificationsObserver
+    public interface IModificationsObserver
     {
     }
 }

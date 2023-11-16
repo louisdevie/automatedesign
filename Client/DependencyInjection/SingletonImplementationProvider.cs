@@ -3,7 +3,7 @@
     /// <summary>
     /// Fournis la même instance à chaque fois qu'elle est demandée.
     /// </summary>
-    internal class InstanceProvider : ImplementationProvider
+    internal class SingletonImplementationProvider : ImplementationProvider
     {
         private object implementation;
 
@@ -11,7 +11,7 @@
         /// Crée un fournisseur de service qui renvoie toujours la même implémentation.
         /// </summary>
         /// <param name="implementation">L'implémentation du service.</param>
-        public InstanceProvider(object implementation)
+        public SingletonImplementationProvider(object implementation)
         {
             this.implementation = implementation;
         }

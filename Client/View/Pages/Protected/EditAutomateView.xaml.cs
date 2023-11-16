@@ -112,7 +112,7 @@ namespace AutomateDesign.Client.View
             
         }
 
-        public bool ChooseEvent(out IEvent evt)
+        public bool ChooseEvent(out Event evt)
         {
             SuggestionInputDialog popup = new(
                 "Nouvelle transition", "Entrez le nom de l'évènement déclencheur :",

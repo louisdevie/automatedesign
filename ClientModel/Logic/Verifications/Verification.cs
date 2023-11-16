@@ -43,6 +43,6 @@ namespace AutomateDesign.Client.Model.Logic.Verifications
         /// <param name="client">Le client à utiliser pour envoyer la requête.</param>
         /// <param name="verificationCode">Le code de vérification à utiliser.</param>
         /// <returns></returns>
-        public abstract Task SendVerificationRequest(IUsersClient client, uint verificationCode)
+        public abstract Task SendVerificationRequest(IUsersClient client, uint verificationCode);
     }
 }
