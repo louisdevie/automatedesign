@@ -5,8 +5,8 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{588C7ABC-DEB3-4581-BFCB-B5EAB4D29D72}"
 	ProjectSection(SolutionItems) = preProject
+		Protos\documents.proto = Protos\documents.proto
 		Protos\helpers.proto = Protos\helpers.proto
-		documents.proto = documents.proto
 		Protos\users.proto = Protos\users.proto
 	EndProjectSection
 EndProject

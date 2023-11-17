@@ -27,9 +27,11 @@ DatabaseSettings dbSettings = builder.Configuration.GetSection("DatabaseSettings
 builder.Services.AddSingleton(new DatabaseConnector(dbSettings))
                 .AddScoped<IUserDao, UserDao>()
                 .AddScoped<IRegistrationDao, RegistrationDao>()
-                .AddScoped<ISessionDao, SessionDao>();
+                .AddScoped<ISessionDao, SessionDao>()
+                .AddScoped<IDocumentDao, DocumentDao>();
 
 builder.Services.AddAuthentication("Bearer").AddBearer();
+builder.Services.AddAuthorization();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<EmailSender>();
@@ -42,7 +44,9 @@ var app = builder.Build();
 
 app.UseRouting();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGrpcService<UsersService>();
+app.MapGrpcService<DocumentsService>();
 
 app.Run();

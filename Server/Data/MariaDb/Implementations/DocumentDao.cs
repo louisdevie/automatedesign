@@ -18,7 +18,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
         }
 
 #pragma warning disable CS1998 // Cette méthode async n'a pas d'opérateur 'await' et elle s'exécutera de façon synchrone
-        public async IAsyncEnumerable<byte[]> ReadAllHeadersAsync(int userId)
+        public async IAsyncEnumerable<byte[]> ReadAllHeadersAsync(int userId, [EnumeratorCancellation] CancellationToken ct = default)
         {
             using MySqlConnection connection = Connect();
 
@@ -29,6 +29,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
 
             while (results.Read())
             {
+                ct.ThrowIfCancellationRequested();
                 byte[] buffer = new byte[results.GetUInt32(0)];
                 results.GetBytes(1, 0, buffer, 0, buffer.Length);
                 yield return buffer;
