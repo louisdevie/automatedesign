@@ -14,6 +14,9 @@ namespace TestsUnitaires.Core.Documents
         {
          
             var document = new Document();
+            var etatA = document.CreateState("A");
+            var etatB = document.CreateState("B");
+            document.CreateTransition(etatB, etatA, new DefaultEvent());
             var documentSerializer = new DocumentSerializer();
 
         

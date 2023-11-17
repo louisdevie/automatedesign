@@ -12,7 +12,7 @@ namespace AutomateDesign.Client.Model.Serialisation
     {
         IAsyncEnumerable<byte[]> SerialiseDocumentAsync(Document document);
 
-        Task<byte[]> SerialiseHeaderAsync(Document document);
+        Task<byte[]> SerialiseHeaderAsync(DocumentHeader document);
 
         Task<Document> DeserialiseDocumentAsync(IAsyncEnumerable<byte[]> stream);
 
