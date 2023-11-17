@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{588C7ABC-DEB3-4581-BFCB-B5EAB4D29D72}"
 	ProjectSection(SolutionItems) = preProject
 		Protos\helpers.proto = Protos\helpers.proto
+		documents.proto = documents.proto
 		Protos\users.proto = Protos\users.proto
 	EndProjectSection
 EndProject
@@ -23,6 +24,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientModel", "ClientModel\ClientModel.csproj", "{C30B94A8-B9B7-453E-AADA-E2D0BBF634FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsUnitaires", "TestsUnitaires\TestsUnitaires.csproj", "{1CE77164-AFC0-4954-A1DE-988AD049A0C7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{AB88211D-EC62-4FCB-B4AC-225ED0380DE3}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\automatedesign-ddl.sql = SQL\automatedesign-ddl.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
