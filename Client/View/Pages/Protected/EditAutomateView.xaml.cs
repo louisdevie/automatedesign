@@ -43,6 +43,48 @@ namespace AutomateDesign.Client.View
 
             this.context = new(new Document(), this);
             this.diagramEditor.OnShapeSelected += this.DiagramEditorOnShapeSelected;
+
+
+        }
+
+        /// <summary>
+        /// Ajoute au bon endroit le document dans le TreeView
+        /// </summary>
+        /// <param name="document"></param>
+        private void AddTreeViewItem(State document)
+        {
+            // Si doc est un etat
+            StateTreeViewItem.Items.Add(document);
+        }
+        private void AddTreeViewItem(Transition document)
+        {
+            // Sinon si doc est une transition
+            TransitionTreeViewItem.Items.Add(document);
+            }
+        private void AddTreeViewItem(EnumEvent document)
+        {
+            // Sinon doc est un evenement
+            EventTreeViewItem.Items.Add(document);
+        }
+
+        /// <summary>
+        /// Ajoute au bon endroit le document dans le TreeView
+        /// </summary>
+        /// <param name="document"></param>
+        private void DeleteTreeViewItem(State document)
+        {
+            // Si doc est un etat
+            StateTreeViewItem.Items.Remove(document);
+        }
+        private void DeleteTreeViewItem(Transition document)
+        {
+            // Sinon si doc est une transition
+            TransitionTreeViewItem.Items.Remove(document);
+        }
+        private void DeleteTreeViewItem(EnumEvent document)
+        {
+            // Sinon doc est un evenement
+            EventTreeViewItem.Items.Remove(document);
         }
 
         private void DiagramEditorOnShapeSelected(DiagramShape selected)
