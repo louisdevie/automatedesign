@@ -58,6 +58,18 @@ namespace AutomateDesign.Core.Documents
         }
 
         /// <summary>
+        /// Crée un automate à partir des métadonnées fournies.
+        /// </summary>
+        /// <param name="header"></param>
+        public Document(DocumentHeader header, IEnumerable<State> states, IEnumerable<EnumEvent> events, IEnumerable<Transition> transitions)
+        {
+            this.header = header;
+            this.states = states.ToList();
+            this.enumEvents = events.ToList();
+            this.transitions = transitions.ToList();
+        }
+
+        /// <summary>
         /// Ajoute un état à l'automate.
         /// </summary>
         /// <param name="name">Le nom de l'état.</param>
@@ -105,5 +117,12 @@ namespace AutomateDesign.Core.Documents
             this.transitions.Add(trans);
             return trans;
         }
+
+        /// <summary>
+        /// Recherche un état par son identifiant dans l'automate.
+        /// </summary>
+        /// <param name="id">L'identifiant recherché.</param>
+        /// <returns>L'état trouvé ou <see langword="null"/>.</returns>
+        public State? FindState(int id) => this.States.FirstOrDefault(state => state.Id == id);
     }
 }
