@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutomateDesign.Client.DependencyInjection;
+using AutomateDesign.Client.Model.Network;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +15,6 @@ namespace Client
     /// </summary>
     public partial class App : Application
     {
+        
     }
 }

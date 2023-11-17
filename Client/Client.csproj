@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="View\Images\AutomateEx.png" />
-    <None Remove="View\Images\ExAutomate.png" />
+    <None Remove="Images\AutomateEx.png" />
+    <None Remove="Images\ExAutomate.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,16 +22,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core.fr" Version="2.14.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Include="App.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClientModel\ClientModel.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\GrpcNetworkClient\ClientNetwork.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="View\Images\AutomateEx.png">
+    <Resource Include="Images\AutomateEx.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
@@ -40,12 +44,6 @@
     <Compile Update="View\Helpers\SuggestionInputDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="View\Images\ExAutomate.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

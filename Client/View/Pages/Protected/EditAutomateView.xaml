@@ -46,9 +46,9 @@
             </TreeView>
         </Grid>
         <!--Barre haut de page-->
-        <Grid Grid.Row="0"
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
               Background="LightBlue"
-              >
+              Panel.ZIndex="100">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
@@ -88,7 +88,7 @@
                     />
 
             <!--Menu burger-->
-            <ToggleButton x:Name="BurgerButton" 
+            <ToggleButton x:Name="BurgerButton"
                           Grid.Column="0"
                           HorizontalAlignment="Center" VerticalAlignment="Center"
                           Height="50" Width="50"

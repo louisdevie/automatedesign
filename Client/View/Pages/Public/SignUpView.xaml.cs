@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using AutomateDesign.Client.Model.Verifications;
-using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.ViewModel.Users;
 
 namespace AutomateDesign.Client.View
 {
@@ -14,16 +14,16 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class SignUpView : NavigablePage
     {
-        private UsersClient users;
-        private EmailInputHelper emailInputHelper;
+        private SignUpViewModel viewModel;
 
         public SignUpView()
         {
-            this.users = new UsersClient();
+            this.viewModel = new();
 
+            DataContext = this.viewModel;
             InitializeComponent();
-            this.emailInputHelper = new(this.emailBox);
-            this.emailInputHelper.AfterAutocompletion += this.EmailInputHelper_AfterAutocompletion;
+            EmailInputHelper.AttachTo(this.emailBox)
+                            .AfterAutocompletion += this.EmailInputHelper_AfterAutocompletion;
         }
 
         private void EmailInputHelper_AfterAutocompletion()
@@ -37,44 +37,34 @@ namespace AutomateDesign.Client.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ContinueButtonClick(object sender, RoutedEventArgs e)
+        private async void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            string email = emailBox.Text;
-            string password = passBox.Password;
-            string passwordAgain = passBoxConf.Password;
-            bool warningRead = this.checkBoxButton.IsChecked ?? false;
-
-            if (password != passwordAgain)
+            if (!this.viewModel.PasswordsMatch)
             {
                 MessageBox.Show("Les mots de passe ne correspondent pas", "Erreur");
             }
-            else if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(password))
+            else if (!this.viewModel.PasswordsNotEmpty)
             {
                 MessageBox.Show("Veuillez saisir une addresse mail et un mot de passe", "Erreur");
             }
-            else if (!warningRead)
+            else if (!this.viewModel.WarningRead)
             {
                 this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
             }
             else
             {
-                this.users
-                .SignUpAsync(email, password)
-                .ContinueWith(task =>
-                {
-                    if (task.IsFaulted)
-                    {
-                        ErrorMessageBox.Show(task.Exception?.InnerException);
-                        this.IsEnabled = true;
-                    }
-                    else
-                    {
-                        this.Navigator.Go(new EmailVerificationView(new SignUpEmailVerification(email, password, task.Result)));
-                    }
-                },
-                TaskScheduler.FromCurrentSynchronizationContext());
-
                 this.IsEnabled = false;
+
+                try
+                {
+                    var signUpVM = await this.viewModel.SignUpAsync();
+                    this.Navigator.Go(new EmailVerificationView(signUpVM));
+                }
+                catch (Exception error)
+                {
+                    ErrorMessageBox.Show(error);
+                    this.IsEnabled = true;
+                }
             }
         }
 

@@ -2,40 +2,68 @@
 
 namespace AutomateDesign.Core.Documents
 {
+    /// <summary>
+    /// Représente un automate.
+    /// </summary>
     public class Document
     {
-        #region Attributs
-
+        private DocumentHeader header;
         private List<State> states;
         private List<EnumEvent> enumEvents;
         private List<Transition> transitions;
 
-        #endregion
+        private State? initialState;
 
-        #region Properties
+        /// <summary>
+        /// Les métadonnées de l'automate.
+        /// </summary>
+        public DocumentHeader Header => this.header;
 
+        /// <summary>
+        /// Les différents états.
+        /// </summary>
         public IEnumerable<State> States => this.states;
 
+        /// <summary>
+        /// Les différents évènements.
+        /// </summary>
         public IEnumerable<EnumEvent> Events => this.enumEvents;
 
+        /// <summary>
+        /// Les transitions entre les états.
+        /// </summary>
         public IEnumerable<Transition> Transitions => this.transitions;
 
-        #endregion
-
+        /// <summary>
+        /// Crée un automate vierge.
+        /// </summary>
         public Document()
         {
+            this.header = new DocumentHeader("");
             this.states = new List<State>();
             this.enumEvents = new List<EnumEvent>();
             this.transitions = new List<Transition>();
         }
 
         /// <summary>
-        /// Creer un etat a partir des parametres fournit et le renvoie
+        /// Crée un automate vide à partir des métadonnées fournies.
         /// </summary>
-        /// <param name="name">le nom de l'etat</param>
-        /// <param name="kind">niveau de l'etat (normal, initial, final)</param>
-        /// <returns>l'etat creer</returns>
-        public State CreateState(string name, StateKind kind = StateKind.NORMAL)
+        /// <param name="header"></param>
+        public Document(DocumentHeader header)
+        {
+            this.header = header;
+            this.states = new List<State>();
+            this.enumEvents = new List<EnumEvent>();
+            this.transitions = new List<Transition>();
+        }
+
+        /// <summary>
+        /// Ajoute un état à l'automate.
+        /// </summary>
+        /// <param name="name">Le nom de l'état.</param>
+        /// <param name="kind">Le type d'état.</param>
+        /// <returns>Le nouvel état.</returns>
+        public State CreateState(string name, StateKind kind = StateKind.Normal)
         {
             State item = new(this, this.states.Count, name, kind);
             this.states.Add(item);
@@ -43,10 +71,20 @@ namespace AutomateDesign.Core.Documents
         }
 
         /// <summary>
-        /// Creer un EnumEvent a partir du nom fournit en parametre
+        /// Gère un changement d'état initial.
         /// </summary>
-        /// <param name="name">le nom du EnumEvent</param>
-        /// <returns>l'EnumEvent creer</returns>
+        /// <param name="state"></param>
+        public void SetInitialState(State state)
+        {
+            if (this.initialState is not null) this.initialState.Kind = StateKind.Normal;
+            this.initialState = state;
+        }
+
+        /// <summary>
+        /// Ajoute un évènement à l'automate.
+        /// </summary>
+        /// <param name="name">Le nom de l'évènement.</param>
+        /// <returns>Le nouvel évènement.</returns>
         public EnumEvent CreateEnumEvent(string name)
         {
             EnumEvent evt = new(this.enumEvents.Count, name);
@@ -55,13 +93,13 @@ namespace AutomateDesign.Core.Documents
         }
 
         /// <summary>
-        /// Creer une transition a partir des donnees fournit en parametre
+        /// Ajoute une transition à l'automate.
         /// </summary>
-        /// <param name="from">debut de la transition</param>
-        /// <param name="to">fin de la transition</param>
-        /// <param name="triggeredBy">nom de la transition</param>
-        /// <returns>la transition creer</returns>
-        public Transition CreateTransition(State from, State to, IEvent triggeredBy)
+        /// <param name="from">L'état de départ.</param>
+        /// <param name="to">L'état d'arrivée.</param>
+        /// <param name="triggeredBy">L'évènement qui déclenche cette transition.</param>
+        /// <returns>La nouvelle transition.</returns>
+        public Transition CreateTransition(State from, State to, Event triggeredBy)
         {
             Transition trans = new(this.transitions.Count, from, to, triggeredBy);
             this.transitions.Add(trans);

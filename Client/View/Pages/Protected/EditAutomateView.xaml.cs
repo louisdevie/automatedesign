@@ -1,5 +1,5 @@
-﻿using AutomateDesign.Client.Model.Editor;
-using AutomateDesign.Client.Model.Editor.States;
+﻿using AutomateDesign.Client.Model.Logic.Editor;
+using AutomateDesign.Client.Model.Logic.Editor.States;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Client.View.Helpers;
@@ -7,6 +7,7 @@ using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Core.Documents;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace AutomateDesign.Client.View
         private EditorContext context;
 
         public override WindowPreferences Preferences => new(
-            WindowPreferences.WindowSize.FullScreen,
+            WindowPreferences.WindowSize.Large,
             WindowPreferences.ResizeMode.Resizeable
         );
 
@@ -40,7 +41,7 @@ namespace AutomateDesign.Client.View
             BurgerMenu.Visibility = Visibility.Collapsed;
             ProfilMenu.Visibility = Visibility.Collapsed;
 
-            this.context = new(this, new Document());
+            this.context = new(new Document(), this);
             this.diagramEditor.OnShapeSelected += this.DiagramEditorOnShapeSelected;
 
 
@@ -98,6 +99,11 @@ namespace AutomateDesign.Client.View
 
         private void BurgerToggleButton_Click(object sender, RoutedEventArgs e)
         {
+            this.BurgerMenu.Visibility = this.BurgerMenu.Visibility switch
+            {
+                Visibility.Visible => Visibility.Collapsed,
+                _ => Visibility.Visible
+            };
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)
@@ -126,15 +132,17 @@ namespace AutomateDesign.Client.View
 
         private void AddStateButtonClick(object sender, RoutedEventArgs e)
         {
-            this.context.HandleEvent(new EditorEvent.CreateState());
+            this.context.HandleEvent(new EditorEvent.BeginCreatingState());
         }
 
         private void AddTransitionButtonClick(object sender, RoutedEventArgs e)
         {
-            this.context.HandleEvent(new EditorEvent.CreateTransition());
+            this.context.HandleEvent(new EditorEvent.BeginCreatingTransition());
         }
 
-        public bool AskNewStateName(out string name)
+        #region Implémentation de IEditorUI
+
+        public bool PromptForStateName([NotNullWhen(true)] out string? name)
         {
             InputDialog popup = new("Nouvel état", "Entrez le nom du nouvel état :");
             popup.Owner = this.Navigator.Window;
@@ -144,12 +152,7 @@ namespace AutomateDesign.Client.View
             return result;
         }
 
-        public void ShowTransitionGhost(State startState)
-        {
-            
-        }
-
-        public bool ChooseEvent(out IEvent evt)
+        public bool PromptForEvent([NotNullWhen(true)] out Event? evt)
         {
             SuggestionInputDialog popup = new(
                 "Nouvelle transition", "Entrez le nom de l'évènement déclencheur :",
@@ -172,24 +175,6 @@ namespace AutomateDesign.Client.View
             return result;
         }
 
-        public void OnCreateState(State state)
-        {
-            this.diagramEditor.AddShape(new DiagramState(state));
-        }
-
-        public void OnModeChange(bool selectionMode)
-        {
-            this.diagramEditor.SelectionMode = selectionMode;
-        }
-
-        public void OnStateChange(EditorState state)
-        {
-            this.status.Content = state.Description;
-        }
-
-        public void OnCreateTransition(Transition transition)
-        {
-            this.diagramEditor.AddShape(new DiagramTransition(transition));
-        }
+        #endregion
     }
 }

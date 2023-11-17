@@ -1,7 +1,10 @@
 ﻿namespace AutomateDesign.Core.Documents
 {
+    /// <summary>
+    /// Les différents type d'états.
+    /// </summary>
     public enum StateKind
     {
-        NORMAL, INITIAL, FINAL
+        Normal, Initial, Final
     }
 }

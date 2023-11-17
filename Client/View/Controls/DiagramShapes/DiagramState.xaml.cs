@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 namespace AutomateDesign.Client.View.Controls.DiagramShapes
 {
     /// <summary>
-    /// Logique d'interaction pour DiagramState.xaml
+    /// Un état sur le diagramme.
     /// </summary>
     public partial class DiagramState : DiagramShape
     {
@@ -42,5 +42,13 @@ namespace AutomateDesign.Client.View.Controls.DiagramShapes
         public void AttachTransition(DiagramTransition transition) => this.attachedTransitions.Add(transition);
 
         public void DetachTransition(DiagramTransition transition) => this.attachedTransitions.Remove(transition);
+
+        public override void OnMovement()
+        {
+            foreach (var transition in this.AttachedTransitions)
+            {
+                transition.OnMovement();
+            }
+        }
     }
 }
