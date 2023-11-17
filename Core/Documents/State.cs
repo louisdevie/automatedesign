@@ -58,5 +58,7 @@
             this.kind = kind;
             if (this.kind == StateKind.Initial) this.document.SetInitialState(this);
         }
+
+        public State() { }
     }
 }

@@ -4,7 +4,7 @@ using System.Data;
 
 namespace AutomateDesign.Server.Data.MariaDb.Implementations
 {
-    public class AutomateDao : BaseDao, IAutomateDao
+    public class AutomateDao : BaseDao, IDocumentDao
     {
         public AutomateDao(DatabaseConnector connector) : base(connector) { }
 
