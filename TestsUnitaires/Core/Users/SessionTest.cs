@@ -63,5 +63,29 @@ namespace TestsUnitaires.Core.Users
             Assert.False(session.Expired);
         }
 
+        [Fact]
+        public void TestRefresh()
+        {
+            // Session valide
+            Session session = new Session(token, DateTime.UtcNow, DateTime.MaxValue, user);
+            bool result = session.Refresh();
+
+            Assert.True(result);
+
+            // session expiré
+            session = new Session(token, lastUse, DateTime.MinValue, user);
+            result = session.Refresh();
+
+            Assert.False(result);
+
+            // Vérification des valeurs
+            lastUse = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(15));
+            session = new Session(token, lastUse, DateTime.MaxValue, user);
+            Assert.True(session.Refresh());
+            DateTime updatedLastUse = session.LastUse;
+
+            Assert.NotEqual(lastUse, updatedLastUse);
+            Assert.True(updatedLastUse > lastUse);
+        }
     }
 }
