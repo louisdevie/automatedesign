@@ -36,7 +36,14 @@ namespace AutomateDesign.Client.View
 
         private void BurgerToggleButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (BurgerMenu.Visibility == Visibility.Visible)
+            {
+                BurgerMenu.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                BurgerMenu.Visibility = Visibility.Visible;
+            }
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)
