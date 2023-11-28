@@ -5,7 +5,7 @@ namespace AutomateDesign.Core.Random
     /// <summary>
     /// Générateur simple basé sur <see cref="System.Random"/>.
     /// </summary>
-    internal class BasicRandomProvider : System.Random, IRandomProvider
+    public class BasicRandomProvider : System.Random, IRandomProvider
     {
         /// <summary>
         /// Crée un générateur de nombre aléatoire avec une seed par défaut.
