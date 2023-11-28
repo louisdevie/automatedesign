@@ -20,6 +20,17 @@ namespace TestsUnitaires.Core.Users
         }
 
         [Fact]
+        public void TestCreateSession()
+        {
+            Session session = createSession();
+
+            Assert.Equal(token, session.Token);
+            Assert.Equal(lastUse, session.LastUse);
+            Assert.Equal(expiration, session.Expiration);
+            Assert.Equal(user, session.User);
+        }
+
+        [Fact]
         public void TestToken()
         {
             Session session = createSession();

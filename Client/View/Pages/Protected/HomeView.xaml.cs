@@ -95,4 +95,3 @@ namespace AutomateDesign.Client.View
         }
     }
 }
->>>>>>>>> Temporary merge branch 2
