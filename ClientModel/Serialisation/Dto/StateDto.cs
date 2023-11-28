@@ -13,13 +13,13 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
     internal class StateDto
     {
         /// <inheritdoc cref="State.Id"/>
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         /// <inheritdoc cref="State.Name"/>
-        public string Name { get; private set; } = "";
+        public string Name { get; set; } = "";
 
         /// <inheritdoc cref="State.Kind"/>
-        public StateKind Kind { get; private set; }
+        public StateKind Kind { get; set; }
 
         /// <summary>
         /// Crée un DTO à partir du modèle.

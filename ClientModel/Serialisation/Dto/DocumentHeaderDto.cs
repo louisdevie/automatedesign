@@ -16,7 +16,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         public string Name { get; set; } = "";
 
         /// <inheritdoc cref="DocumentHeader.LastModificationdate"/>
-        public DateTime LastModificationdate { get; set; }
+        public DateTime LastModificationDate { get; set; }
 
         /// <summary>
         /// Crée un DTO à partir du modèle.
@@ -28,7 +28,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
             return new DocumentHeaderDto
             {
                 Name = header.Name,
-                LastModificationdate = header.LastModificationdate
+                LastModificationDate = header.LastModificationdate
             };
         }
 
@@ -38,7 +38,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         /// <returns>Un nouveau modèle avec les informations de ce DTO.</returns>
         public DocumentHeader MapToModel()
         {
-            return new DocumentHeader(this.Name, this.LastModificationdate);
+            return new DocumentHeader(this.Name, this.LastModificationDate);
         }
     }
 }

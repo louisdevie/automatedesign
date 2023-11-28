@@ -1,9 +1,13 @@
 ﻿using AutomateDesign.Core.Documents;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
 
 namespace AutomateDesign.Client.Model.Serialisation.Dto
 {
-    public class EventDto
+    /// <summary>
+    /// Une référence vers un évènement déclaré ailleurs dans l'automate sérialisé.
+    /// </summary>
+    internal class EventReferenceDto
     {
         public enum EventType { DefaultEvent, EnumEvent }
 
@@ -13,38 +17,30 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         public EventType Type { get; set; }
 
         /// <summary>
-        /// Le nom de l'évènement s'il en a un.
-        /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? Name { get; set; }
-
-        /// <summary>
         /// L'identifiant de l'évènement s'il en a un.
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public int? Id { get; private set; }
+        public int? Id { get; set; }
 
         /// <summary>
         /// Crée un DTO à partir du modèle.
         /// </summary>
         /// <param name="evt">Le modèle à sérialiser.</param>
         /// <returns>Un DTO contenant les informations du <paramref name="evt"/>.</returns>
-        internal static EventDto MapFromModel(Event evt)
+        public static EventReferenceDto MapFromModel(Event evt)
         {
             return evt switch
             {
-                DefaultEvent defaultEvent => new EventDto
+                DefaultEvent defaultEvent => new EventReferenceDto
                 {
                     Type = EventType.DefaultEvent,
                     Id = null,
-                    Name = null,
                 },
 
-                EnumEvent enumEvent => new EventDto
+                EnumEvent enumEvent => new EventReferenceDto
                 {
                     Type = EventType.EnumEvent,
                     Id = enumEvent.Id,
-                    Name = enumEvent.Name
                 },
 
                 _ => throw new InvalidOperationException($"Le type d'évènement {evt.GetType()} n'est pas pris en charge.")
@@ -54,17 +50,25 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         /// <summary>
         /// Crée un modèle à partir de ce DTO.
         /// </summary> 
+        /// <param name="document">Le document qui va contenir l'évènement.</param>
         /// <returns>Un nouveau modèle avec les informations de ce DTO.</returns>
-        internal Event MapToModel()
+        public Event MapToModel(Document document)
         {
-            return this.Type switch
+            Event result;
+            switch (this.Type)
             {
-                EventType.DefaultEvent => new DefaultEvent(),
+                case EventType.DefaultEvent:
+                    result = new DefaultEvent();
+                    break;
 
-                EventType.EnumEvent => new EnumEvent(this.Id ?? 0, this.Name ?? ""),
+                case EventType.EnumEvent:
+                    result = document.FindEnumEvent(this.Id!.Value)!;
+                    break;
 
-                _ => throw new InvalidOperationException($"Le type d'évènement {this.Type} n'est pas pris en charge.")
-            };
+                default:
+                    throw new InvalidOperationException($"Le type d'évènement {this.Type} n'est pas pris en charge.");
+            }
+            return result;
         }
     }
 }

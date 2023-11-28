@@ -17,6 +17,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="TestsUnitaires" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\Core\Core.csproj" />
 	</ItemGroup>
 

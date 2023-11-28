@@ -58,16 +58,22 @@ namespace AutomateDesign.Core.Documents
         }
 
         /// <summary>
-        /// Crée un automate à partir des métadonnées fournies.
+        /// Ajoutes des états existants à l'automate.
         /// </summary>
-        /// <param name="header"></param>
-        public Document(DocumentHeader header, IEnumerable<State> states, IEnumerable<EnumEvent> events, IEnumerable<Transition> transitions)
-        {
-            this.header = header;
-            this.states = states.ToList();
-            this.enumEvents = events.ToList();
-            this.transitions = transitions.ToList();
-        }
+        /// <param name="states">Les état à rajouter.</param>
+        public void AddStates(IEnumerable<State> states) => this.states.AddRange(states);
+
+        /// <summary>
+        /// Ajoutes des états existants à l'automate.
+        /// </summary>
+        /// <param name="states">Les état à rajouter.</param>
+        public void AddEvents(IEnumerable<EnumEvent> events) => this.enumEvents.AddRange(events);
+
+        /// <summary>
+        /// Ajoutes des états existants à l'automate.
+        /// </summary>
+        /// <param name="states">Les état à rajouter.</param>
+        public void AddTransitions(IEnumerable<Transition> transitions) => this.transitions.AddRange(transitions);
 
         /// <summary>
         /// Ajoute un état à l'automate.
@@ -124,5 +130,12 @@ namespace AutomateDesign.Core.Documents
         /// <param name="id">L'identifiant recherché.</param>
         /// <returns>L'état trouvé ou <see langword="null"/>.</returns>
         public State? FindState(int id) => this.States.FirstOrDefault(state => state.Id == id);
+
+        /// <summary>
+        /// Recherche un évènement par son identifiant dans l'automate.
+        /// </summary>
+        /// <param name="id">L'identifiant recherché.</param>
+        /// <returns>L'évèenemnt trouvé ou <see langword="null"/>.</returns>
+        public EnumEvent? FindEnumEvent(int id) => this.Events.FirstOrDefault(evt => evt.Id == id);
     }
 }

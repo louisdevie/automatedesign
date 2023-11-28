@@ -1,8 +1,7 @@
 ﻿using Xunit;
 using System.Linq;
-using AutomateDesign.Core.Users;
 
-namespace TestsUnitaires.Core.Users
+namespace AutomateDesign.Core.Users
 {
     public class HashedPasswordTest
     {

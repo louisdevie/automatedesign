@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Net.Mail;
-using AutomateDesign.Core.Users;
 using Xunit;
 
-namespace TestsUnitaires.Core.Users
+namespace AutomateDesign.Core.Users
 {
     public class RegistrationTest
     {

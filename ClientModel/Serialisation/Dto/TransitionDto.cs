@@ -17,7 +17,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         public int End { get; set; }
 
         /// <inheritdoc cref="Transition.TriggeredBy"/>
-        public EventDto TriggeredBy { get; set; } = new();
+        public EventReferenceDto TriggeredBy { get; set; } = new();
 
         /// <summary>
         /// Crée un DTO à partir du modèle.
@@ -31,7 +31,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
                 Id = transition.Id,
                 Start = transition.Start.Id,
                 End = transition.End.Id,
-                TriggeredBy = EventDto.MapFromModel(transition.TriggeredBy),
+                TriggeredBy = EventReferenceDto.MapFromModel(transition.TriggeredBy),
             };
         }
 
@@ -46,7 +46,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
                 this.Id,
                 document.FindState(this.Start)!,
                 document.FindState(this.End)!,
-                this.TriggeredBy.MapToModel()
+                this.TriggeredBy.MapToModel(document)
             );
         }
     }
