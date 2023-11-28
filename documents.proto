@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package AutomateDesign;
+option csharp_namespace = "AutomateDesign.Protos";
+
+import "helpers.proto";
+
+service Documents {
+	rpc GetAllHeaders (Nothing) returns (stream EncryptedDocumentChunk);
+}
+
+message EncryptedDocumentChunk {
+
+}

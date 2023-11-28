@@ -246,7 +246,6 @@ namespace AutomateDesign.Server.Services
 
         public override Task<Nothing> Disconnect(SessionUser request, ServerCallContext context)
         {
-
             sessionDao.Delete(request.Session);
             
             return Task.FromResult(new Nothing());

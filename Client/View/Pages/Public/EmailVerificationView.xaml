@@ -26,6 +26,7 @@
                VerticalAlignment="Center"
                x:Name="titleLabel"
                Style="{StaticResource MultilineTitle}"
+               Text="{Binding Path=Title}"
                />
 
         <TextBlock Grid.Row="1"
@@ -38,6 +39,7 @@
                  Grid.Row="2"
                  HorizontalAlignment="Center" VerticalAlignment="Top"
                  Style="{StaticResource CodeInput}"
+                 Text="{Binding Path=Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Width="100"
                  MaxLength="4" 
                  PreviewTextInput="NumbersOnly"

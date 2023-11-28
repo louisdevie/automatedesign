@@ -1,11 +1,15 @@
-﻿using AutomateDesign.Client.Model.Network;
+﻿using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Navigation;
+using AutomateDesign.Client.ViewModel.Documents;
+using AutomateDesign.Client.ViewModel.Users;
+using System.Collections.ObjectModel;
 using AutomateDesign.Core.Documents;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 
 namespace AutomateDesign.Client.View
@@ -15,30 +19,46 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class HomeView : NavigablePage
     {
-        private UsersClient users;
-        private DocumentCrypte document;
-        private List<DocumentCrypte> items;
+        private SessionViewModel? sessionVM;
+        private DocumentCollectionViewModel documentsVM;
+
+        public string CurrentUserEmail => this.sessionVM?.UserEmail ?? "";
+
+        public ObservableCollection<DocumentViewModel> Documents => this.documentsVM;
 
         public override WindowPreferences Preferences => new(
-            WindowPreferences.WindowSize.FullScreen,
+            WindowPreferences.WindowSize.Large,
             WindowPreferences.ResizeMode.Resizeable
         );
 
         public HomeView()
         {
-            this.users = new UsersClient();
+            this.documentsVM = new();
 
+            Task.Run(this.documentsVM.Reload);
+
+            DataContext = this;
             InitializeComponent();
-            items = new List<DocumentCrypte>
+            items = new List<Automate>
             {
-                new DocumentCrypte()
+                new Automate("auto1", "16/10/2023"),
+                new Automate("auto2", "17/10/2023"),
+                new Automate("auto3", "18/10/2023"),
+                new Automate("auto4", "18/10/2023"),
+                new Automate("auto5", "18/10/2023"),
+                new Automate("auto6", "18/10/2023"),
+                new Automate("auto7", "18/10/2023"),
+                new Automate("auto8", "18/10/2023"),
+                new Automate("auto9", "18/10/2023"),
+                new Automate("auto10", "18/10/2023"),
+                new Automate("auto11", "18/10/2023")
             };
 
             AumateList.ItemsSource = items;
 
         }
 
-        private void HaveFocusRecherche(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void HaveFocusRecherche(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (this.TextBoxRecherche.Text == "Rechercher")
             {
@@ -46,7 +66,7 @@ namespace AutomateDesign.Client.View
             }
         }
 
-        private void LostFocusRecherche(object sender, System.Windows.RoutedEventArgs e)
+        private void LostFocusRecherche(object sender, RoutedEventArgs e)
         {
             if (this.TextBoxRecherche.Text == "")
             {
@@ -55,9 +75,9 @@ namespace AutomateDesign.Client.View
             }
         }
 
-        private void InitializationAutomate()
+        private void NewDocumentClick(object sender, RoutedEventArgs e)
         {
-
+            this.Navigator.Go(new EditAutomateView());
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)
@@ -73,54 +93,20 @@ namespace AutomateDesign.Client.View
                 ProfilMenu.Visibility = Visibility.Visible;
             }
         }
-
-        private void ChangePassword(object sender, RoutedEventArgs e)
+        private async void SignOut(object sender, RoutedEventArgs e)
+    }
+            await this.sessionVM!.SignOutAsync();
+    public class Automate
+    {
+        private string name;
+        private string date;
+        public string Name { get => this.name; set => this.name = value; }
+        public string Date { get => this.date; set => this.date = value; }
+        public Automate(string name, string date)
         {
-            ChangePasswordPopup popup = new(this.Navigator.Session!);
-            popup.Owner = this.Navigator.Window;
-
-            popup.ShowDialog();
+            this.name = name;
+            this.date = date;
         }
-
-        private void SignOut(object sender, RoutedEventArgs e)
-        {
-            this.users.DisconnectAsync(this.Navigator.Session!.Token)
-            .ContinueWith(task =>
-            {
-                this.Navigator.Session = null;
-                this.Navigator.Go(new LoginView());
-            },
-            TaskScheduler.FromCurrentSynchronizationContext());
-        }
-        /// <summary>
-        /// Ouvre un menu déroulant des options
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ButtonSettings(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            btn.ContextMenu.IsOpen = true;
-        }
-
-        private void DeleteClick(object sender, RoutedEventArgs e)
-        {
-            // Afficher une boîte de dialogue de confirmation
-            MessageBoxResult result = MessageBox.Show("Voulez-vous vraiment supprimer cet automate ?", "Confirmation de suppression", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                // Supprimer l'élément
-                this.users.DeleteAutomateAsync(document.IdDoc);
-            }
-        }
-
-
-        private void EditClick(object sender, RoutedEventArgs e)
-        {
-            // Logique de modification ici
-        }
-
-
     }
 }
+>>>>>>>>> Temporary merge branch 2
