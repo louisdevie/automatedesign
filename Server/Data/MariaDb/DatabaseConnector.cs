@@ -5,7 +5,9 @@ namespace AutomateDesign.Server.Data.MariaDb
 {
     public class DatabaseConnector
     {
+        #region Attributs
         private DatabaseSettings settings;
+        #endregion
 
         public DatabaseConnector(DatabaseSettings settings)
         {

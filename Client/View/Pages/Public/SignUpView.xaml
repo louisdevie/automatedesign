@@ -40,6 +40,7 @@
                  Grid.Row="2"
                  HorizontalAlignment="Stretch" VerticalAlignment="Top"
                  Style="{StaticResource TextInput}"
+                 Text="{Binding Path=Email}"
                  />
         
         <Label Grid.Row="3" 
@@ -83,6 +84,7 @@
                       Margin="10 4 10 10"
                       FontSize="16"
                       VerticalContentAlignment="Center"
+                      IsChecked="{Binding WarningRead}"
                       Style="{StaticResource CheckBoxInput}"
                       HorizontalAlignment="Left">
                 <Label Content="J'ai compris"

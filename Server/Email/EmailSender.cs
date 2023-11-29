@@ -7,7 +7,9 @@ namespace AutomateDesign.Server.Model
 {
     public class EmailSender
     {
+        #region Attributs
         private readonly EmailSettings settings;
+        #endregion
 
         public EmailSender(IOptions<EmailSettings> settings)
         {

@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Client.View.Controls.DiagramShapes;
+﻿using AutomateDesign.Client.Model.Logic.Editor;
+using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Core.Documents;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +10,7 @@ using System.Windows.Shapes;
 namespace AutomateDesign.Client.View.Controls
 {
     /// <summary>
-    /// Logique d'interaction pour DiagramEditor.xaml
+    /// Un canvas sur lequel ont peut placer des éléments de diagramme.
     /// </summary>
     public partial class DiagramEditor : UserControl
     {
@@ -17,15 +18,15 @@ namespace AutomateDesign.Client.View.Controls
         private Point? clickPosition;
         private TranslateTransform? originTT;
         private DiagramShape? clickedOn;
-        private bool selectionMode;
+        private EditorMode mode;
 
-        public bool SelectionMode
+        public EditorMode Mode
         {
-            get => this.selectionMode;
+            get => this.mode;
             set
             {
-                this.selectionMode = value;
-                foreach (var child in this.frontCanvas.Children) (child as DiagramShape)?.ChangeMode(selectionMode);
+                this.mode = value;
+                foreach (var child in this.frontCanvas.Children) (child as DiagramShape)?.ChangeMode(mode);
             }
         }
 
@@ -37,22 +38,22 @@ namespace AutomateDesign.Client.View.Controls
             this.isDragging = false;
 
             InitializeComponent();
-            this.SelectionMode = false;
+            this.Mode = EditorMode.Move;
         }
 
         public void AddShape(DiagramShape shape)
         {
             this.frontCanvas.Children.Add(shape);
-            shape.ChangeMode(this.selectionMode);
-            shape.MouseLeftButtonDown += this.CanvasMouseLeftButtonDown;
-            shape.MouseLeftButtonUp += this.CanvasMouseLeftButtonUp;
-            shape.MouseMove += this.CanvasMouseMove;
+            shape.ChangeMode(this.mode);
+            shape.MouseLeftButtonDown += this.ShapeMouseLeftButtonDown;
+            shape.MouseLeftButtonUp += this.ShapeMouseLeftButtonUp;
+            shape.MouseMove += this.ShapeMouseMove;
         }
 
         public void AddShape(DiagramTransition transition)
         {
             this.AddShape((DiagramShape)transition);
-            Canvas.SetZIndex(transition, -1);
+            Panel.SetZIndex(transition, -1);
             transition.Reattach(this);
         }
 
@@ -68,48 +69,61 @@ namespace AutomateDesign.Client.View.Controls
             return null;
         }
 
-        private void CanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// Gère l'enfoncement du bouton gauche sur les éléments du diagramme.
+        /// </summary>
+        private void ShapeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is DiagramShape shape)
             {
-                if (this.selectionMode)
+                switch (this.mode)
                 {
-                    this.clickedOn = shape;
-                }
-                else
-                {
-                    this.originTT = shape.RenderTransform as TranslateTransform ?? new TranslateTransform();
-                    this.isDragging = true;
-                    this.clickPosition = e.GetPosition(this);
-                    shape.CaptureMouse();
+                    case EditorMode.Move:
+                        this.originTT = shape.RenderTransform as TranslateTransform ?? new TranslateTransform();
+                        this.isDragging = true;
+                        this.clickPosition = e.GetPosition(this);
+                        shape.CaptureMouse();
+                        break;
+
+                    case EditorMode.Select:
+                        this.clickedOn = shape;
+                        break;
                 }
             }
         }
 
-        private void CanvasMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// Gère le relâchement du bouton gauche sur les éléments du diagramme.
+        /// </summary>
+        private void ShapeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             this.isDragging = false;
             if (sender is DiagramShape shape)
             {
-                if (this.selectionMode)
+                switch (this.mode)
                 {
-                    if (shape == this.clickedOn)
-                    {
-                        this.OnShapeSelected?.Invoke(shape);
-                    }
-                    this.clickedOn = null;
-                }
-                else
-                {
-                    shape.ReleaseMouseCapture();
+                    case EditorMode.Move:
+                        shape.ReleaseMouseCapture();
+                        break;
+
+                    case EditorMode.Select:
+                        if (shape == this.clickedOn)
+                        {
+                            this.OnShapeSelected?.Invoke(shape);
+                        }
+                        this.clickedOn = null;
+                        break;
                 }
             }
         }
 
-        private void CanvasMouseMove(object sender, MouseEventArgs e)
+        /// <summary>
+        /// Gère les mouvements de souris sur les éléments du diagramme.
+        /// </summary>
+        private void ShapeMouseMove(object sender, MouseEventArgs e)
         {
-            if (!this.selectionMode
-                && sender is DiagramShape draggableControl
+            if (this.mode == EditorMode.Move
+                && sender is DiagramState draggableControl
                 && this.isDragging
                 && this.originTT is not null
                 && this.clickPosition is not null)
@@ -119,14 +133,7 @@ namespace AutomateDesign.Client.View.Controls
                 transform.X = this.originTT.X + (currentPosition.X - this.clickPosition.Value.X);
                 transform.Y = this.originTT.Y + (currentPosition.Y - this.clickPosition.Value.Y);
                 draggableControl.RenderTransform = new TranslateTransform(transform.X, transform.Y);
-                
-                if (draggableControl is DiagramState state)
-                {
-                    foreach (var transition in state.AttachedTransitions)
-                    {
-                        transition.Redraw();
-                    }
-                }
+                draggableControl.OnMovement();               
             }
         }
     }

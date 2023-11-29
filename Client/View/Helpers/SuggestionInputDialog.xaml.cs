@@ -13,11 +13,14 @@ namespace AutomateDesign.Client.View.Helpers
 
         public string UserInput => this.userInput;
 
+        public IEnumerable<string> Suggestions => this.suggestions;
+
         public SuggestionInputDialog(string title, string prompt, IEnumerable<string> suggestions)
         {
             this.userInput = string.Empty;
             this.suggestions = suggestions;
 
+            DataContext = this;
             InitializeComponent();
             this.Title = title;
             this.prompt.Text = prompt;

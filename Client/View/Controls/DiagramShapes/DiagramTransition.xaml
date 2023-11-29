@@ -6,5 +6,16 @@
              xmlns:local="clr-namespace:AutomateDesign.Client.View.Controls.DiagramShapes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Line x:Name="line" Stroke="Black" StrokeThickness="3"/>
+    <Grid>
+        <Line x:Name="line"
+              Stroke="Black"
+              StrokeThickness="3" />
+
+        <Label x:Name="eventLabel"
+               Background="White"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Content="{Binding Path=TriggeredBy.DisplayName}"/>
+
+    </Grid>
 </local:DiagramShape>

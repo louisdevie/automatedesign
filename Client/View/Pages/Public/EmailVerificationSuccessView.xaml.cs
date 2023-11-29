@@ -1,80 +1,78 @@
-﻿using AutomateDesign.Client.Model.Verifications;
-using AutomateDesign.Client.Model.Network;
-using AutomateDesign.Client.View.Controls;
+﻿using AutomateDesign.Client.View.Controls;
 using System.Threading.Tasks;
 using System.Windows;
-using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Logic.Verifications;
+using AutomateDesign.Client.ViewModel.Users;
+using System;
 
 namespace AutomateDesign.Client.View
 {
     /// <summary>
     /// Logique d'interaction pour PasswordResetSuccessView.xaml
     /// </summary>
-    public partial class EmailVerificationSuccessView : NavigablePage
+    public partial class EmailVerificationSuccessView : NavigablePage, IVerificationHandler
     {
-        private UsersClient users;
-        private Verification verification;
+        private VerificationBaseViewModel? viewModel;
 
-        public EmailVerificationSuccessView(Verification verification)
+        /// <summary>
+        /// Crée une vue de succès à partir d'une opération qui à été vérifiée.
+        /// </summary>
+        /// <param name="verification">L'opération vérifiée avec succès.</param>
+        public EmailVerificationSuccessView(VerificationBaseViewModel verification)
         {
-            this.users = new UsersClient();
-            this.verification = verification;
+            this.viewModel = verification;
 
+            DataContext = this.viewModel;
             InitializeComponent();
-            this.successMessage.Text = this.verification.SuccessMessage;
 
-            if (this.verification is SignUpEmailVerification)
-            {
-                this.continueButton.Content = "Commencer";
-                this.continueButton.Click += this.AutoSignIn;
-            }
-            else if (this.verification is PasswordResetVerification)
-            {
-                this.continueButton.Content = "Connexion";
-                this.continueButton.Click += this.BackToSignIn;
-            }
-            else if (this.verification is PasswordChangeVerification)
-            {
-                this.continueButton.Content = "Terminer";
-                this.continueButton.Click += this.CloseWindow;
-            }
+            this.continueButton.Click += ContinueButtonClickDispatch;
         }
 
-        private void CloseWindow(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Crée une vue de succès à partir d'informations précises.
+        /// </summary>
+        /// <param name="successMessage">Le message indiquant le résultat de l'opération.</param>
+        /// <param name="continuationText">Le texte du bouton invitant l'utilisateur à continuer.</param>
+        /// <param name="continuationAction">L'action à effectuer quand l'utilisateur continue.</param>
+        public EmailVerificationSuccessView(string successMessage, string continuationText, RoutedEventHandler continuationAction)
         {
-            this.Navigator.Window.Close();
+            this.viewModel = null;
+
+            DataContext = new { SucessMessage = successMessage, Continuation = continuationText };
+            InitializeComponent();
+
+            this.continueButton.Click += continuationAction;
         }
 
-        private void BackToSignIn(object sender, RoutedEventArgs e)
+        private void ContinueButtonClickDispatch(object sender, RoutedEventArgs e)
         {
-            this.Navigator.Go(new LoginView(), true);
+            this.viewModel?.DispatchHandler(this);
         }
 
-        private void AutoSignIn(object sender, RoutedEventArgs e)
+        public void Handle(SignUpEmailVerification verification)
         {
-            if (this.verification is SignUpEmailVerification verif)
+            var signUpVM = this.viewModel as SignUpEmailVerificationViewModel;
+
+            signUpVM?.AutoSignInAsync()
+            .ContinueWith(task =>
             {
-                this.users.SignInAsync(verif.SignUpEmail, verif.SignUpPassword)
-                .ContinueWith(task =>
+                if (task.IsFaulted)
                 {
-                    if (task.IsFaulted)
-                    {
-                        MessageBox.Show("Une erreur inconnue s'est produite durant la connexion automatique.", "Erreur");
-                        this.Navigator.Go(new LoginView(), true);
-                    }
-                    else
-                    {
-                        this.Navigator.Session = new Session(task.Result.Token, task.Result.UserId, verif.SignUpEmail);
-                        this.Navigator.Go(new HomeView(), true);
-                    }
-                },
-                TaskScheduler.FromCurrentSynchronizationContext());
-            }
-            else
-            {
-                MessageBox.Show("Une erreur inconnue s'est produite durant la connexion automatique.", "Erreur");
-                this.Navigator.Go(new LoginView(), true);
-            }
+                    MessageBox.Show("Une erreur inconnue s'est produite durant la connexion automatique.", "Erreur");
+                    this.Navigator.Go(new SignInView(), true);
+                }
+                else
+                {
+                    this.Navigator.Session = task.Result;
+                    this.Navigator.Go(new HomeView(), true);
+                }
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        public void Handle(PasswordResetVerification verification)
+        {
+            this.Navigator.Go(new SignInView(), true);
         }
     }
 }

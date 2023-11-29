@@ -23,6 +23,7 @@
                    Style="{StaticResource Prompt}"
                    TextAlignment="Center"
                    x:Name="successMessage"
+                   Text="{Binding Path=SucessMessage}"
                    />
 
         <Button Grid.Row="2"
@@ -30,6 +31,7 @@
                 VerticalAlignment="Bottom"
                 Style="{StaticResource AccentedButton}"
                 x:Name="continueButton"
+                Content="{Binding Path=Continuation}"
                 />
 
     </Grid>
