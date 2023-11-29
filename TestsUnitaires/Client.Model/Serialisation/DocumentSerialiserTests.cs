@@ -25,9 +25,9 @@ namespace AutomateDesign.Client.Model.Serialisation
             {
                 foreach (var header in headers)
                 {
-                    (DocumentBuffer.Receiver receiver, DocumentBuffer.Sender sender) = DocumentBuffer.CreateSpsc();
-                    await serialiser.SerialiseHeaderAsync(header, sender);
-                    await writer.WriteAsync(await receiver.ReadHeaderAsync());
+                    DocumentChannel channel = new();
+                    await serialiser.SerialiseHeaderAsync(header, channel.Writer);
+                    await writer.WriteAsync(await channel.Reader.ReadHeaderAsync());
                 }
                 writer.Complete();
             });
@@ -51,7 +51,7 @@ namespace AutomateDesign.Client.Model.Serialisation
         [Fact]
         public void DocumentRoundTrip()
         {
-            (DocumentBuffer.Receiver receiver, DocumentBuffer.Sender sender) = DocumentBuffer.CreateSpsc();
+            DocumentChannel channel = new();
             JsonDocumentSerialiser serialiser = new();
 
             Document document = new Document(new DocumentHeader("Document test"));
@@ -64,8 +64,8 @@ namespace AutomateDesign.Client.Model.Serialisation
             document.CreateTransition(state2, state1, new DefaultEvent());
             document.CreateTransition(state2, state3, eventB);
 
-            Task serialiseTask = serialiser.SerialiseDocumentAsync(document, sender);
-            Task<Document> deserialiseTask = serialiser.DeserialiseDocumentAsync(receiver);
+            Task serialiseTask = serialiser.SerialiseDocumentAsync(document, channel.Writer);
+            Task<Document> deserialiseTask = serialiser.DeserialiseDocumentAsync(channel.Reader);
             Task.WaitAll(serialiseTask, deserialiseTask);
 
             Document result = deserialiseTask.Result;

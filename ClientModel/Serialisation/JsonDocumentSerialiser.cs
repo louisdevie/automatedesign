@@ -8,7 +8,7 @@ namespace AutomateDesign.Client.Model.Serialisation
 {
     public class JsonDocumentSerialiser : IDocumentSerialiser
     {
-        public async Task<Document> DeserialiseDocumentAsync(DocumentBuffer.Receiver input)
+        public async Task<Document> DeserialiseDocumentAsync(DocumentChannelReader input)
         {
             DocumentHeaderDto header;
             DocumentBodyDto body;
@@ -43,20 +43,20 @@ namespace AutomateDesign.Client.Model.Serialisation
             }
         }
 
-        public async Task SerialiseDocumentAsync(Document document, DocumentBuffer.Sender output)
+        public async Task SerialiseDocumentAsync(Document document, DocumentChannelWriter output)
         {
             await SerialiseHeaderAsync(document.Header, output);
 
             using MemoryStream stream = new();
             await JsonSerializer.SerializeAsync(stream, DocumentBodyDto.MapFromModel(document));
-            await output.SendBodyAsync(stream.ToArray());
+            await output.WriteBodyAsync(stream.ToArray());
         }
 
-        public async Task SerialiseHeaderAsync(DocumentHeader header, DocumentBuffer.Sender output)
+        public async Task SerialiseHeaderAsync(DocumentHeader header, DocumentChannelWriter output)
         {
             using MemoryStream stream = new();
             await JsonSerializer.SerializeAsync(stream, DocumentHeaderDto.MapFromModel(header));
-            await output.SendHeaderAsync(stream.ToArray());
+            await output.WriteHeaderAsync(stream.ToArray());
         }
     }
 }

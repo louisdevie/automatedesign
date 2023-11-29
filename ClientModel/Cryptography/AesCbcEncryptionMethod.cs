@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using AutomateDesign.Core.Documents;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace AutomateDesign.Client.Model.Cryptography
             using MemoryStream binaryStream = new();
             using CryptoStream cryptoStream = new(binaryStream, transform, CryptoStreamMode.Write);
 
-            cryptoStream.Write(enumerator.Current, 17, enumerator.Current.Length-17);
+            cryptoStream.Write(enumerator.Current, 17, enumerator.Current.Length - 17);
             cryptoStream.Flush();
             byte[] chunk = new byte[enumerator.Current.Length - (17 + padding)];
             var a = binaryStream.ToArray();
@@ -56,47 +57,100 @@ namespace AutomateDesign.Client.Model.Cryptography
             }
         }
 
-        public async IAsyncEnumerable<byte[]> EncryptAsync(IAsyncEnumerable<byte[]> data)
+        public async Task DecryptAsync(DocumentChannelReader input, DocumentChannelWriter output)
+        {
+            // déchiffrage de l'en-tête
+            byte[] buffer = await input.ReadHeaderAsync();
+            buffer = await this.DecryptChunkAsync(buffer);
+            await output.WriteHeaderAsync(buffer);
+
+            // déchiffrage de l'automate
+            await foreach (byte[] chunk in input.ReadAllBodyPartsAsync())
+            {
+                // déchiffrage des données d'un bloc
+                await output.WriteBodyPartAsync(await this.DecryptChunkAsync(chunk));
+            }
+            await output.FinishWritingBodyAsync();
+        }
+
+        public async Task EncryptAsync(DocumentChannelReader input, DocumentChannelWriter output)
+        {
+            // chiffrage de l'en-tête
+            byte[] buffer = await input.ReadHeaderAsync();
+            buffer = await this.EncryptChunkAsync(buffer);
+            await output.WriteHeaderAsync(buffer);
+
+            // chiffrage de l'automate
+            Queue<byte> leftOver = new();
+            await foreach (byte[] chunk in input.ReadAllBodyPartsAsync())
+            {
+                int leftOverCount = leftOver.Count;
+                buffer = new byte[leftOverCount + chunk.Length];
+                leftOver.CopyTo(buffer, 0);
+                Array.Copy(chunk, 0, buffer, leftOverCount, chunk.Length);
+
+                int sizeToEncrypt = Math.Min(buffer.Length, MaximumPlainChunkSize);
+
+                // chiffrage des données qui peuvent tenir dans un bloc de document
+                await output.WriteBodyPartAsync(await this.EncryptChunkAsync(buffer.AsMemory(0, sizeToEncrypt)));
+
+                // on passe les données restantes au bloc suivant
+                for (int i = sizeToEncrypt; i < buffer.Length; i++) leftOver.Enqueue(buffer[i]);
+            }
+            await output.FinishWritingBodyAsync();
+        }
+         
+        private static int MaximumPlainChunkSize => DocumentChannel.ChunkSize - 17; // moins 16 octets 
+
+        internal async Task<byte[]> EncryptChunkAsync(ReadOnlyMemory<byte> chunk)
         {
             Aes algo = Aes.Create();
+            algo.Padding = PaddingMode.PKCS7;
             algo.Key = this.key;
 
-            int blockSizeInBytes = algo.BlockSize / 8;
-            if (blockSizeInBytes >= 256) throw new CryptographicException("Cannot handle blocks of more than 255 bytes.");
+            using MemoryStream output = new();
 
-            ICryptoTransform transform = algo.CreateEncryptor();
-            using MemoryStream binaryStream = new();
-            using CryptoStream cryptoStream = new(binaryStream, transform, CryptoStreamMode.Write);
+            // écriture du vecteur d'initialisation
+            output.Write(algo.IV);
 
-            bool firstChunk = true;
-            await foreach (byte[] chunk in data)
+            using CryptoStream crypto = new(output, algo.CreateEncryptor(), CryptoStreamMode.Write);
+
+            // écriture des données encryptées
+            await crypto.WriteAsync(chunk);
+            await crypto.FlushFinalBlockAsync();
+
+            return output.ToArray();
+        }
+
+        internal async Task<byte[]> DecryptChunkAsync(byte[] bytes)
+        {
+            Aes algo = Aes.Create();
+            algo.Padding = PaddingMode.PKCS7;
+            algo.Key = this.key;
+
+            byte[] buffer = new byte[bytes.Length - 16];
+            byte[] data;
+
+            using MemoryStream input = new(bytes);
+
+            // lecture du vecteur d'initialisation
+            byte[] ivBuffer = new byte[16];
+            await input.ReadAsync(ivBuffer);
+            algo.IV = ivBuffer;
+
+            using (CryptoStream crypto = new(input, algo.CreateDecryptor(), CryptoStreamMode.Read))
             {
-                if (firstChunk)
-                {
-                    // on bourre avant de chiffrer pour que le premier morceau puisse être décrypté seul
-                    int blocks = (int)Math.Ceiling((double)chunk.Length / blockSizeInBytes);
-                    int padding = (blocks * blockSizeInBytes) - chunk.Length;
+                // lecture des données décryptées
+                int read = await crypto.ReadAsync(buffer);
 
-                    // ajout du vecteur d'initialisation et de la taille du bourrage au premier morceau
-                    binaryStream.Write(algo.IV);
-                    binaryStream.WriteByte((byte)padding);
+                // lecture du dernier bloc avec bourrage
+                read += await crypto.ReadAsync(buffer, read, buffer.Length - read);
 
-                    cryptoStream.Write(chunk);
-                    cryptoStream.Write(new byte[padding]);
-
-                    firstChunk = false;
-                }
-                else
-                {
-                    cryptoStream.Write(chunk);
-                }
-
-                yield return binaryStream.ToArray();
-
-                // efface le tampon en gardant la mémoire allouée
-                binaryStream.SetLength(0);
-                binaryStream.Seek(0, SeekOrigin.Begin);
+                data = new byte[read];
+                Array.Copy(buffer, 0, data, 0, read);
             }
+
+            return data;
         }
     }
 }

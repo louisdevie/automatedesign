@@ -14,7 +14,7 @@ namespace AutomateDesign.Client.Model.Serialisation
         /// <param name="document">Le document à sérialiser.</param>
         /// <param name="output">Le tampon dans lequel envoyer les données sérialisées.</param>
         /// <returns>Une tâche représentant l'opération.</returns>
-        Task SerialiseDocumentAsync(Document document, DocumentBuffer.Sender output);
+        Task SerialiseDocumentAsync(Document document, DocumentChannelWriter output);
 
         /// <summary>
         /// Sérialise uniquement un en-tête de document.
@@ -22,14 +22,14 @@ namespace AutomateDesign.Client.Model.Serialisation
         /// <param name="header">L'en-tête à sérialiser.</param>
         /// <param name="output">Le tampon dans lequel envoyer les données sérialisées.</param>
         /// <returns>Une tâche représentant l'opération.</returns>
-        Task SerialiseHeaderAsync(DocumentHeader header, DocumentBuffer.Sender output);
+        Task SerialiseHeaderAsync(DocumentHeader header, DocumentChannelWriter output);
 
         /// <summary>
         /// Désérialise un document entier (automate et métadonnées).
         /// </summary>
         /// <param name="input">Le tampon depuis lequel récupérer les données à désérialiser.</param>
         /// <returns>Un automate avec son en-tête.</returns>
-        Task<Document> DeserialiseDocumentAsync(DocumentBuffer.Receiver input);
+        Task<Document> DeserialiseDocumentAsync(DocumentChannelReader input);
 
         /// <summary>
         /// Désérialise une liste d'en-têtes.

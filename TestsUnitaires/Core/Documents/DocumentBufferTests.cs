@@ -9,7 +9,7 @@ namespace AutomateDesign.Core.Documents
 {
     public class DocumentBufferTests
     {
-        private byte[] GenerateRandomData(int size)
+        public static byte[] GenerateRandomData(int size)
         {
             byte[] data = new byte[size];
 
@@ -22,45 +22,41 @@ namespace AutomateDesign.Core.Documents
         [Fact]
         public void SendAndReceiveOneChunk()
         {
-            DocumentBuffer.Sender sender;
-            DocumentBuffer.Receiver receiver;
-            (receiver, sender) = DocumentBuffer.CreateSpsc();
+            DocumentChannel channel = new();
 
             byte[] header = GenerateRandomData(39);
-            byte[] body = GenerateRandomData(DocumentBuffer.ChunkSize + 123);
+            byte[] body = GenerateRandomData(DocumentChannel.ChunkSize + 123);
 
-            var headerRcvTask = receiver.ReadHeaderAsync();
+            var headerRcvTask = channel.Reader.ReadHeaderAsync();
 
             Assert.False(headerRcvTask.IsCompleted);
 
-            sender.SendHeaderAsync(header).AsTask().Wait();
+            channel.Writer.WriteHeaderAsync(header).AsTask().Wait();
             Thread.Sleep(20);
 
             Assert.True(headerRcvTask.IsCompleted);
             Assert.Equal(header, headerRcvTask.Result);
 
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendHeaderAsync(header).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteHeaderAsync(header).AsTask);
 
-            var bodyRcvTask = receiver.ReadBodyAsync();
+            var bodyRcvTask = channel.Reader.ReadBodyAsync();
 
             Assert.False(bodyRcvTask.IsCompleted);
 
-            sender.SendBodyAsync(body).AsTask().Wait();
+            channel.Writer.WriteBodyAsync(body).AsTask().Wait();
             Thread.Sleep(20);
 
             Assert.True(bodyRcvTask.IsCompleted);
             Assert.Equal(body, bodyRcvTask.Result);
 
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendHeaderAsync(header).AsTask);
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendBodyAsync(body).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteHeaderAsync(header).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteBodyAsync(body).AsTask);
         }
 
         [Fact]
         public void SendAndReceiveMultipleChunks()
         {
-            DocumentBuffer.Sender sender;
-            DocumentBuffer.Receiver receiver;
-            (receiver, sender) = DocumentBuffer.CreateSpsc();
+            DocumentChannel channel = new();
 
             byte[] headerPart1 = GenerateRandomData(44);
             byte[] headerPart2 = GenerateRandomData(31);
@@ -68,48 +64,48 @@ namespace AutomateDesign.Core.Documents
             Array.Copy(headerPart1, 0, wholeHeader, 0, headerPart1.Length);
             Array.Copy(headerPart2, 0, wholeHeader, headerPart1.Length, headerPart2.Length);
 
-            byte[] bodyPart1 = GenerateRandomData(DocumentBuffer.ChunkSize - 123);
+            byte[] bodyPart1 = GenerateRandomData(DocumentChannel.ChunkSize - 123);
             byte[] bodyPart2 = GenerateRandomData(456);
-            byte[] bodyChunk1 = new byte[DocumentBuffer.ChunkSize];
+            byte[] bodyChunk1 = new byte[DocumentChannel.ChunkSize];
             byte[] bodyChunk2 = new byte[333];
             Array.Copy(bodyPart1, 0, bodyChunk1, 0, bodyPart1.Length);
             Array.Copy(bodyPart2, 0, bodyChunk1, bodyPart1.Length, 123);
             Array.Copy(bodyPart2, 123, bodyChunk2, 0, 333);
 
-            var headerRcvTask = receiver.ReadHeaderAsync();
+            var headerRcvTask = channel.Reader.ReadHeaderAsync();
 
             Assert.False(headerRcvTask.IsCompleted);
 
-            sender.SendHeaderPartAsync(headerPart1).AsTask().Wait();
+            channel.Writer.WriteHeaderPartAsync(headerPart1).AsTask().Wait();
             Thread.Sleep(20);
 
             Assert.False(headerRcvTask.IsCompleted);
 
-            sender.SendHeaderPartAsync(headerPart2).AsTask().Wait();
+            channel.Writer.WriteHeaderPartAsync(headerPart2).AsTask().Wait();
             Thread.Sleep(20);
 
             Assert.False(headerRcvTask.IsCompleted);
 
-            sender.FinishSendingHeaderAsync().AsTask().Wait();
+            channel.Writer.FinishWritingHeaderAsync().AsTask().Wait();
             Thread.Sleep(20);
 
             Assert.True(headerRcvTask.IsCompleted);
             Assert.Equal(wholeHeader, headerRcvTask.Result);
 
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendHeaderPartAsync(Array.Empty<byte>()).AsTask);
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendHeaderAsync(Array.Empty<byte>()).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteHeaderPartAsync(Array.Empty<byte>()).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteHeaderAsync(Array.Empty<byte>()).AsTask);
 
-            var bodyRcvEnumerator = receiver.ReadAllBodyPartsAsync().GetAsyncEnumerator();
+            var bodyRcvEnumerator = channel.Reader.ReadAllBodyPartsAsync().GetAsyncEnumerator();
             var bodyRcvMoveNextTask = bodyRcvEnumerator.MoveNextAsync();
 
             Assert.False(bodyRcvMoveNextTask.IsCompleted);
 
-            sender.SendBodyPartAsync(bodyPart1).AsTask().Wait();
+            channel.Writer.WriteBodyPartAsync(bodyPart1).AsTask().Wait();
             Thread.Sleep(20);
 
             Assert.False(bodyRcvMoveNextTask.IsCompleted);
 
-            sender.SendBodyPartAsync(bodyPart2).AsTask().Wait();
+            channel.Writer.WriteBodyPartAsync(bodyPart2).AsTask().Wait();
             Thread.Sleep(20);
 
             Assert.True(bodyRcvMoveNextTask.IsCompleted);
@@ -119,16 +115,16 @@ namespace AutomateDesign.Core.Documents
             
             Assert.False(bodyRcvMoveNextTask.IsCompleted);
 
-            sender.FinishSendingBodyAsync().AsTask().Wait();
+            channel.Writer.FinishWritingBodyAsync().AsTask().Wait();
             Thread.Sleep(20);
 
             Assert.True(bodyRcvMoveNextTask.IsCompleted);
             Assert.Equal(bodyChunk2, bodyRcvEnumerator.Current);
 
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendHeaderPartAsync(Array.Empty<byte>()).AsTask);
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendBodyPartAsync(Array.Empty<byte>()).AsTask);
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendHeaderAsync(Array.Empty<byte>()).AsTask);
-            Assert.ThrowsAsync<InvalidOperationException>(sender.SendBodyAsync(Array.Empty<byte>()).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteHeaderPartAsync(Array.Empty<byte>()).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteBodyPartAsync(Array.Empty<byte>()).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteHeaderAsync(Array.Empty<byte>()).AsTask);
+            Assert.ThrowsAsync<InvalidOperationException>(channel.Writer.WriteBodyAsync(Array.Empty<byte>()).AsTask);
         }
     }
 }

@@ -1,38 +1,63 @@
-﻿using System;
+﻿using AutomateDesign.Core.Documents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AutomateDesign.Client.Model.Cryptography
 {
     public class EncryptionMethodTests
     {
-#pragma warning disable CS1998 // Cette méthode async n'a pas d'opérateur 'await' et elle s'exécutera de façon synchrone
-        private static async IAsyncEnumerable<byte[]> EnumerateAsync(IEnumerable<byte[]> data)
-        {
-            foreach (var chunk in data) yield return chunk;
-        }
-#pragma warning restore CS1998
-
         [Fact]
         public void AesCbcRoundTrip()
         {
-            /*byte[] key = new byte[16] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
+            DocumentChannel inputChannel = new();
+            DocumentChannel middleChannel = new();
+            DocumentChannel outputChannel = new();
 
+            byte[] key = DocumentBufferTests.GenerateRandomData(16);
             IEncryptionMethod encryption = new AesCbcEncryptionMethod(key);
 
-            byte[][] data = new byte[][]
-            {
-                Encoding.UTF8.GetBytes("Hello, World!"),
-                new byte[] { 0x12, 0x23, 0x34 },
-                new byte[] { 0xab, 0xbc, 0xcd, 0xde, 0xef },
-            };
+            byte[] header = DocumentBufferTests.GenerateRandomData(32);
+            byte[] body = DocumentBufferTests.GenerateRandomData(DocumentChannel.ChunkSize + 671);
 
-            byte[][] result = encryption.DecryptAsync(encryption.EncryptAsync(EnumerateAsync(data)))
-                .ToBlockingEnumerable().ToArray();
+            Task encryptionTask = encryption.EncryptAsync(inputChannel.Reader, middleChannel.Writer);
+            Task decryptionTask = encryption.DecryptAsync(middleChannel.Reader, outputChannel.Writer);
 
-            Assert.Equal(data, result);*/
+            inputChannel.Writer.WriteHeaderAsync(header).AsTask().Wait();
+            inputChannel.Writer.WriteBodyAsync(body).AsTask().Wait();
+
+            Task.WaitAll(encryptionTask, decryptionTask);
+
+            Task<byte[]> headerTask = outputChannel.Reader.ReadHeaderAsync();
+            headerTask.Wait();
+
+            Assert.Equal(header, headerTask.Result);
+
+            Task<byte[]> bodyTask = outputChannel.Reader.ReadBodyAsync();
+            bodyTask.Wait();
+
+            Assert.Equal(body, bodyTask.Result);
+        }
+
+        [Fact]
+        public async void AesCbcChunkRoundTrip()
+        {
+            byte[] key = DocumentBufferTests.GenerateRandomData(16);
+            AesCbcEncryptionMethod encryption = new(key);
+            byte[] data = DocumentBufferTests.GenerateRandomData(123);
+
+            byte[] result = await encryption.DecryptChunkAsync(await encryption.EncryptChunkAsync(data));
+
+            Assert.Equal(data, result);
+
+            data = DocumentBufferTests.GenerateRandomData(128);
+
+            result = await encryption.DecryptChunkAsync(await encryption.EncryptChunkAsync(data));
+
+            Assert.Equal(data, result);
         }
     }
 }
