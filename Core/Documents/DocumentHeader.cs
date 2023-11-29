@@ -11,9 +11,12 @@ namespace AutomateDesign.Core.Documents
     /// </summary>
     public class DocumentHeader
     {
+        #region Attributs
         private string name;
         private DateTime lastModification;
+        #endregion
 
+        #region Properties
         /// <summary>
         /// Le nom donné à l'automate.
         /// </summary>
@@ -28,6 +31,7 @@ namespace AutomateDesign.Core.Documents
         /// Le temps depuis la dernière modification.
         /// </summary>
         public TimeSpan TimeSinceLastModification => DateTime.Now - lastModification;
+        #endregion
 
         /// <summary>
         /// Crée des métadonnées pour un automate.
