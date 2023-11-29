@@ -11,7 +11,7 @@ namespace AutomateDesign.Client.Model.Cryptography
         [Fact]
         public void Pbkdf2()
         {
-            IKeyGenerator keyGenerator = new Pbkdf2KeyGenerator();
+            Pbkdf2KeyGenerator keyGenerator = new();
 
             byte[] k1 = keyGenerator.GetKey(16, "motdepasse", "automatedesign");
             byte[] k2 = keyGenerator.GetKey(16, "motdepasse", "automatedesign");

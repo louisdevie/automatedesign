@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AutomateDesign.Client.Model.Cryptography
 {
-    internal class Pbkdf2KeyGenerator : IKeyGenerator
+    internal class Pbkdf2KeyGenerator
     {
         public byte[] GetKey(int keySize, string password, string salt)
         {
