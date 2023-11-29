@@ -98,5 +98,20 @@ namespace TestsUnitaires.Core.Users
             Assert.NotEqual(lastUse, updatedLastUse);
             Assert.True(updatedLastUse > lastUse);
         }
+
+        [Fact]
+        public void TestUnusedSince()
+        {
+            DateTime lastUse = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(15));
+            DateTime expiration = DateTime.MaxValue;
+            Session session = new Session(token, lastUse, expiration, user);
+            
+            TimeSpan expectedUnusedTime = DateTime.UtcNow.Subtract(lastUse);
+            int valueMeyhode = (int)Math.Round(session.UnusedSince.TotalMinutes);
+            int valueExpected = (int)Math.Round(expectedUnusedTime.TotalMinutes);
+
+
+            Assert.Equal(valueExpected ,valueMeyhode);
+        }
     }
 }
