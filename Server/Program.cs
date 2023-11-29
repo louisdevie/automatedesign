@@ -44,5 +44,6 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.MapGrpcService<UsersService>();
+app.MapGrpcService<DocumentsService>();
 
 app.Run();
