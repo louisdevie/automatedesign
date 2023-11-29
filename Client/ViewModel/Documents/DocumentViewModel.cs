@@ -1,4 +1,7 @@
-﻿using AutomateDesign.Core.Documents;
+﻿using AutomateDesign.Client.DependencyInjection;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Core.Documents;
+using System.Threading.Tasks;
 
 namespace AutomateDesign.Client.ViewModel.Documents
 {
@@ -9,6 +12,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         private Document document;
         private DocumentHeaderViewModel header;
         private DocumentCollectionViewModel parentCollection;
+        private IDocumentsClient client;
 
         /// <summary>
         /// Si l'automate est chargé ou non.
@@ -48,6 +52,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
             this.parentCollection = parentCollection;
             this.loaded = false;
             this.hasUnsavedChanges = false;
+            this.client = DependencyContainer.Current.GetImplementation<IDocumentsClient>();
         }
 
         /// <summary>
@@ -83,6 +88,8 @@ namespace AutomateDesign.Client.ViewModel.Documents
 
         }
 
-        public void Delete() { }
+        public void Delete() {
+            this.client.DeleteAutomateAsync(this.document.Id).Wait();
+        }
     }
 }
