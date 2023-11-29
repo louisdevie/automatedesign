@@ -48,8 +48,7 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche représentant l'opération, qui termine avec la session ouverte.</returns>
         public async Task<Session> SignInAsync()
         {
-            var result = await Users.SignInAsync(this.email, this.passwordInput.Password);
-            return new Session(result.Token, result.UserId, this.email);
+            return await Users.SignInAsync(this.email, this.passwordInput.Password);
         }
 
         public async Task<SignUpEmailVerificationViewModel> RetryEmailVerificationAsync()

@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Protos;
+﻿using AutomateDesign.Client.Model.Logic;
+using AutomateDesign.Protos;
 
 namespace AutomateDesign.Client.Model.Network
 {
@@ -34,18 +35,20 @@ namespace AutomateDesign.Client.Model.Network
             );
         }
 
-        public async Task<SignInReply> SignInAsync(string email, string password)
+        public async Task<Session> SignInAsync(string email, string password)
         {
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);
 
-            return await client.SignInAsync(
+            var response = await client.SignInAsync(
                 new EmailAndPassword
                 {
                     Email = email,
                     Password = password
                 }
             );
+
+            return new Session(response.Token, response.UserId, email);
         }
 
         public async Task ChangePasswordAsync(int userId, string newPassword, string currentPassword)
@@ -104,13 +107,13 @@ namespace AutomateDesign.Client.Model.Network
             );
         }
 
-        public async Task DisconnectAsync(string token)
+        public async Task DisconnectAsync(Session session)
         {
             using var channel = this.OpenChannel();
             var client = new Users.UsersClient(channel);
 
             await client.DisconnectAsync(
-                new SessionUser { Session = token }
+                new SessionUser { Session = session.Token }
             );
         }
     }
