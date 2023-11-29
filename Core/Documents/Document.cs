@@ -7,13 +7,16 @@ namespace AutomateDesign.Core.Documents
     /// </summary>
     public class Document
     {
+        #region Attributs
         private DocumentHeader header;
         private List<State> states;
         private List<EnumEvent> enumEvents;
         private List<Transition> transitions;
 
         private State? initialState;
+        #endregion
 
+        #region Porpoerties
         /// <summary>
         /// Les métadonnées de l'automate.
         /// </summary>
@@ -33,6 +36,7 @@ namespace AutomateDesign.Core.Documents
         /// Les transitions entre les états.
         /// </summary>
         public IEnumerable<Transition> Transitions => this.transitions;
+        #endregion
 
         /// <summary>
         /// Crée un automate vierge.
