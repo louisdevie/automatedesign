@@ -30,7 +30,7 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche représentant l'opération.</returns>
         public async Task SignOutAsync()
         {
-            await Users.DisconnectAsync(this.session.Token);
+            await Users.DisconnectAsync(this.session);
         }
 
         /// <summary>
