@@ -109,13 +109,15 @@
                 </StackPanel>
             </Canvas>
 
+
+            <!--Menu du profil-->
             <Button Name="ProfilButton"
-                    Content="Profil" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Height="50" Width="50"
                     Grid.Column="2" Click="CliclProfilButton"
-                    />
-            <!--Menu du profil-->
+                    >
+                <Image Source="/Resources/Icons/circle-user.png" Height="40" Width="40"/>
+            </Button>
             <Canvas x:Name="ProfilMenu" 
                     VerticalAlignment="Top" HorizontalAlignment="Right" 
                     Margin="0,65,55,0" 

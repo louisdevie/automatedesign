@@ -92,6 +92,12 @@ namespace AutomateDesign.Client.View
         private async void SignOut(object sender, RoutedEventArgs e)
         {
             await this.sessionVM!.SignOutAsync();
+
+        }
+
+        private void DeleteSearchButtonClick(object sender, RoutedEventArgs e)
+        {
+            TextBoxRecherche.Text=string.Empty;
         }
     }
 }

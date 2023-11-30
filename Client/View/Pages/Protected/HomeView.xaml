@@ -51,14 +51,68 @@
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <!--Zone principale-->
+        <ScrollViewer PanningMode="VerticalOnly" Grid.Row="1">
+            <ItemsControl x:Name="AumateList">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Grid.Row="0" MaxWidth="500">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Name="btn1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,20,0">
+                                <Image Source="./Images/AutomateEx.png"></Image>
+                            </Button>
+                            <TextBlock FontSize="25" Text="{Binding Name}" 
+                                       HorizontalAlignment="Center" 
+                                       Grid.Row="1" Grid.Column="0"/>
+                            <TextBlock FontSize="25" Text="{Binding Date}" 
+                                       HorizontalAlignment="Center" 
+                                       Grid.Row="2" Grid.Column="0"/>
+                            <Button Grid.Row="1" Grid.Column="1"
+                                    Margin="0,20,20,20"
+                                    Width="30" Height="30">
+                                <Image Source="/Resources/Icons/pencil.png" 
+                                       Width="20"/>
+                            </Button>
+                            <Button Grid.Row="1" Grid.Column="2"
+                                    Margin="20,20,-20,20"
+                                    Width="30" Height="30">
+                                <Image Source="/Resources/Icons/trash.png" 
+                                       Width="20"/>
+                            </Button>
+
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <!--Barre du haut-->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="500"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
-
-            <Button Content="L" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <!--Zone de recherche-->
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" 
+                    Margin="3,0,0,0" Height="18" Width="18">
+                <Image Source="/Resources/Icons/search.png" Width="12" RenderTransformOrigin="0.1,0.55"/>
+            </Button>
             <TextBox 
                 x:Name="TextBoxRecherche"
                 Grid.Column="0" 
@@ -67,19 +121,25 @@
                 Text="Rechercher" 
                 GotKeyboardFocus="HaveFocusRecherche" LostFocus="LostFocusRecherche" Margin="26,0,26,0"
             />
-            <Button Content="X" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="479,0,0,0"/>
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" 
+                    Margin="479,0,0,0" Click="DeleteSearchButtonClick">
+                <Image Source="/Resources/Icons/cross-small.png" />
+            </Button>
 
+
+            <!--Menu du profil-->
             <Button Name="ProfilButton"
-                    Content="Profil" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Height="50" Width="50"
                     Grid.Column="2" Click="CliclProfilButton"
-                    />  
+                    >
+                <Image Source="/Resources/Icons/circle-user.png" Height="40" Width="40"/>
+            </Button>
             <Canvas x:Name="ProfilMenu" 
                     VerticalAlignment="Top" HorizontalAlignment="Right" 
-                    Margin="0,2,150,0" 
+                    Margin="0,65,55,0" 
                     Grid.Column="1"
-                    >   
+                    >
                 <StackPanel Height="Auto" Width="Auto"
                             Orientation="Vertical">
                     <Label Name="emailLabel" 
