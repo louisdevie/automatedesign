@@ -30,8 +30,7 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche représentant l'opération, qui termine avec la session nouvellement ouverte.</returns>
         public async Task<Session> AutoSignInAsync()
         {
-            var result = await Users.SignInAsync(email, password);
-            return new Session(result.Token, result.UserId, email);
+            return await Users.SignInAsync(email, password);
         }
     }
 }
