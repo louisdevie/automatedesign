@@ -1,4 +1,7 @@
-﻿using AutomateDesign.Client.Model.Logic;
+﻿using AutomateDesign.Protos;
+using Grpc.Core;
+using System.Reflection;
+using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Protos;
 
 namespace AutomateDesign.Client.Model.Network
@@ -16,6 +19,7 @@ namespace AutomateDesign.Client.Model.Network
                     Email = email,
                     Password = password
                 }
+                
             );
 
             return reply.UserId;

@@ -39,7 +39,7 @@
             set
             {
                 this.kind = value;
-                this.document.SetInitialState(this);
+                if (this.kind == StateKind.Initial) this.document.SetInitialState(this);
             }
         }
 
@@ -55,10 +55,7 @@
             this.document = document;
             this.id = id;
             this.name = name;
-            this.kind = kind;
-            if (this.kind == StateKind.Initial) this.document.SetInitialState(this);
+            this.Kind = kind;
         }
-
-        public State() { }
     }
 }

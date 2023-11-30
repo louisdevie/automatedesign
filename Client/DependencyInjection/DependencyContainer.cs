@@ -5,7 +5,7 @@ using System.Reflection;
 namespace AutomateDesign.Client.DependencyInjection
 {
     /// <summary>
-    /// Le conteneur d'injection de dépendances.
+    /// Un conteneur d'injection de dépendances simple.
     /// </summary>
     public class DependencyContainer
     {

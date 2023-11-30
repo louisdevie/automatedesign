@@ -1,11 +1,10 @@
-﻿using AutomateDesign.Core.Users;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestsUnitaires.Core.Users
+namespace AutomateDesign.Core.Users
 {
     public class SessionTest
     {
@@ -47,6 +46,21 @@ namespace TestsUnitaires.Core.Users
             Assert.Equal(session.Expiration, expiration);
         }
 
+        [Fact]
+        public void TestGetExpired()
+        {
+            // Date d'expiration dépassé
+            Session session = new Session(token, lastUse, DateTime.MinValue, user);
+            Assert.True(session.Expired);
+
+            // lastUse > 30 minutes
+            session = new Session(token, lastUse, DateTime.MaxValue, user);
+            Assert.True(session.Expired);
+
+            // Session valide
+            session = new Session(token, DateTime.Now, DateTime.MaxValue, user);
+            Assert.False(session.Expired);
+        }
 
     }
 }
