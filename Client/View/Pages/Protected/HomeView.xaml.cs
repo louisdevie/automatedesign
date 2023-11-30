@@ -34,6 +34,7 @@ namespace AutomateDesign.Client.View
             items.Add(new Automate("auto11", "18/10/2023"));
 
             AumateList.ItemsSource = items;
+            ProfilMenu.Visibility = Visibility.Hidden;
            
         }
 
@@ -80,6 +81,11 @@ namespace AutomateDesign.Client.View
         private void LogOutButton(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void DeleteSearchButtonClick(object sender, RoutedEventArgs e)
+        {
+            TextBoxRecherche.Text=string.Empty;
         }
     }
 
