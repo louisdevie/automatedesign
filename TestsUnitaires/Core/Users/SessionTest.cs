@@ -1,11 +1,10 @@
-﻿using AutomateDesign.Core.Users;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestsUnitaires.Core.Users
+namespace AutomateDesign.Core.Users
 {
     public class SessionTest
     {

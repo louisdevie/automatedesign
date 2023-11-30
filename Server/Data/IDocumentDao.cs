@@ -24,7 +24,7 @@ namespace AutomateDesign.Server.Data
         /// Récupère tous les automates d'un utilisateur.
         /// </summary>
         /// <returns>Les métadonnées des automates. Chaque morceau doit correspondre à un automate.</returns>
-        public IAsyncEnumerable<byte[]> ReadAllHeadersAsync(int userId);
+        public IAsyncEnumerable<byte[]> ReadAllHeadersAsync(int userId, CancellationToken ct = default);
 
         /// <summary>
         /// Enregistre un automate existant.
