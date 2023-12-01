@@ -1,17 +1,21 @@
-﻿using MySql.Data.MySqlClient;
+﻿    using MySql.Data.MySqlClient;
 
 namespace AutomateDesign.Server.Data.MariaDb
 {
     public class BaseDao
     {
+        #region Attributs
         private DatabaseConnector connector;
+        #endregion
+
+        #region Properties
+        public MySqlConnection Connect() => this.connector.Connect();
+        #endregion
 
         public BaseDao(DatabaseConnector connector)
         {
             this.connector = connector;
         }
-
-        public MySqlConnection Connect() => this.connector.Connect();
     }
 
     public static class MySqlQueryExtensions
@@ -62,6 +66,12 @@ namespace AutomateDesign.Server.Data.MariaDb
             return (T)PrepareCommand(connection, query, parameters).ExecuteScalar();
         }
 
+        /// <summary>
+        /// Renvoie la cle primaire du dernier element ajoute a la bdd
+        /// </summary>
+        /// <param name="connection">la connexion a la bdd a utiliser</param>
+        /// <returns>la cle primaire</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static int GetLastInsertId(this MySqlConnection connection)
         {
             MySqlCommand cmd = connection.CreateCommand();

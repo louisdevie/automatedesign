@@ -5,6 +5,7 @@ using AutomateDesign.Server.Data;
 using AutomateDesign.Server.Data.MariaDb.Implementations;
 using AutomateDesign.Server.Model;
 using EmailSender = AutomateDesign.Server.Model.EmailSender;
+using AutomateDesign.Server.Middleware.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,11 @@ DatabaseSettings dbSettings = builder.Configuration.GetSection("DatabaseSettings
 builder.Services.AddSingleton(new DatabaseConnector(dbSettings))
                 .AddScoped<IUserDao, UserDao>()
                 .AddScoped<IRegistrationDao, RegistrationDao>()
-                .AddScoped<ISessionDao, SessionDao>();
+                .AddScoped<ISessionDao, SessionDao>()
+                .AddScoped<IDocumentDao, DocumentDao>();
+
+builder.Services.AddAuthentication("Bearer").AddBearer();
+builder.Services.AddAuthorization();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<EmailSender>();
@@ -38,7 +43,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGrpcService<UsersService>();
+app.MapGrpcService<DocumentsService>();
 
 app.Run();

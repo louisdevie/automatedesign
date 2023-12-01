@@ -5,6 +5,7 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{588C7ABC-DEB3-4581-BFCB-B5EAB4D29D72}"
 	ProjectSection(SolutionItems) = preProject
+		Protos\documents.proto = Protos\documents.proto
 		Protos\helpers.proto = Protos\helpers.proto
 		Protos\users.proto = Protos\users.proto
 	EndProjectSection
@@ -20,7 +21,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientNetwork", "GrpcNetworkClient\ClientNetwork.csproj", "{C68C0105-5470-4813-96AF-C1DEAE772765}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientModel", "ClientModel\ClientModel.csproj", "{C30B94A8-B9B7-453E-AADA-E2D0BBF634FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsUnitaires", "TestsUnitaires\TestsUnitaires.csproj", "{1CE77164-AFC0-4954-A1DE-988AD049A0C7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{AB88211D-EC62-4FCB-B4AC-225ED0380DE3}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\automatedesign-ddl.sql = SQL\automatedesign-ddl.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +48,14 @@ Global
 		{B99AF28B-FA99-4C36-BCF9-6039F9BE2429}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B99AF28B-FA99-4C36-BCF9-6039F9BE2429}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B99AF28B-FA99-4C36-BCF9-6039F9BE2429}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C68C0105-5470-4813-96AF-C1DEAE772765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C68C0105-5470-4813-96AF-C1DEAE772765}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C68C0105-5470-4813-96AF-C1DEAE772765}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C68C0105-5470-4813-96AF-C1DEAE772765}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C30B94A8-B9B7-453E-AADA-E2D0BBF634FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C30B94A8-B9B7-453E-AADA-E2D0BBF634FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C30B94A8-B9B7-453E-AADA-E2D0BBF634FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C30B94A8-B9B7-453E-AADA-E2D0BBF634FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CE77164-AFC0-4954-A1DE-988AD049A0C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CE77164-AFC0-4954-A1DE-988AD049A0C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CE77164-AFC0-4954-A1DE-988AD049A0C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CE77164-AFC0-4954-A1DE-988AD049A0C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

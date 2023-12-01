@@ -1,10 +1,11 @@
-﻿using AutomateDesign.Client.Model;
-using AutomateDesign.Client.Model.Network;
-using AutomateDesign.Client.View.Controls;
+﻿using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.ViewModel.Users;
+using System;
+using AutomateDesign.Client.Model.Logic.Verifications;
 
 namespace AutomateDesign.Client.View
 {
@@ -13,40 +14,38 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class PasswordResetView : NavigablePage
     {
-        private UsersClient users;
-        private EmailInputHelper emailInputHelper;
-
-        public string Email { get; set; }
+        private AskForPasswordResetViewModel viewModel;
 
         public PasswordResetView()
         {
-            this.users = new UsersClient();
-            this.Email = string.Empty;
+            this.viewModel = new();
 
+            DataContext = this.viewModel;
             InitializeComponent();
-            this.emailInputHelper = new(this.emailBox);
-            DataContext = this;
+
+            EmailInputHelper.AttachTo(this.emailBox);
         }
 
-        private void ResetPasswordButtonClick(object sender, RoutedEventArgs e)
+        private async void ResetPasswordButtonClick(object sender, RoutedEventArgs e)
         {
-            this.users.ResetPasswordAsync(this.Email)
-               .ContinueWith(task =>
-               {
-                   if (task.IsFaulted)
-                   {
-                       ErrorMessageBox.Show(task.Exception?.InnerException);
-                       this.IsEnabled = true;
-                   }
-                   else
-                   {
-                       this.Navigator.Go(new EmailVerificationView(new PasswordResetVerification(task.Result)));
-                   }
-               },
-               TaskScheduler.FromCurrentSynchronizationContext());
-
             this.IsEnabled = false;
 
+            try
+            {
+                int userId = await this.viewModel.AskForPasswordResetAsync();
+                this.Navigator.Go(
+                    new EmailVerificationView(
+                        new PasswordResetVerificationViewModel(
+                            new PasswordResetVerification(userId)
+                        )
+                    )
+                );
+            }
+            catch (Exception error)
+            {
+                ErrorMessageBox.Show(error);
+                this.IsEnabled = true;
+            }
         }
 
         private void BackButtonClick(object sender, RoutedEventArgs e)

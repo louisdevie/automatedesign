@@ -1,0 +1,83 @@
+﻿<my:NavigablePage x:Class="AutomateDesign.Client.View.SignInView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AutomateDesign.Client.View"
+      xmlns:my="clr-namespace:AutomateDesign.Client.View.Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="400"
+      Title="LoginView">
+
+    <Grid Margin="40">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <Label
+               VerticalAlignment="Center"
+               Style="{StaticResource Title}" 
+               Content="AutomateDesign"
+               />
+
+        <Label Grid.Row="1" 
+               VerticalAlignment="Bottom"
+               Style="{StaticResource InputLabel}"
+               Content="Adresse mail"
+               />
+        <TextBox x:Name="emailBox"
+                 Grid.Row="2"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                 Style="{StaticResource TextInput}"
+                 Text="{Binding Path=Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 />
+
+        <Label Grid.Row="3"
+               VerticalAlignment="Bottom"
+               Style="{StaticResource InputLabel}"
+               Content="Mot de passe"
+               />
+        <PasswordBox x:Name="passBox" 
+                     Grid.Row="4"
+                     VerticalAlignment="Top"
+                     Style="{StaticResource PasswordInput}"
+                     KeyDown="PasswordBoxKeyDown"
+                     />
+
+        <Button Grid.Row="5"
+                Content="Connexion"
+                HorizontalAlignment="Right" VerticalAlignment="Center"
+                Click="SignInButtonClick"
+                x:Name="signInButton"
+                Style="{StaticResource AccentedButton}"
+                />
+
+        <Button Grid.Row="7"
+                Content="Pas encore inscrit ?"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                Style="{StaticResource LinkButton}"
+                Click="NoAccountButtonClick"
+                />
+
+        <Button Grid.Row="8"
+                Content="Mot de passe oublié ?" 
+                HorizontalAlignment="Center"  VerticalAlignment="Bottom" 
+                Style="{StaticResource LinkButton}"
+                Click="PasswordForgottenButtonClick"
+                />
+
+
+
+    </Grid>
+</my:NavigablePage>

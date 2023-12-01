@@ -10,97 +10,45 @@
       Title="EditAutomateView">
 
     <!--Page-->
-    <Grid Background="LightGray">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <!--Zone de dessin-->
+        <!--Zone principale-->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="163*"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
+            
             <!--Zone de dessin-->
-            <Grid Name="ZoneDessinAutomate"
-                    Grid.Column="0" Grid.ColumnSpan="2"
-                    Background="White"
-                    >
-
-            </Grid>
-            <!--Liste des elements-->
-            <Grid Background="LightGray" Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
-                <!--Etats-->
-                <Label Content="Etats :"
-                       FontSize="20"
-                       Grid.Row="0" 
-                       Margin="18,10,10,267" 
-                       />
-                <StackPanel Name="StackPanelStates"
-                            Height="257" Width="230" 
-                            HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Orientation="Vertical" 
-                            Margin="0,43,0,0" 
-                            Grid.Row="0"
-                            >
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                </StackPanel>
-                <!--Evenements-->
-                <Label Content="Evènements :"
-                       FontSize="20"
-                       Grid.Row="1" 
-                       Margin="18,10,10,267" 
-                       />
-                <StackPanel Name="StackPanelEvenements"
-                            Height="257" Width="230" 
-                            HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Orientation="Vertical" 
-                            Margin="0,43,0,0" 
-                            Grid.Row="1"
-                            >
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                </StackPanel>
-                <!--Transitions-->
-                <Label Content="Transitions :"
-                       FontSize="20"
-                       Grid.Row="2" 
-                       Margin="18,10,10,267" 
-                       />
-                <StackPanel Name="StackPanelTransitions"
-                            Height="257" Width="230" 
-                            HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Orientation="Vertical" 
-                            Margin="0,43,0,0" 
-                            Grid.Row="2"
-                            >
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                    <Label Content="Element Temporaire"/>
-                </StackPanel>
-
-            </Grid>
+            <my:DiagramEditor Grid.Column="0" x:Name="diagramEditor"></my:DiagramEditor>
+            
+            <!--Side Barre-->
+            <TreeView Name="treeView"
+                      Grid.Column="1"
+                      Background="Gray">
+                <TreeViewItem Header="Etats"
+                              Name="StateTreeViewItem">
+                    
+                </TreeViewItem>
+                <TreeViewItem Header="Transitions"
+                              Name="TransitionTreeViewItem">
+                    
+                </TreeViewItem>
+                <TreeViewItem Header="Evènements"
+                              Name="EventTreeViewItem">
+                    
+                </TreeViewItem>
+            </TreeView>
         </Grid>
         <!--Barre haut de page-->
-        <Grid Grid.Row="0"
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
               Background="LightBlue"
-              >
+              Panel.ZIndex="100">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
@@ -120,8 +68,10 @@
                     VerticalAlignment="Center" HorizontalAlignment="Left"
                     Height="50" Width="50"
                     Margin="70,0,0,0"
-                    Grid.Column="1" 
+                    Grid.Column="1"
+                    Click="AddTransitionButtonClick"
                     />
+
             <Button Name="AddStartStateButton"
                     Content="Etat de départ"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
@@ -138,7 +88,7 @@
                     />
 
             <!--Menu burger-->
-            <ToggleButton x:Name="BurgerButton" 
+            <ToggleButton x:Name="BurgerButton"
                           Grid.Column="0"
                           HorizontalAlignment="Center" VerticalAlignment="Center"
                           Height="50" Width="50"
@@ -158,7 +108,6 @@
                     <Button Content="Exporter" />
                 </StackPanel>
             </Canvas>
-
 
             <!--Menu du profil-->
             <Button Name="ProfilButton"
@@ -188,5 +137,11 @@
                 </StackPanel>
             </Canvas>
         </Grid>
+        
+        <StatusBar Grid.Row="2" FontSize="14" Padding="10 4">
+            <StatusBarItem x:Name="status" HorizontalAlignment="Left"/>
+        </StatusBar>
+        <TreeView/>
+
     </Grid>
 </my:NavigablePage>

@@ -25,6 +25,7 @@
 	<ItemGroup>
 		<ProtoBuf Include="../Protos/helpers.proto" GrpcServices="Server" />
 		<Protobuf Include="../Protos/users.proto" GrpcServices="Server" />
+		<Protobuf Include="../Protos/documents.proto" GrpcServices="Server" />
 	</ItemGroup>
 
 	<ItemGroup>

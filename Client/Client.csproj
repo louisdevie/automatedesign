@@ -27,12 +27,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core.fr" Version="2.14.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Include="App.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClientModel\ClientModel.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\GrpcNetworkClient\ClientNetwork.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,9 +53,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="View\Images\ExAutomate.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Compile Update="View\Helpers\SuggestionInputDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>

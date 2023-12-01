@@ -1,8 +1,12 @@
-﻿using AutomateDesign.Client.View.Controls;
+﻿using AutomateDesign.Client.Model.Logic;
+using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Navigation;
-using System.Collections.Generic;
-using System.ComponentModel;
+using AutomateDesign.Client.ViewModel.Documents;
+using AutomateDesign.Client.ViewModel.Users;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace AutomateDesign.Client.View
 {
@@ -11,52 +15,58 @@ namespace AutomateDesign.Client.View
     /// </summary>
     public partial class HomeView : NavigablePage
     {
-        private List<Automate> items;
+        private SessionViewModel? sessionVM;
+        private DocumentCollectionViewModel documentsVM;
+
+        public string CurrentUserEmail => this.sessionVM?.UserEmail ?? "";
+
+        public ObservableCollection<DocumentViewModel> Documents => this.documentsVM;
+
         public override WindowPreferences Preferences => new(
-            WindowPreferences.WindowSize.FullScreen,
+            WindowPreferences.WindowSize.Large,
             WindowPreferences.ResizeMode.Resizeable
         );
 
         public HomeView()
         {
-            InitializeComponent();
-            items = new List<Automate>();
-            items.Add(new Automate("auto1", "16/10/2023"));
-            items.Add(new Automate("auto2", "17/10/2023"));
-            items.Add(new Automate("auto3", "18/10/2023"));
-            items.Add(new Automate("auto4", "18/10/2023"));
-            items.Add(new Automate("auto5", "18/10/2023"));
-            items.Add(new Automate("auto6", "18/10/2023"));
-            items.Add(new Automate("auto7", "18/10/2023"));
-            items.Add(new Automate("auto8", "18/10/2023"));
-            items.Add(new Automate("auto9", "18/10/2023"));
-            items.Add(new Automate("auto10", "18/10/2023"));
-            items.Add(new Automate("auto11", "18/10/2023"));
+            this.documentsVM = new();
 
+            Task.Run(this.documentsVM.Reload);
+
+            DataContext = this;
+            InitializeComponent();
             AumateList.ItemsSource = items;
             ProfilMenu.Visibility = Visibility.Hidden;
-           
+        }
+        
+        public override void OnNavigatedToThis(bool clearedHistory)
+        {
+            if (this.Navigator.Session is Session session)
+            {
+                this.sessionVM = new SessionViewModel(session);
+            }
         }
 
-        private void HaveFocusRecherche(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void HaveFocusRecherche(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (this.TextBoxRecherche.Text == "Rechercher") 
+            if (this.TextBoxRecherche.Text == "Rechercher")
             {
                 this.TextBoxRecherche.Text = "";
             }
         }
 
-        private void LostFocusRecherche(object sender, System.Windows.RoutedEventArgs e)
+        private void LostFocusRecherche(object sender, RoutedEventArgs e)
         {
-            if (this.TextBoxRecherche.Text == "") {
+            if (this.TextBoxRecherche.Text == "")
+            {
                 this.TextBoxRecherche.Focus();
                 this.TextBoxRecherche.Text = "Rechercher";
             }
         }
 
-        private void InitializationAutomate()
+        private void NewDocumentClick(object sender, RoutedEventArgs e)
         {
-
+            this.Navigator.Go(new EditAutomateView());
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)
@@ -73,14 +83,17 @@ namespace AutomateDesign.Client.View
             }
         }
 
-        private void ChangePwdButton(object sender, RoutedEventArgs e)
+        private void ChangePassword(object sender, RoutedEventArgs e)
         {
+            ChangePasswordPopup popup = new(this.Navigator.Session, this.sessionVM!.ChangePassword());
+            popup.Owner = this.Navigator.Window;
 
+            popup.ShowDialog();
         }
 
-        private void LogOutButton(object sender, RoutedEventArgs e)
+        private async void SignOut(object sender, RoutedEventArgs e)
         {
-
+            await this.sessionVM!.SignOutAsync();
         }
 
         private void DeleteSearchButtonClick(object sender, RoutedEventArgs e)
@@ -99,7 +112,5 @@ namespace AutomateDesign.Client.View
             this.name = name;
             this.date = date;
         }
-
-     
     }
 }

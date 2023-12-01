@@ -9,9 +9,12 @@ namespace AutomateDesign.Core.Users
     /// </summary>
     public class HashedPassword
     {
+        #region Attributs
         private byte[] hash;
         private string salt;
+        #endregion
 
+        #region Properties
         /// <summary>
         /// Le hash du mot de passe.
         /// </summary>
@@ -21,6 +24,7 @@ namespace AutomateDesign.Core.Users
         /// Le sel utilisé pour hacher le mot de passe.
         /// </summary>
         public string Salt => salt;
+        #endregion
 
         /// <summary>
         /// Crée un <see cref="HashedPassword"/> à partir d'informations existantes.

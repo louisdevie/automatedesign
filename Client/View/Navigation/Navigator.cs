@@ -1,5 +1,4 @@
-﻿using AutomateDesign.Client.Model;
-using Google.Protobuf.WellKnownTypes;
+﻿using AutomateDesign.Client.Model.Logic;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -7,11 +6,13 @@ using System.Windows.Controls;
 
 namespace AutomateDesign.Client.View.Navigation
 {
+    /// <summary>
+    /// Gère la navigation au sein d'un conteneur.
+    /// </summary>
     public class Navigator
     {
-        private Window window;
-        private Frame frame;
         private Session? session;
+        private INavigationContainer container;
         private Stack<INavigable> history;
         private INavigable current;
 
@@ -21,27 +22,44 @@ namespace AutomateDesign.Client.View.Navigation
             set
             {
                 this.current = value;
-                this.frame.Content = value;
+                this.container.ChangeContent(value);
             }
         }
 
+        /// <summary>
+        /// La session actuelle.
+        /// </summary>
         public Session? Session { get => this.session; set => this.session = value; }
 
+        /// <summary>
+        /// La fenêtre parente.
+        /// </summary>
+        public Window Window => this.container.Window;
+
+        /// <summary>
+        /// Crée un navigateur.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="initialPage"></param>
 #pragma warning disable CS8618 // `current` est bien assigné
-        public Navigator(Window window, Frame frame, INavigable initialPage)
+        public Navigator(INavigationContainer container, INavigable initialPage)
         {
-            this.window = window;
-            this.frame = frame;
+            this.container = container;
             this.session = null;
             this.history = new Stack<INavigable>();
 
             initialPage.UseNavigator(this);
             this.Current = initialPage;
-            this.Current.Preferences.ApplyTo(this.window);
+            this.container.ApplyPreferences(this.Current.Preferences);
             this.Current.OnNavigatedToThis(true);
         }
 #pragma warning restore CS8618
 
+        /// <summary>
+        /// Navigue vers une autre vue.
+        /// </summary>
+        /// <param name="nextPage">La nouvelle vue.</param>
+        /// <param name="clearAllHistory">Si <see langword="true"/>, l'historique sera effacé avant de passer à la vue suivante.</param>
         public void Go(INavigable nextPage, bool clearAllHistory = false)
         {
             if (clearAllHistory)
@@ -55,10 +73,15 @@ namespace AutomateDesign.Client.View.Navigation
 
             nextPage.UseNavigator(this);
             this.Current = nextPage;
-            this.Current.Preferences.ApplyTo(this.window);
+            this.container.ApplyPreferences(this.Current.Preferences);
             nextPage.OnNavigatedToThis(clearAllHistory);
         }
 
+        /// <summary>
+        /// Retourne à la page précédente.
+        /// </summary>
+        /// <param name="ignoreEnd">Si <see langword="true"/>, le cas ou il n'y a aucune vue dans l'historique est ignoré silencieusement.</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void Back(bool ignoreEnd = false)
         {
             if (ignoreEnd && this.history.Count == 0) return;
@@ -66,7 +89,7 @@ namespace AutomateDesign.Client.View.Navigation
             try
             {
                 this.Current = this.history.Pop();
-                this.Current.Preferences.ApplyTo(this.window);
+                this.container.ApplyPreferences(this.Current.Preferences);
                 this.Current.OnWentBackToThis();
             }
             catch (InvalidOperationException)
