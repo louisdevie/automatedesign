@@ -22,12 +22,12 @@ namespace AutomateDesign.Client.Model.Network
             return new JsonDocumentSerialiser();
         }
 
-        public Task DeleteDocument(Session session, int documentId)
+        public async Task DeleteDocument(Session session, int documentId)
         {
             using var channel = this.OpenChannel();
             var document = new Documents.DocumentsClient(channel);
 
-            document.DeleteDocument(
+            await document.DeleteDocumentAsync(
                 new DocumentIdOnly
                 {
                     DocumentId = documentId
