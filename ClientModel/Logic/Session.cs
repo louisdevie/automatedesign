@@ -1,4 +1,6 @@
-﻿namespace AutomateDesign.Client.Model.Logic
+﻿using AutomateDesign.Client.Model.Cryptography;
+
+namespace AutomateDesign.Client.Model.Logic
 {
     /// <summary>
     /// Les informations de session côté client. À ne pas confondre avec <see cref="Core.Users.Session"/>.
@@ -23,6 +25,9 @@
         /// L'adresse mail de l'utilisateur connecté.
         /// </summary>
         public string UserEmail => this.userEmail;
+
+        public IEncryptionMethod EncryptionMethod { get; internal set; }
+        public byte[] UserEncryptionKey { get; internal set; }
 
         /// <summary>
         /// Crée une nouvelle session.

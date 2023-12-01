@@ -2,7 +2,7 @@
 
 namespace AutomateDesign.Client.ViewModel.Documents
 {
-    public class DocumentCollectionViewModel : ObservableCollection<DocumentViewModel>
+    public class DocumentCollectionViewModel : ObservableCollection<DocumentBaseViewModel>
     {
         /// <summary>
         /// Recharge les automates.
@@ -10,15 +10,16 @@ namespace AutomateDesign.Client.ViewModel.Documents
         public void Reload()
         {
             this.Clear();
+            this.Add(new NewDocumentViewModel());
         }
 
         /// <summary>
         /// Crée un nouvel automate et l'ajoute à la collection.
         /// </summary>
         /// <returns>L'automate créé.</returns>
-        public DocumentViewModel NewDocument()
+        public DocumentBaseViewModel NewDocument()
         {
-            DocumentViewModel newDocument = DocumentViewModel.CreateEmptyDocument(this);
+            DocumentBaseViewModel newDocument = ExistingDocumentViewModel.CreateEmptyDocument(this);
             this.Add(newDocument);
             return newDocument;
         }

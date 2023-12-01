@@ -2,7 +2,7 @@
 
 namespace AutomateDesign.Client.ViewModel.Documents
 {
-    public class DocumentViewModel : BaseViewModel
+    public class ExistingDocumentViewModel : DocumentBaseViewModel
     {
         private bool loaded;
         private bool hasUnsavedChanges;
@@ -36,12 +36,16 @@ namespace AutomateDesign.Client.ViewModel.Documents
             }
         }
 
+        public override string Name => this.header.Name;
+
+        public override string TimeSinceLastModification => this.header.TimeSinceLastModification;
+
         /// <summary>
         /// Crée un modèle-vue à partir d'un automate.
         /// </summary>
         /// <param name="document">L'automate associé.</param>
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
-        public DocumentViewModel(Document document, DocumentCollectionViewModel parentCollection)
+        public ExistingDocumentViewModel(Document document, DocumentCollectionViewModel parentCollection)
         {
             this.document = document;
             this.header = new(this.document.Header);
@@ -55,7 +59,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// </summary>
         /// <param name="headerOnly">Les métadonnées de l'automate.</param>
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
-        public DocumentViewModel(DocumentHeader headerOnly, DocumentCollectionViewModel parentCollection)
+        public ExistingDocumentViewModel(DocumentHeader headerOnly, DocumentCollectionViewModel parentCollection)
         : this(new Document(headerOnly), parentCollection) { }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// </summary>
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
         /// <returns></returns>
-        public static DocumentViewModel CreateEmptyDocument(DocumentCollectionViewModel parentCollection)
+        public static ExistingDocumentViewModel CreateEmptyDocument(DocumentCollectionViewModel parentCollection)
         {
             return new(new Document(), parentCollection);
         }

@@ -20,7 +20,7 @@ namespace AutomateDesign.Client.View
 
         public string CurrentUserEmail => this.sessionVM?.UserEmail ?? "";
 
-        public ObservableCollection<DocumentViewModel> Documents => this.documentsVM;
+        public ObservableCollection<DocumentBaseViewModel> Documents => this.documentsVM;
 
         public override WindowPreferences Preferences => new(
             WindowPreferences.WindowSize.Large,
@@ -43,6 +43,7 @@ namespace AutomateDesign.Client.View
             {
                 this.sessionVM = new SessionViewModel(session);
             }
+            this.documentsVM.Reload();
         }
 
         private void HaveFocusRecherche(object sender, KeyboardFocusChangedEventArgs e)

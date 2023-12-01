@@ -38,10 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientNetwork\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ClientModel\ClientModel.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>

@@ -1,60 +1,17 @@
 ﻿using AutomateDesign.Core.Documents;
 using Microsoft.VisualBasic;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Channels;
 
 namespace AutomateDesign.Client.Model.Cryptography
 {
-    internal class AesCbcEncryptionMethod : IEncryptionMethod
+    public class AesCbcEncryptionMethod : IEncryptionMethod
     {
         private byte[] key;
 
         public AesCbcEncryptionMethod(byte[] key)
         {
             this.key = key;
-        }
-
-        public async IAsyncEnumerable<byte[]> DecryptAsync(IAsyncEnumerable<byte[]> data)
-        {
-            var enumerator = data.GetAsyncEnumerator();
-
-            if (!await enumerator.MoveNextAsync()) yield break;
-            byte[] iv = new byte[16];
-            Array.Copy(enumerator.Current, 0, iv, 0, 16);
-            byte padding = enumerator.Current[16];
-
-            Aes algo = Aes.Create();
-            algo.Key = this.key;
-            algo.IV = iv;
-
-            ICryptoTransform transform = algo.CreateDecryptor();
-            using MemoryStream binaryStream = new();
-            using CryptoStream cryptoStream = new(binaryStream, transform, CryptoStreamMode.Write);
-
-            cryptoStream.Write(enumerator.Current, 17, enumerator.Current.Length - 17);
-            cryptoStream.Flush();
-            byte[] chunk = new byte[enumerator.Current.Length - (17 + padding)];
-            var a = binaryStream.ToArray();
-            binaryStream.Seek(0, SeekOrigin.Begin);
-            binaryStream.Read(chunk);
-            yield return chunk;
-            binaryStream.SetLength(0);
-            binaryStream.Seek(0, SeekOrigin.Begin);
-
-            while (await enumerator.MoveNextAsync())
-            {
-                cryptoStream.Write(enumerator.Current);
-                chunk = new byte[enumerator.Current.Length];
-                binaryStream.Read(chunk);
-                yield return chunk;
-                binaryStream.SetLength(0);
-                binaryStream.Seek(0, SeekOrigin.Begin);
-            }
         }
 
         public async Task DecryptAsync(DocumentChannelReader input, DocumentChannelWriter output)
@@ -99,8 +56,19 @@ namespace AutomateDesign.Client.Model.Cryptography
             }
             await output.FinishWritingBodyAsync();
         }
-         
-        private static int MaximumPlainChunkSize => DocumentChannel.ChunkSize - 17; // moins 16 octets 
+
+        public async Task DecryptUnstructuredAsync(ChannelReader<byte[]> input, ChannelWriter<byte[]> output)
+        {
+            await foreach (byte[] chunk in input.ReadAllAsync())
+            {
+                byte[] decrypted = await this.DecryptChunkAsync(chunk);
+                await output.WriteAsync(decrypted);
+            }
+            output.Complete();
+        }
+
+        // le vecteur d'initialisation prends 16 octets et le bourrage prends au minimum 1 octet
+        private static int MaximumPlainChunkSize => DocumentChannel.ChunkSize - 17; 
 
         internal async Task<byte[]> EncryptChunkAsync(ReadOnlyMemory<byte> chunk)
         {

@@ -1,4 +1,5 @@
 ﻿using AutomateDesign.Client.Model.Logic;
+using AutomateDesign.Client.Model.Pipelines;
 using AutomateDesign.Core.Documents;
 
 namespace AutomateDesign.Client.Model.Network
@@ -9,8 +10,8 @@ namespace AutomateDesign.Client.Model.Network
         /// Récupère tous les en-têtes des documents d'un utilisateur.
         /// </summary>
         /// <param name="session">Les informations de l'utilisateur connecté.</param>
-        /// <returns>Un énumérable asynchrone qui cède les en-têtes au fur et à mesure qu'ils sont reçus.</returns>
-        IAsyncEnumerable<DocumentHeader> GetAllHeader(Session session);
+        /// <returns>Un <see cref="HeadersReceptionPipeline"/> qui représente l'opération.</returns>
+        HeadersReceptionPipeline GetAllHeaders(Session session);
 
         /// <summary>
         /// Enregistre uniquement les métadonnées d'un document.
