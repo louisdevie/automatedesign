@@ -21,7 +21,8 @@
     <None Remove="Resources\Icons\pencil.png" />
     <None Remove="Resources\Icons\search.png" />
     <None Remove="Resources\Icons\trash.png" />
-    <None Remove="Resources\Images\AutomateEx.png" />
+    <None Remove="View\Images\AutomateEx.png" />
+    <None Remove="View\Images\ExAutomate.png" />
   </ItemGroup>
 
   <ItemGroup>
