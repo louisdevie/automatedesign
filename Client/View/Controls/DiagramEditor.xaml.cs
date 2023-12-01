@@ -1,6 +1,8 @@
 ﻿using AutomateDesign.Client.Model.Logic.Editor;
 using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Core.Documents;
+using System;
+using System.Runtime;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,6 +20,7 @@ namespace AutomateDesign.Client.View.Controls
         private Point? clickPosition;
         private TranslateTransform? originTT;
         private DiagramShape? clickedOn;
+        private DiagramStateGhost? stateGhost;
         private EditorMode mode;
 
         public EditorMode Mode
@@ -33,12 +36,18 @@ namespace AutomateDesign.Client.View.Controls
         public delegate void SelectedShapeEventHandler(DiagramShape selected);
         public event SelectedShapeEventHandler? OnShapeSelected;
 
+        public delegate void StatePlacedEventHandler(Point position);
+        public event StatePlacedEventHandler? OnStatePlaced;
+
         public DiagramEditor()
         {
             this.isDragging = false;
 
             InitializeComponent();
             this.Mode = EditorMode.Move;
+            this.frontCanvas.MouseLeftButtonDown += this.CanvasMouseLeftButtonDown;
+            this.frontCanvas.MouseLeftButtonUp += this.CanvasMouseLeftButtonUp;
+            this.frontCanvas.MouseMove += this.CanvasMouseMove;
         }
 
         public void AddShape(DiagramShape shape)
@@ -135,6 +144,40 @@ namespace AutomateDesign.Client.View.Controls
                 draggableControl.RenderTransform = new TranslateTransform(transform.X, transform.Y);
                 draggableControl.OnMovement();               
             }
+        }
+
+        /// <summary>
+        /// Ahoute un fantôme d'état qui suit la souris.
+        /// </summary>
+        public void AddStateGhost()
+        {
+            this.stateGhost = new DiagramStateGhost();
+            this.frontCanvas.Children.Add(this.stateGhost);
+            Panel.SetZIndex(this.stateGhost, 1000);
+        }
+
+        private void CanvasMouseMove(object sender, MouseEventArgs e)
+        {
+            if (this.mode == EditorMode.Place && this.stateGhost is DiagramStateGhost ghost)
+            {
+                Point mousePositionOnCanvas = e.GetPosition(this.frontCanvas);
+                Canvas.SetLeft(ghost, mousePositionOnCanvas.X - (ghost.ActualWidth / 2));
+                Canvas.SetTop(ghost, mousePositionOnCanvas.Y - (ghost.ActualHeight / 2));
+            }
+        }
+
+        private void CanvasMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (this.mode == EditorMode.Place && this.stateGhost is DiagramStateGhost ghost)
+            {
+                Point mousePositionOnCanvas = e.GetPosition(this.frontCanvas);
+                this.OnStatePlaced?.Invoke(mousePositionOnCanvas);
+            }
+        }
+
+        private void CanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            
         }
     }
 }

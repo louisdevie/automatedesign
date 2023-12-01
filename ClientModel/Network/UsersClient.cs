@@ -52,7 +52,7 @@ namespace AutomateDesign.Client.Model.Network
                 }
             );
 
-            return new Session(response.Token, response.UserId, email);
+            return new Session(response.Token, response.UserId, email, password);
         }
 
         public async Task ChangePasswordAsync(int userId, string newPassword, string currentPassword)

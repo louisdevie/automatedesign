@@ -118,9 +118,8 @@
                     >
                 <StackPanel Height="Auto" Width="Auto"
                             Orientation="Vertical">
-                    <Label Name="emailLabel" 
-                           Background="LightGray" 
-                           Content="_ici_ton_mail" 
+                    <Label Background="LightGray" 
+                           Content="{Binding Path=CurrentUserEmail.Value}" 
                            />
                     <Button Content=" Changer mot de passe " 
                             Click="ChangePassword" 

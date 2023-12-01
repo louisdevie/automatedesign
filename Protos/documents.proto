@@ -8,7 +8,7 @@ import "helpers.proto";
 service Documents {
 	rpc GetAllHeaders (Nothing) returns (stream EncryptedDocumentChunk);
 
-	rpc GetDocument (DocumentIdOnly)  returns (stream EncryptedDocumentChunk);
+	rpc GetDocument (DocumentIdOnly)  returns (stream EncryptedDocumentChunk); 
 
 	rpc SaveHeader (EncryptedDocumentChunk) returns (DocumentIdOnly);
 	rpc SaveDocument (stream EncryptedDocumentChunk) returns (DocumentIdOnly);

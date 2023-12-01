@@ -68,7 +68,9 @@ namespace AutomateDesign.Client.Model.Logic.Editor
 
         public Document Document => this.document;
 
-        public EditorMode Mode => this.mode;
+        public IEditorUI EditorUI => this.editorUI;
+
+        public EditorMode Mode { get => this.mode; set => this.mode = value; }
 
         /// <summary>
         /// Crée un nouveau contexte d'édition.
@@ -81,6 +83,24 @@ namespace AutomateDesign.Client.Model.Logic.Editor
             this.document = document;
             this.editorUI = editor;
             this.observers = new();
+            this.mode = EditorMode.Move;
+        }
+
+        /// <summary>
+        /// Configure le contexte dans son état de départ.
+        /// </summary>
+        public void Initialize()
+        {
+            this.EditorStateChanged?.Invoke(this.state);
+        }
+
+        public void AddState()
+        {
+            if (this.editorUI.PromptForStateName(out string? name))
+            {
+                State state = this.document.CreateState(name);
+                
+            }
         }
     }
 }

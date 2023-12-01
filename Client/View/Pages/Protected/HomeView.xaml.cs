@@ -1,5 +1,6 @@
 ﻿using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Client.View.Controls;
+using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Client.ViewModel.Documents;
 using AutomateDesign.Client.ViewModel.Users;
@@ -18,7 +19,8 @@ namespace AutomateDesign.Client.View
         private SessionViewModel? sessionVM;
         private DocumentCollectionViewModel documentsVM;
 
-        public string CurrentUserEmail => this.sessionVM?.UserEmail ?? "";
+        public Observable<string> CurrentUserEmail { get; private init; }
+
 
         public ObservableCollection<DocumentBaseViewModel> Documents => this.documentsVM;
 
@@ -29,9 +31,8 @@ namespace AutomateDesign.Client.View
 
         public HomeView()
         {
+            this.CurrentUserEmail = new("aaa");
             this.documentsVM = new();
-
-            Task.Run(this.documentsVM.Reload);
 
             DataContext = this;
             InitializeComponent();
@@ -42,8 +43,11 @@ namespace AutomateDesign.Client.View
             if (this.Navigator.Session is Session session)
             {
                 this.sessionVM = new SessionViewModel(session);
+                this.CurrentUserEmail.Value = this.sessionVM.UserEmail.Split('@')[0];
+
+                this.documentsVM.UseSession(session);
+                Task.Run(ErrorMessageBox.HandleActionErrors(this.documentsVM.Reload));
             }
-            this.documentsVM.Reload();
         }
 
         private void HaveFocusRecherche(object sender, KeyboardFocusChangedEventArgs e)
@@ -65,7 +69,7 @@ namespace AutomateDesign.Client.View
 
         private void NewDocumentClick(object sender, RoutedEventArgs e)
         {
-            this.Navigator.Go(new EditAutomateView());
+            this.Navigator.Go(new EditAutomateView(this.documentsVM.NewDocument()));
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)
@@ -76,8 +80,6 @@ namespace AutomateDesign.Client.View
             }
             else
             {
-                //this.emailLabel.Content = this.Navigator.Session.UserEmail.Split('@')[0];
-                this.emailLabel.Content = "automate.design";
                 ProfilMenu.Visibility = Visibility.Visible;
             }
         }

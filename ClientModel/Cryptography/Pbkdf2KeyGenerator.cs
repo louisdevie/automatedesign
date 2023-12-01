@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AutomateDesign.Client.Model.Cryptography
 {
     public class Pbkdf2KeyGenerator
     {
-        public byte[] GetKey(int keySize, string password, string salt)
+        public static byte[] GetKey(int keySize, string password, string salt)
         {
             Rfc2898DeriveBytes kdf = new(
                 Encoding.UTF8.GetBytes(password),

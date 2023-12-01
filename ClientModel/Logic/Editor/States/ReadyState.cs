@@ -11,7 +11,10 @@
         {
             switch (e)
             {
-                
+                case EditorEvent.BeginCreatingState:
+                    ctx.Mode = EditorMode.Place;
+                    ctx.EditorUI.ShowStateToAdd();
+                    break;
             }
         }
 
@@ -19,6 +22,9 @@
         {
             switch (e)
             {
+                case EditorEvent.BeginCreatingState:
+                    return new NewStatePlacementState();
+
                 default:
                     return this;
             }

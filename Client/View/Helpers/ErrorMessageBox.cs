@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace AutomateDesign.Client.View.Helpers
@@ -37,6 +38,26 @@ namespace AutomateDesign.Client.View.Helpers
                 message = "Une erreur inconnue est survenue";
             }
             MessageBox.Show(message, "Erreur", MessageBoxButton.OK);
+        }
+
+        /// <summary>
+        /// Gère les erreurs levée dans une méthode asynchrone.
+        /// </summary>
+        /// <param name="asyncAction">La méthode asyncrhone à encapsuler.</param>
+        /// <returns>Une tâche représentant l'opération à gérer.</returns>
+        public static Action HandleActionErrors(Func<Task?> asyncAction)
+        {
+            return () =>
+            {
+                try
+                {
+                    asyncAction()?.Wait();
+                }
+                catch (Exception ex)
+                {
+                    Show(ex);
+                }
+            };
         }
     }
 }

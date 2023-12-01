@@ -43,6 +43,8 @@ namespace AutomateDesign.Client.ViewModel.Documents
 
         public override string TimeSinceLastModification => this.header.TimeSinceLastModification;
 
+        public Document Document => this.document;
+
         /// <summary>
         /// Crée un modèle-vue à partir d'un automate.
         /// </summary>
@@ -54,6 +56,20 @@ namespace AutomateDesign.Client.ViewModel.Documents
             this.header = new(this.document.Header);
             this.parentCollection = parentCollection;
             this.loaded = false;
+            this.hasUnsavedChanges = false;
+            this.documentsClient = new DocumentsClient();
+        }
+
+        /// <summary>
+        /// Crée un modèle-vue pour un nouvel automate.
+        /// </summary>
+        /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
+        public ExistingDocumentViewModel(DocumentCollectionViewModel parentCollection)
+        {
+            this.document = new Document();
+            this.header = new(this.document.Header);
+            this.parentCollection = parentCollection;
+            this.loaded = true;
             this.hasUnsavedChanges = false;
             this.documentsClient = new DocumentsClient();
         }

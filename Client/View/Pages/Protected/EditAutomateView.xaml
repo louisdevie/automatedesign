@@ -33,15 +33,12 @@
                       Background="Gray">
                 <TreeViewItem Header="Etats"
                               Name="StateTreeViewItem">
-                    
                 </TreeViewItem>
                 <TreeViewItem Header="Transitions"
                               Name="TransitionTreeViewItem">
-                    
                 </TreeViewItem>
                 <TreeViewItem Header="Evènements"
                               Name="EventTreeViewItem">
-                    
                 </TreeViewItem>
             </TreeView>
         </Grid>
@@ -140,7 +137,7 @@
         </Grid>
         
         <StatusBar Grid.Row="2" FontSize="14" Padding="10 4">
-            <StatusBarItem x:Name="status" HorizontalAlignment="Left"/>
+            <StatusBarItem x:Name="status" HorizontalAlignment="Left" Content="{Binding Path=StatusMessage.Value}"/>
         </StatusBar>
         <TreeView/>
 

@@ -4,6 +4,7 @@ using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
+using AutomateDesign.Client.ViewModel.Documents;
 using AutomateDesign.Core.Documents;
 using System;
 using System.Collections.Generic;
@@ -29,22 +30,37 @@ namespace AutomateDesign.Client.View
     public partial class EditAutomateView : NavigablePage, IEditorUI
     {
         private EditorContext context;
+        private ExistingDocumentViewModel viewModel;
+
+        public Observable<string> StatusMessage { get; } = new("");
 
         public override WindowPreferences Preferences => new(
             WindowPreferences.WindowSize.Large,
             WindowPreferences.ResizeMode.Resizeable
         );
 
-        public EditAutomateView()
+        public EditAutomateView(ExistingDocumentViewModel viewModel)
         {
+            this.viewModel = viewModel;
+            DataContext = this;
+
+            this.context = new(this.viewModel.Document, this);
+            this.context.EditorStateChanged += this.OnEditorStateChanged;
+
             InitializeComponent();
             BurgerMenu.Visibility = Visibility.Collapsed;
             ProfilMenu.Visibility = Visibility.Collapsed;
 
-            this.context = new(new Document(), this);
             this.diagramEditor.OnShapeSelected += this.DiagramEditorOnShapeSelected;
+            this.diagramEditor.OnStatePlaced += this.DiagramEditorOnStatePlaced;
 
+            this.context.Initialize();
+        }
 
+        private void OnEditorStateChanged(EditorState state)
+        {
+            this.StatusMessage.Value = state.StatusMessage;
+            this.diagramEditor.Mode = this.context.Mode;
         }
 
         /// <summary>
@@ -56,11 +72,13 @@ namespace AutomateDesign.Client.View
             // Si doc est un etat
             StateTreeViewItem.Items.Add(document);
         }
+
         private void AddTreeViewItem(Transition document)
         {
             // Sinon si doc est une transition
             TransitionTreeViewItem.Items.Add(document);
             }
+
         private void AddTreeViewItem(EnumEvent document)
         {
             // Sinon doc est un evenement
@@ -87,6 +105,8 @@ namespace AutomateDesign.Client.View
             EventTreeViewItem.Items.Remove(document);
         }
 
+        #region Évènements du diagramme
+
         private void DiagramEditorOnShapeSelected(DiagramShape selected)
         {
             switch (selected)
@@ -96,6 +116,13 @@ namespace AutomateDesign.Client.View
                     break;
             }
         }
+
+        private void DiagramEditorOnStatePlaced(Point position)
+        {
+            this.context.HandleEvent(new EditorEvent.FinishCreatingState());
+        }
+
+        #endregion
 
         private void BurgerToggleButton_Click(object sender, RoutedEventArgs e)
         {
@@ -174,6 +201,8 @@ namespace AutomateDesign.Client.View
 
             return result;
         }
+
+        public void ShowStateToAdd() => this.diagramEditor.AddStateGhost();
 
         #endregion
     }

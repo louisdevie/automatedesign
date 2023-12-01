@@ -10,6 +10,7 @@ namespace AutomateDesign.Client.Model.Logic
         private string token;
         private int userId;
         private string userEmail;
+        private byte[] userEncryptionKey;
 
         /// <summary>
         /// Le jeton servant à identifier la session.
@@ -26,8 +27,7 @@ namespace AutomateDesign.Client.Model.Logic
         /// </summary>
         public string UserEmail => this.userEmail;
 
-        public IEncryptionMethod EncryptionMethod { get; internal set; }
-        public byte[] UserEncryptionKey { get; internal set; }
+        public byte[] UserEncryptionKey => this.userEncryptionKey;
 
         /// <summary>
         /// Crée une nouvelle session.
@@ -35,11 +35,12 @@ namespace AutomateDesign.Client.Model.Logic
         /// <param name="token">Le jeton servant à identifier la session.</param>
         /// <param name="userId">L'identifiant de l'utilisateur connecté.</param>
         /// <param name="userEmail">L'adresse mail de l'utilisateur connecté.</param>
-        public Session(string token, int userId, string userEmail)
+        public Session(string token, int userId, string userEmail, string userPassword)
         {
             this.token = token;
             this.userId = userId;
             this.userEmail = userEmail;
+            this.userEncryptionKey = Pbkdf2KeyGenerator.GetKey(16, userPassword, userEmail);
         }
     }
 }

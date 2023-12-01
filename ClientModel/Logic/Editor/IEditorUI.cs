@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace AutomateDesign.Client.Model.Logic.Editor
 {
     /// <summary>
-    /// Peut demander des informations à l'utilisateur.
+    /// Peut demander des informations à l'utilisateur et lui fournir un retour sur les actions en cours.
     /// </summary>
     public interface IEditorUI
     {
@@ -21,5 +21,10 @@ namespace AutomateDesign.Client.Model.Logic.Editor
         /// <param name="evt">L'évènement choisi par l'utilisateur, ou <see langword="null"/> si l'utilisateur à refusé.</param>
         /// <returns><see langword="true"/> si l'utilisateur choisi un évènement et confirmé, sinon <see langword="false"/>.</returns>
         bool PromptForEvent([NotNullWhen(true)] out Event? evt);
+
+        /// <summary>
+        /// Indique à l'utilisateur q'un état va être ajouté au diagramme.
+        /// </summary>
+        void ShowStateToAdd();
     }
 }

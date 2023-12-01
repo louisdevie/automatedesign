@@ -11,12 +11,10 @@ namespace AutomateDesign.Client.Model.Cryptography
         [Fact]
         public void Pbkdf2()
         {
-            Pbkdf2KeyGenerator keyGenerator = new();
-
-            byte[] k1 = keyGenerator.GetKey(16, "motdepasse", "automatedesign");
-            byte[] k2 = keyGenerator.GetKey(16, "motdepasse", "automatedesign");
-            byte[] k3 = keyGenerator.GetKey(16, "abc", "def");
-            byte[] k4 = keyGenerator.GetKey(16, "motdepasse", "eehfbZEBFJCQNqjcnkqJQDCNKqjcnbzehjBJFEB");
+            byte[] k1 = Pbkdf2KeyGenerator.GetKey(16, "motdepasse", "automatedesign");
+            byte[] k2 = Pbkdf2KeyGenerator.GetKey(16, "motdepasse", "automatedesign");
+            byte[] k3 = Pbkdf2KeyGenerator.GetKey(16, "abc", "def");
+            byte[] k4 = Pbkdf2KeyGenerator.GetKey(16, "motdepasse", "eehfbZEBFJCQNqjcnkqJQDCNKqjcnbzehjBJFEB");
 
             Assert.Equal(16, k1.Length);
             Assert.Equal(16, k2.Length);

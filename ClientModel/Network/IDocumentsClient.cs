@@ -4,7 +4,7 @@ using AutomateDesign.Core.Documents;
 
 namespace AutomateDesign.Client.Model.Network
 {
-    internal interface IDocumentsClient
+    public interface IDocumentsClient
     {
         /// <summary>
         /// Récupère tous les en-têtes des documents d'un utilisateur.
