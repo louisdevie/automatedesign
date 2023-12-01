@@ -7,12 +7,15 @@ namespace AutomateDesign.Core.Documents
     /// </summary>
     public class Document
     {
+        private int id;
         private DocumentHeader header;
         private List<State> states;
         private List<EnumEvent> enumEvents;
         private List<Transition> transitions;
 
         private State? initialState;
+
+        public int Id => this.id;
 
         /// <summary>
         /// Les métadonnées de l'automate.
