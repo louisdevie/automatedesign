@@ -9,8 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\AutomateEx.png" />
-    <None Remove="Images\ExAutomate.png" />
+    <None Remove="Resources\Icons\circle-user.png" />
+    <None Remove="Resources\Icons\cross-small.png" />
+    <None Remove="Resources\Icons\pencil.png" />
+    <None Remove="Resources\Icons\search.png" />
+    <None Remove="Resources\Icons\trash.png" />
+    <None Remove="View\Images\AutomateEx.png" />
+    <None Remove="View\Images\ExAutomate.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,8 +40,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\AutomateEx.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    <Resource Include="Resources\Icons\circle-user.png" />
+    <Resource Include="Resources\Icons\cross-small.png" />
+    <Resource Include="Resources\Icons\pencil.png" />
+    <Resource Include="Resources\Icons\search.png" />
+    <Resource Include="Resources\Icons\trash.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="View\Images\AutomateEx.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 

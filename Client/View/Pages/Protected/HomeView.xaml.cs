@@ -35,8 +35,10 @@ namespace AutomateDesign.Client.View
 
             DataContext = this;
             InitializeComponent();
+            AumateList.ItemsSource = items;
+            ProfilMenu.Visibility = Visibility.Hidden;
         }
-
+        
         public override void OnNavigatedToThis(bool clearedHistory)
         {
             if (this.Navigator.Session is Session session)
@@ -92,6 +94,23 @@ namespace AutomateDesign.Client.View
         private async void SignOut(object sender, RoutedEventArgs e)
         {
             await this.sessionVM!.SignOutAsync();
+        }
+
+        private void DeleteSearchButtonClick(object sender, RoutedEventArgs e)
+        {
+            TextBoxRecherche.Text=string.Empty;
+        }
+    }
+
+    public class Automate
+    {
+        private string name;
+        private string date;
+        public string Name { get => this.name; set => this.name = value; }
+        public string Date { get => this.date; set => this.date = value; }
+        public Automate(string name, string date) {
+            this.name = name;
+            this.date = date;
         }
     }
 }
