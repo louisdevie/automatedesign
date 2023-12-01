@@ -1,14 +1,27 @@
 ﻿using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Core.Documents;
 using AutomateDesign.Protos;
+using Grpc.Core;
+using System;
+
 
 namespace AutomateDesign.Client.Model.Network
 {
-    public class DocumentsClient : Documents.DocumentsClient, IDocumentsClient
+    public class DocumentsClient : Client, IDocumentsClient
     {
-        public Task DeleteDocument(Session session, int documentId)
+        public async Task DeleteDocument(Session session, int documentId)
         {
-            throw new NotImplementedException();
+            using var channel = this.OpenChannel();
+            var document = new Documents.DocumentsClient(channel);
+
+            document.DeleteDocument(
+                new DocumentIdOnly
+                {
+                    DocumentId = documentId
+                },
+                CallOptionsFromSession(session)
+                
+            );
         }
 
         public IAsyncEnumerable<DocumentHeader> GetAllHeader(Session session)
