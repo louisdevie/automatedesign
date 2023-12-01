@@ -9,7 +9,7 @@ namespace AutomateDesign.Core.Random
     /// <summary>
     /// Classe encapsulant un RNG servant à générer du texte aléatoire.
     /// </summary>
-    internal class RandomTextGenerator
+    public class RandomTextGenerator
     {
         #region Attributs
         private IRandomProvider rng;

@@ -59,5 +59,17 @@ namespace AutomateDesign.Core.Users
             Assert.Equal(password, newUser.Password);
             Assert.Equal(isVerified, newUser.IsVerified);
         }
+
+        [Fact]
+        public void CreateUserByPasswordEmail()
+        {
+            string email = "test@example.com";
+            HashedPassword password = HashedPassword.FromPlain("hashedPassword");
+            User user = new User(email, password);
+
+            Assert.NotNull(user);
+            Assert.Equal(email, user.Email.ToString());
+            Assert.Equal(password, user.Password);
+        }
     }
 }

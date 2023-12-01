@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutomateDesign.Core.Random
 {
-    internal interface IRandomProvider
+    public interface IRandomProvider
     {
         /// <summary>
         /// Génère un nombre aléatoire à 4 chiffres (en décimal).

@@ -19,6 +19,17 @@ namespace AutomateDesign.Core.Users
         }
 
         [Fact]
+        public void TestCreateSession()
+        {
+            Session session = createSession();
+
+            Assert.Equal(token, session.Token);
+            Assert.Equal(lastUse, session.LastUse);
+            Assert.Equal(expiration, session.Expiration);
+            Assert.Equal(user, session.User);
+        }
+
+        [Fact]
         public void TestToken()
         {
             Session session = createSession();
@@ -62,5 +73,44 @@ namespace AutomateDesign.Core.Users
             Assert.False(session.Expired);
         }
 
+        [Fact]
+        public void TestRefresh()
+        {
+            // Session valide
+            Session session = new Session(token, DateTime.UtcNow, DateTime.MaxValue, user);
+            bool result = session.Refresh();
+
+            Assert.True(result);
+
+            // session expiré
+            session = new Session(token, lastUse, DateTime.MinValue, user);
+            result = session.Refresh();
+
+            Assert.False(result);
+
+            // Vérification des valeurs
+            lastUse = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(15));
+            session = new Session(token, lastUse, DateTime.MaxValue, user);
+            Assert.True(session.Refresh());
+            DateTime updatedLastUse = session.LastUse;
+
+            Assert.NotEqual(lastUse, updatedLastUse);
+            Assert.True(updatedLastUse > lastUse);
+        }
+
+        [Fact]
+        public void TestUnusedSince()
+        {
+            DateTime lastUse = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(15));
+            DateTime expiration = DateTime.MaxValue;
+            Session session = new Session(token, lastUse, expiration, user);
+            
+            TimeSpan expectedUnusedTime = DateTime.UtcNow.Subtract(lastUse);
+            int valueMeyhode = (int)Math.Round(session.UnusedSince.TotalMinutes);
+            int valueExpected = (int)Math.Round(expectedUnusedTime.TotalMinutes);
+
+
+            Assert.Equal(valueExpected ,valueMeyhode);
+        }
     }
 }
