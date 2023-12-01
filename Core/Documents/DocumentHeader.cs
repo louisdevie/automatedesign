@@ -11,9 +11,14 @@ namespace AutomateDesign.Core.Documents
     /// </summary>
     public class DocumentHeader
     {
+        private int id;
         private string name;
         private DateTime lastModification;
 
+        /// <summary>
+        /// L'id de l'automate
+        /// </summary>
+        public int Id { get => this.id; }
         /// <summary>
         /// Le nom donné à l'automate.
         /// </summary>

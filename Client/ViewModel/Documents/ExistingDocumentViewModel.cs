@@ -1,4 +1,6 @@
-﻿using AutomateDesign.Core.Documents;
+﻿using AutomateDesign.Client.Model.Logic;
+using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Core.Documents;
 
 namespace AutomateDesign.Client.ViewModel.Documents
 {
@@ -9,6 +11,8 @@ namespace AutomateDesign.Client.ViewModel.Documents
         private Document document;
         private DocumentHeaderViewModel header;
         private DocumentCollectionViewModel parentCollection;
+        private DocumentsClient documentsClient;
+        private Session session;
 
         /// <summary>
         /// Si l'automate est chargé ou non.
@@ -45,13 +49,15 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// </summary>
         /// <param name="document">L'automate associé.</param>
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
-        public ExistingDocumentViewModel(Document document, DocumentCollectionViewModel parentCollection)
+        public DocumentViewModel(Document document, DocumentCollectionViewModel parentCollection, Session session)
         {
             this.document = document;
             this.header = new(this.document.Header);
             this.parentCollection = parentCollection;
             this.loaded = false;
             this.hasUnsavedChanges = false;
+            this.documentsClient = new DocumentsClient();
+            this.session = session;
         }
 
         /// <summary>
@@ -59,17 +65,17 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// </summary>
         /// <param name="headerOnly">Les métadonnées de l'automate.</param>
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
-        public ExistingDocumentViewModel(DocumentHeader headerOnly, DocumentCollectionViewModel parentCollection)
-        : this(new Document(headerOnly), parentCollection) { }
+        public DocumentViewModel(DocumentHeader headerOnly, DocumentCollectionViewModel parentCollection, Session session)
+        : this(new Document(headerOnly), parentCollection,session) { }
 
         /// <summary>
         /// Crée un modèle-vue pour un document vierge.
         /// </summary>
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
         /// <returns></returns>
-        public static ExistingDocumentViewModel CreateEmptyDocument(DocumentCollectionViewModel parentCollection)
+        public static DocumentViewModel CreateEmptyDocument(DocumentCollectionViewModel parentCollection, Session session)
         {
-            return new(new Document(), parentCollection);
+            return new(new Document(), parentCollection, session);
         }
 
         public void Load()
@@ -87,6 +93,9 @@ namespace AutomateDesign.Client.ViewModel.Documents
 
         }
 
-        public void Delete() { }
+        public void Delete() 
+        {
+            this.documentsClient.DeleteDocument(session, document.Header.Id);
+        }
     }
 }

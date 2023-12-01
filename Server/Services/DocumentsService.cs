@@ -32,5 +32,19 @@ namespace AutomateDesign.Server.Services
                 );
             }
         }
+
+        /// <summary>
+        /// Suppréssion d'un automate demandé par l'utiilisateur
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override Task<Nothing> DeleteDocument(DocumentIdOnly request, ServerCallContext context)
+        {
+            User user = context.RequireUser();
+            documentDao.Delete(user.Id,request.DocumentId);
+
+            return Task.FromResult(new Nothing());
+        }
     }
 }

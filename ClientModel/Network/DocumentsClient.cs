@@ -4,6 +4,9 @@ using AutomateDesign.Client.Model.Pipelines;
 using AutomateDesign.Client.Model.Serialisation;
 using AutomateDesign.Core.Documents;
 using AutomateDesign.Protos;
+using Grpc.Core;
+using System;
+
 
 namespace AutomateDesign.Client.Model.Network
 {
@@ -21,7 +24,17 @@ namespace AutomateDesign.Client.Model.Network
 
         public Task DeleteDocument(Session session, int documentId)
         {
-            throw new NotImplementedException();
+            using var channel = this.OpenChannel();
+            var document = new Documents.DocumentsClient(channel);
+
+            document.DeleteDocument(
+                new DocumentIdOnly
+                {
+                    DocumentId = documentId
+                },
+                CallOptionsFromSession(session)
+                
+            );
         }
 
         public HeadersReceptionPipeline GetAllHeaders(Session session)
