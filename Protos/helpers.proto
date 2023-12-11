@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package AutomateDesign;
+option csharp_namespace = "AutomateDesign.Protos";
 
 message Nothing { }
 

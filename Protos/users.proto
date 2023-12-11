@@ -16,6 +16,8 @@ service Users {
     rpc CheckResetCode (VerificationRequest) returns (Nothing);
 
     rpc Disconnect (SessionUser) returns (Nothing);
+    
+    rpc DeleteAutomate (AutomateId) returns (Nothing);
 }
 
 message VerificationRequest {
@@ -43,4 +45,8 @@ message PasswordChangeRequest {
 
 message SessionUser{
     string Session = 1; 
+}
+
+message AutomateId{
+    int32 Id = 1;
 }

@@ -9,6 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="View\Images\**" />
+    <EmbeddedResource Remove="View\Images\**" />
+    <None Remove="View\Images\**" />
+    <Page Remove="View\Images\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Icons\circle-user.png" />
+    <None Remove="Resources\Icons\cross-small.png" />
+    <None Remove="Resources\Icons\pencil.png" />
+    <None Remove="Resources\Icons\search.png" />
+    <None Remove="Resources\Icons\trash.png" />
     <None Remove="View\Images\AutomateEx.png" />
     <None Remove="View\Images\ExAutomate.png" />
   </ItemGroup>
@@ -22,30 +34,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core.fr" Version="2.14.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Include="App.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClientModel\ClientModel.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\GrpcNetworkClient\ClientNetwork.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="View\Images\AutomateEx.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    <Resource Include="Resources\Icons\circle-user.png" />
+    <Resource Include="Resources\Icons\cross-small.png" />
+    <Resource Include="Resources\Icons\pencil.png" />
+    <Resource Include="Resources\Icons\search.png" />
+    <Resource Include="Resources\Icons\trash.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\AutomateEx.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="View\Controls\DiagramShapes\DiagramStateGhost.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Helpers\SuggestionInputDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="View\Images\ExAutomate.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

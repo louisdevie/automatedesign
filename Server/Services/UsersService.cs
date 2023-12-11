@@ -12,16 +12,18 @@ namespace AutomateDesign.Server.Services
         private IUserDao userDao;
         private IRegistrationDao registrationDao;
         private ISessionDao sessionDao;
+        private IAutomateDao automateDao;
         private EmailSender emailSender;
 
         private static readonly string IUT_EMAIL_HOST = "iut-dijon.u-bourgogne.fr";
 
-        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao, EmailSender emailSender)
+        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao, IAutomateDao automateDao, EmailSender emailSender)
         {
             this.userDao = userDao;
             this.registrationDao = registrationDao;
             this.sessionDao = sessionDao;
-            this.emailSender = emailSender;
+            this.automateDao = automateDao;
+            this.emailSender = emailSender;           
         }
 
         public override Task<UserIdOnly> SignUp(EmailAndPassword request, ServerCallContext context)
@@ -244,10 +246,17 @@ namespace AutomateDesign.Server.Services
 
         public override Task<Nothing> Disconnect(SessionUser request, ServerCallContext context)
         {
-
             sessionDao.Delete(request.Session);
             
             return Task.FromResult(new Nothing());
         }
+
+        public override Task<Nothing> DeleteAutomate(AutomateId request, ServerCallContext context)
+        {
+            automateDao.Delete(request.Id);
+
+            return Task.FromResult(new Nothing());
+        }
+
     }
 }

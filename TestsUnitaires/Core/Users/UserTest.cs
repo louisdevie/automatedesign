@@ -1,9 +1,8 @@
 ﻿using AutomateDesign.Core.Exceptions;
-using AutomateDesign.Core.Users;
 using System.Net.Mail;
 using Xunit;
 
-namespace TestsUnitaires.Core.Users
+namespace AutomateDesign.Core.Users
 {
     public class UserTests
     {
@@ -59,6 +58,18 @@ namespace TestsUnitaires.Core.Users
             Assert.Equal(email, newUser.Email);
             Assert.Equal(password, newUser.Password);
             Assert.Equal(isVerified, newUser.IsVerified);
+        }
+
+        [Fact]
+        public void CreateUserByPasswordEmail()
+        {
+            string email = "test@example.com";
+            HashedPassword password = HashedPassword.FromPlain("hashedPassword");
+            User user = new User(email, password);
+
+            Assert.NotNull(user);
+            Assert.Equal(email, user.Email.ToString());
+            Assert.Equal(password, user.Password);
         }
     }
 }

@@ -27,5 +27,17 @@ CREATE TABLE `Registration` (
    primary key (`UserId`)
 );
 
+create table `Document` (
+   `DocumentId` INT,
+   `UserId` INT not null,
+   `HeaderSize` INT unsigned not null,
+   `HeaderData` BLOB,
+   `BodySize` INT unsigned not null,
+   `BodyData` BLOB,
+   primary key (`DocumentId`)
+);
+
+
 alter table `Session` add foreign key (`UserId`) references `User`(`UserId`) on update cascade on delete cascade;
 alter table `Registration` add foreign key (`UserId`) references `User`(`UserId`) on update cascade on delete cascade;
+alter table `Document` add foreign key (`UserId`) references `User`(`UserId`) on update cascade on delete cascade;

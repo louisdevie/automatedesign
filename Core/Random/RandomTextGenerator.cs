@@ -9,11 +9,13 @@ namespace AutomateDesign.Core.Random
     /// <summary>
     /// Classe encapsulant un RNG servant à générer du texte aléatoire.
     /// </summary>
-    internal class RandomTextGenerator
+    public class RandomTextGenerator
     {
+        #region Attributs
         private IRandomProvider rng;
 
         private const string ALPHANUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        #endregion
 
         /// <summary>
         /// Crée un nouveau <see cref="RandomTextGenerator"/> en utilisant un RNG avec une seed par défaut.
