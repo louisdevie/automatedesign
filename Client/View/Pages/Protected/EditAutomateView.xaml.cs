@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Client.Model.Logic.Editor;
+﻿using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Logic.Editor;
 using AutomateDesign.Client.Model.Logic.Editor.States;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Controls.DiagramShapes;
@@ -10,7 +11,10 @@ using AutomateDesign.Core.Documents;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace AutomateDesign.Client.View
 {
@@ -166,6 +170,28 @@ namespace AutomateDesign.Client.View
         private void AddTransitionButtonClick(object sender, RoutedEventArgs e)
         {
             this.context.HandleEvent(new EditorEvent.BeginCreatingTransition());
+        }
+
+        private void Export(object sender, RoutedEventArgs e)
+        {
+            this.BurgerMenu.Visibility = this.BurgerMenu.Visibility switch
+            {
+                Visibility.Visible => Visibility.Collapsed,
+                _ => Visibility.Visible
+            };
+        }
+        private void PngCaptureDiagramEditor(string filePath)
+        {
+            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)diagramEditor.ActualWidth, (int)diagramEditor.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            renderTargetBitmap.Render(diagramEditor);
+
+            PngBitmapEncoder pngImage = new PngBitmapEncoder();
+            pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                pngImage.Save(stream);
+            }
         }
 
         private void PageKeyUp(object sender, KeyEventArgs e)
