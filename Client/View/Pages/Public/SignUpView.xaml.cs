@@ -20,6 +20,8 @@ namespace AutomateDesign.Client.View
         public SignUpView()
         {
             this.viewModel = new();
+            this.viewModel.Password.Bind(this.passBox);
+            this.viewModel.PasswordAgain.Bind(this.passBoxConf);
 
             DataContext = this.viewModel;
             InitializeComponent();
