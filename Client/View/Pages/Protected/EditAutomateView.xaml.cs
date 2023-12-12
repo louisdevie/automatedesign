@@ -8,6 +8,8 @@ using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Client.ViewModel;
 using AutomateDesign.Client.ViewModel.Documents;
 using AutomateDesign.Core.Documents;
+using Microsoft.Win32;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
@@ -47,8 +49,6 @@ namespace AutomateDesign.Client.View
             this.context.AddModificationObserver(this.viewModel);
 
             InitializeComponent();
-            BurgerMenu.Visibility = Visibility.Collapsed;
-            ProfilMenu.Visibility = Visibility.Collapsed;
 
             this.diagramEditor.ViewModel = this.viewModel;
             this.diagramEditor.OnShapeSelected += this.DiagramEditorOnShapeSelected;
@@ -124,15 +124,6 @@ namespace AutomateDesign.Client.View
 
         #endregion
 
-        private void BurgerToggleButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.BurgerMenu.Visibility = this.BurgerMenu.Visibility switch
-            {
-                Visibility.Visible => Visibility.Collapsed,
-                _ => Visibility.Visible
-            };
-        }
-
         private void SaveButtonClick(object sender, RoutedEventArgs e)
         {
             this.Navigator.Back();
@@ -172,14 +163,29 @@ namespace AutomateDesign.Client.View
             this.context.HandleEvent(new EditorEvent.BeginCreatingTransition());
         }
 
-        private void Export(object sender, RoutedEventArgs e)
+        private void ExportPng(object sender, RoutedEventArgs e)
         {
-            this.BurgerMenu.Visibility = this.BurgerMenu.Visibility switch
-            {
-                Visibility.Visible => Visibility.Collapsed,
-                _ => Visibility.Visible
-            };
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Sélectionnez un dossier";
+            saveFileDialog.Filter = "Image PNG (*.png)|*.png";
+            saveFileDialog.FileName = this.viewModel.Name;
+            
+            if (saveFileDialog.ShowDialog() == true)
+            {                
+                string filePath = saveFileDialog.FileName;
+                if (!filePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                {
+                    filePath += ".png";
+                }
+
+                PngCaptureDiagramEditor(filePath);
+            }
         }
+
+        /// <summary>
+        /// Enregistre l'automate sous format png
+        /// </summary>
+        /// <returns>Image Png</returns>
         private void PngCaptureDiagramEditor(string filePath)
         {
             RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)diagramEditor.ActualWidth, (int)diagramEditor.ActualHeight, 96, 96, PixelFormats.Pbgra32);

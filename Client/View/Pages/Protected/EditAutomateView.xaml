@@ -98,16 +98,14 @@
                   Height="50" Width="50">
                 <MenuItem Header="☰"
                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                          Height="50" Width="50"
-                          Click="BurgerToggleButton_Click">
+                          Height="50" Width="50">
                     <MenuItem Header="Ouvrir" />
                     <MenuItem Header="Enregistrer" 
                               Click="SaveButtonClick"/>
                     <MenuItem Header="Importer" />
-                    <MenuItem Header="Exporter" 
-                              Click="Export">
+                    <MenuItem Header="Exporter">
                         <MenuItem Header="Latex" />
-                        <MenuItem Header="Image" />
+                        <MenuItem Header="Image" Click="ExportPng"/>
                         <MenuItem Header="Code" />
                     </MenuItem>
                 </MenuItem>
