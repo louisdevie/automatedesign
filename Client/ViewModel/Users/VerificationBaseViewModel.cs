@@ -16,7 +16,7 @@ namespace AutomateDesign.Client.ViewModel.Users
             get => this.code.ToString();
             set
             {
-                this.code = uint.Parse(value);
+               this.code = uint.Parse(value);
                 this.NotifyPropertyChanged();
             }
         }
