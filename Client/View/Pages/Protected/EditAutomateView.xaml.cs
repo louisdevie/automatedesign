@@ -188,8 +188,8 @@ namespace AutomateDesign.Client.View
         /// <returns>Image Png</returns>
         private void PngCaptureDiagramEditor(string filePath)
         {
-            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)diagramEditor.ActualWidth, (int)diagramEditor.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            renderTargetBitmap.Render(diagramEditor);
+            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)diagramEditor.FrontCanvas.ActualWidth, (int)diagramEditor.FrontCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            renderTargetBitmap.Render(diagramEditor.FrontCanvas);
 
             PngBitmapEncoder pngImage = new PngBitmapEncoder();
             pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));

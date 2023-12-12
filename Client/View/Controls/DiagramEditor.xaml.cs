@@ -27,6 +27,8 @@ namespace AutomateDesign.Client.View.Controls
         private ExistingDocumentViewModel? viewmodel;
         private EditorMode mode;
 
+        public Canvas FrontCanvas => this.frontCanvas;
+
         public EditorMode Mode
         {
             get => this.mode;
