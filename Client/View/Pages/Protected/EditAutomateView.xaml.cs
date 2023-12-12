@@ -188,7 +188,7 @@ namespace AutomateDesign.Client.View
             return result;
         }
 
-        public bool PromptForEvent([NotNullWhen(true)] out Event? evt)
+        public bool PromptForEvent([NotNullWhen(true)] out IEvent? evt)
         {
             SuggestionInputDialog popup = new(
                 "Nouvelle transition", "Entrez le nom de l'évènement déclencheur :",

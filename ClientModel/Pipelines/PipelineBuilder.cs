@@ -6,6 +6,9 @@ using Grpc.Core;
 
 namespace AutomateDesign.Client.Model.Pipelines
 {
+    /// <summary>
+    /// Permets de créer et de configurer un <see cref="Pipeline"/>.
+    /// </summary>
     public class PipelineBuilder
     {
         private IEncryptionMethod? encryptionMethod;
@@ -31,10 +34,8 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucun algorithme d'encryption n'a été configuré.");
             }
-            else
-            {
-                return this.encryptionMethod;
-            }
+
+            return this.encryptionMethod;
         }
 
         /// <summary>
@@ -54,10 +55,8 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucun sérialiseur n'a été configuré.");
             }
-            else
-            {
-                return this.documentSerialiser;
-            }
+
+            return this.documentSerialiser;
         }
 
         /// <summary>
@@ -77,10 +76,8 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucun flux de réponse n'a été configuré.");
             }
-            else
-            {
-                return this.serverStream;
-            }
+
+            return this.serverStream;
         }
 
         /// <summary>
@@ -100,10 +97,8 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucun flux de requête n'a été configuré.");
             }
-            else
-            {
-                return this.clientStream;
-            }
+
+            return this.clientStream;
         }
 
         /// <summary>
@@ -123,17 +118,23 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucune charge utilse n'a été configurée.");
             }
-            else
-            {
-                return this.payload;
-            }
+
+            return this.payload;
         }
 
+        /// <summary>
+        /// Construit un pipeline pour recevoir un document.
+        /// </summary>
+        /// <returns>Un nouveau <see cref="DocumentReceptionPipeline"/>.</returns>
         public DocumentReceptionPipeline BuildDocumentReceptionPipeline()
         {
             throw new NotImplementedException("Not implemented");
         }
 
+        /// <summary>
+        /// Construit un pipeline pour recevoir les en-têtes de plusieurs documents.
+        /// </summary>
+        /// <returns>Un nouveau <see cref="HeadersReceptionPipeline"/>.</returns>
         public HeadersReceptionPipeline BuildHeadersReceptionPipeline()
         {
             return new HeadersReceptionPipeline(
@@ -143,6 +144,10 @@ namespace AutomateDesign.Client.Model.Pipelines
             );
         }
 
+        /// <summary>
+        /// Construit un pipeline pour envoyer un document.
+        /// </summary>
+        /// <returns>Un nouveau <see cref="DocumentTransmissionPipeline"/>.</returns>
         public DocumentTransmissionPipeline BuildDocumentTransmissionPipeline()
         {
             return new DocumentTransmissionPipeline(
@@ -153,6 +158,10 @@ namespace AutomateDesign.Client.Model.Pipelines
             );
         }
 
+        /// <summary>
+        /// Construit un pipeline pour envoyer un en-tête seulement.
+        /// </summary>
+        /// <returns>Un nouveau <see cref="HeaderTransmissionPipeline"/>.</returns>
         public HeaderTransmissionPipeline BuildHeaderTransmissionPipeline()
         {
             throw new NotImplementedException("Not implemented");

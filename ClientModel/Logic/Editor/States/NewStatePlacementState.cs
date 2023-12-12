@@ -20,14 +20,16 @@
 
         public override EditorState Next(EditorEvent evt)
         {
+            EditorState nextState = this;
+
             switch (evt)
             {
                 case EditorEvent.FinishCreatingState:
-                    return new ReadyState();
-
-                default:
-                    return this;
+                    nextState = new ReadyState();
+                    break;
             }
+
+            return nextState;
         }
     }
 }

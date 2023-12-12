@@ -9,7 +9,7 @@ namespace AutomateDesign.Core.Documents
     /// <summary>
     /// Un évènement défini par l'utilisateur.
     /// </summary>
-    public class EnumEvent : Event
+    public class EnumEvent : IEvent
     {
         private int id;
         private string name;
@@ -24,9 +24,9 @@ namespace AutomateDesign.Core.Documents
         /// </summary>
         public string Name { get => this.name; set => this.name = value; }
 
-        public override int Order => 0;
+        public int Order => 0;
 
-        public override string DisplayName => this.Name;
+        public string DisplayName => this.Name;
 
         /// <summary>
         /// Crée un nouvel évènement utilisateur.

@@ -10,6 +10,9 @@ using System;
 
 namespace AutomateDesign.Client.Model.Network
 {
+    /// <summary>
+    /// Une implémentation de <see cref="IDocumentsClient"/> qui utilise le service gRPC.
+    /// </summary>
     public class DocumentsClient : Client, IDocumentsClient
     {
         private static IEncryptionMethod GetDefaultEncryptionMethodWithKey(byte[] userKey)

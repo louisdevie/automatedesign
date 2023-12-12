@@ -1,10 +1,11 @@
 ﻿using AutomateDesign.Protos;
-using Grpc.Core;
-using System.Reflection;
 using AutomateDesign.Client.Model.Logic;
 
 namespace AutomateDesign.Client.Model.Network
 {
+    /// <summary>
+    /// Une implémentation de <see cref="IUsersClient"/> qui utilise le service gRPC.
+    /// </summary>
     public class UsersClient : Client, IUsersClient
     {
         public async Task<int> SignUpAsync(string email, string password)

@@ -26,6 +26,11 @@ namespace AutomateDesign.Client.ViewModel.Users
             }
         }
 
+        /// <summary>
+        /// Crée un nouveau <see cref="PasswordResetViewModel"/> pour un utilisateur spécifique.
+        /// </summary>
+        /// <param name="userId">L'identifiant de l'utilisateur qui veut réinitialiser son mot de passe.</param>
+        /// <param name="verificationCode">Le code de vérification saisi et vérifié au préalable.</param>
         public PasswordResetViewModel(int userId, uint verificationCode)
         {
             this.userId = userId;

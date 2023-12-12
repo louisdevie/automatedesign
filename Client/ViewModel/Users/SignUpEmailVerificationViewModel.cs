@@ -13,6 +13,12 @@ namespace AutomateDesign.Client.ViewModel.Users
         private string email;
         private string password;
 
+        /// <summary>
+        /// Crée un nouveau <see cref="SignUpEmailVerificationViewModel"/>.
+        /// </summary>
+        /// <param name="verification">L'opération de vérification d'email en cours.</param>
+        /// <param name="email">L'adresse mail utilisée pour s'inscrire.</param>
+        /// <param name="password">Le mot de passe utilisé pour s'inscrire.</param>
         public SignUpEmailVerificationViewModel(SignUpEmailVerification verification, string email, string password)
         {
             this.verification = verification;

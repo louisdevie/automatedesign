@@ -3,6 +3,9 @@ using System.Reflection.Metadata;
 
 namespace AutomateDesign.Server.Data
 {
+    /// <summary>
+    /// Permet d'accéder aux données des documents.
+    /// </summary>
     public interface IDocumentDao
     {
         /// <summary>

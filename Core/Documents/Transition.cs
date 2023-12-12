@@ -14,7 +14,7 @@ namespace AutomateDesign.Core.Documents
         private int id;
         private State start;
         private State end;
-        private Event triggeredBy;
+        private IEvent triggeredBy;
 
         /// <summary>
         /// L'identifiant de la transition.
@@ -34,7 +34,7 @@ namespace AutomateDesign.Core.Documents
         /// <summary>
         /// L'évènement qui déclenche cette transition.
         /// </summary>
-        public Event TriggeredBy { get => this.triggeredBy; set => this.triggeredBy = value; }
+        public IEvent TriggeredBy { get => this.triggeredBy; set => this.triggeredBy = value; }
 
         /// <summary>
         /// Crée une nouvelle transition.
@@ -43,7 +43,7 @@ namespace AutomateDesign.Core.Documents
         /// <param name="start">L'état de départ.</param>
         /// <param name="end">L'état d'arrivée.</param>
         /// <param name="triggeredBy">L'évènement qui déclenche cette transition.</param>
-        public Transition(int id, State start, State end, Event triggeredBy)
+        public Transition(int id, State start, State end, IEvent triggeredBy)
         {
             this.id = id;
             this.start = start;

@@ -51,6 +51,10 @@ namespace AutomateDesign.Client.ViewModel.Users
             return await Users.SignInAsync(this.email, this.passwordInput.Password);
         }
 
+        /// <summary>
+        /// Renvoie un mail de vérification pour réesssayer de s'inscrire.
+        /// </summary>
+        /// <returns></returns>
         public async Task<SignUpEmailVerificationViewModel> RetryEmailVerificationAsync()
         {
             int userId = await Users.SignUpAsync(this.email, this.Password.Password);

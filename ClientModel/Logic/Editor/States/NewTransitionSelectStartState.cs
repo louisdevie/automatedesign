@@ -9,21 +9,20 @@
 
         public override void Action(EditorEvent evt, EditorContext ctx)
         {
-            switch (evt)
-            {
-            }
         }
 
         public override EditorState Next(EditorEvent evt)
         {
+            EditorState nextState = this;
+
             switch (evt)
             {
                 case EditorEvent.SelectState selectState:
-                    return new NewTransitionSelectEndState(selectState.state);
-
-                default:
-                    return this;
+                    nextState = new NewTransitionSelectEndState(selectState.state);
+                    break;
             }
+
+            return nextState;
         }
     }
 }

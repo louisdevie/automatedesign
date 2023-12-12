@@ -3,6 +3,9 @@ using System.Runtime.CompilerServices;
 
 namespace AutomateDesign.Server.Data.MariaDb.Implementations
 {
+    /// <summary>
+    /// Une implémentation de <see cref="IDocumentDao"/> pour MySQL.
+    /// </summary>
     public class DocumentDao : BaseDao, IDocumentDao
     {
         public DocumentDao(DatabaseConnector connector) : base(connector) { }
@@ -17,7 +20,6 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
             throw new NotImplementedException();
         }
 
-#pragma warning disable CS1998 // Cette méthode async n'a pas d'opérateur 'await' et elle s'exécutera de façon synchrone
         public async IAsyncEnumerable<byte[]> ReadAllHeadersAsync(int userId, [EnumeratorCancellation] CancellationToken ct = default)
         {
             using MySqlConnection connection = Connect();
@@ -27,7 +29,7 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
                 userId
             );
 
-            while (results.Read())
+            while (await results.ReadAsync())
             {
                 ct.ThrowIfCancellationRequested();
                 byte[] buffer = new byte[results.GetUInt32(0)];
@@ -36,7 +38,6 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
             }
             yield break;
         }
-#pragma warning restore CS1998
 
         public IAsyncEnumerable<byte[]> ReadByIdAsync(int userId, int documentId)
         {

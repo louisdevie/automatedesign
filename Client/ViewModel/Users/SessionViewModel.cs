@@ -19,6 +19,10 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// </summary>
         public string UserEmail => this.session.UserEmail;
 
+        /// <summary>
+        /// Crée un nouveau <see cref="SessionViewModel"/> à partir d'une <see cref="Session"/>.
+        /// </summary>
+        /// <param name="session">La session à présenter.</param>
         public SessionViewModel(Session session)
         {
             this.session = session;

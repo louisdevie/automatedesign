@@ -27,7 +27,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         /// </summary>
         /// <param name="evt">Le modèle à sérialiser.</param>
         /// <returns>Un DTO contenant les informations du <paramref name="evt"/>.</returns>
-        public static EventReferenceDto MapFromModel(Event evt)
+        public static EventReferenceDto MapFromModel(IEvent evt)
         {
             return evt switch
             {
@@ -52,9 +52,9 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         /// </summary> 
         /// <param name="document">Le document qui va contenir l'évènement.</param>
         /// <returns>Un nouveau modèle avec les informations de ce DTO.</returns>
-        public Event MapToModel(Document document)
+        public IEvent MapToModel(Document document)
         {
-            Event result;
+            IEvent result;
             switch (this.Type)
             {
                 case EventType.DefaultEvent:

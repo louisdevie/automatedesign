@@ -4,13 +4,13 @@ namespace AutomateDesign.Client.ViewModel.Documents
 {
     public class EventViewModel
     {
-        private Event model;
+        private IEvent model;
 
         public string DisplayName => model.DisplayName;
 
-        public Event Model => this.model;
+        public IEvent Model => this.model;
 
-        public EventViewModel(Event model)
+        public EventViewModel(IEvent model)
         {
             this.model = model;
         }

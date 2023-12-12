@@ -1,11 +1,13 @@
 ﻿using AutomateDesign.Client.Model.Serialisation.Dto;
 using AutomateDesign.Core.Documents;
-using System.Reflection.PortableExecutable;
 using System.Text.Json;
 using System.Threading.Channels;
 
 namespace AutomateDesign.Client.Model.Serialisation
 {
+    /// <summary>
+    /// Une implémentation de <see cref="IDocumentSerialiser"/> qui sérialise les données en JSON et UTF-8.
+    /// </summary>
     public class JsonDocumentSerialiser : IDocumentSerialiser
     {
         public async Task<Document> DeserialiseDocumentAsync(DocumentChannelReader input)
