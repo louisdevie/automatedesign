@@ -1,5 +1,7 @@
-﻿using AutomateDesign.Core.Documents;
+﻿using AutomateDesign.Client.ViewModel.Documents;
+using AutomateDesign.Core.Documents;
 using System;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -11,30 +13,24 @@ namespace AutomateDesign.Client.View.Controls.DiagramShapes
     /// </summary>
     public partial class DiagramTransition : DiagramShape
     {
-        private Transition model;
+        private TransitionViewModel viewModel;
         private DiagramState? start, end;
 
         public override Shape MainShape => this.line;
 
-        public DiagramTransition(Transition model)
+        public DiagramTransition(TransitionViewModel viewModel)
         {
-            this.model = model;
+            this.viewModel = viewModel;
+            this.viewModel.Presentation = this;
 
-            DataContext = this.model;
+            DataContext = this.viewModel;
             InitializeComponent();
         }
 
-        public void Reattach(DiagramEditor parentEditor)
+        public void Reattach()
         {
-            this.start?.DetachTransition(this);
-            this.end?.DetachTransition(this);
-
-            start = parentEditor.FindShapeFor(this.model.Start);
-            end = parentEditor.FindShapeFor(this.model.End);
-
-            this.start?.AttachTransition(this);
-            this.end?.AttachTransition(this);
-
+            start = this.viewModel.Start.Presentation as DiagramState;
+            end = this.viewModel.End.Presentation as DiagramState;
             this.Redraw();
         }
 
@@ -53,17 +49,29 @@ namespace AutomateDesign.Client.View.Controls.DiagramShapes
 
         private void Redraw()
         {
-            if (this.start is not null && this.end is not null)
+            bool lineRedrawn = false;
+            if (this.start is not null)
             {
-                this.line.X1 = (this.start.ActualWidth/ 2) + (this.start.RenderTransform as TranslateTransform)?.X ?? 50;
-                this.line.Y1 = (this.start.ActualHeight / 2) + (this.start.RenderTransform as TranslateTransform)?.Y ?? 50;
-                this.line.X2 = (this.end.ActualWidth / 2) + (this.end.RenderTransform as TranslateTransform)?.X ?? 50;
-                this.line.Y2 = (this.end.ActualHeight / 2) + (this.end.RenderTransform as TranslateTransform)?.Y ?? 50;
+                Vector2 startPosition = this.start.Position.Center;
+                this.line.X1 = startPosition.X;
+                this.line.Y1 = startPosition.Y;
+                lineRedrawn = true;
+            }
 
+            if (this.end is not null)
+            {
+                Vector2 endPosition = this.end.Position.Center;
+                this.line.X2 = endPosition.X;
+                this.line.Y2 = endPosition.Y;
+                lineRedrawn = true;
+            }
+
+            if (lineRedrawn)
+            {
                 Size labelSize = this.GetLabelSize();
                 this.eventLabel.RenderTransform = new TranslateTransform(
-                    (this.line.X1 + this.line.X2 - labelSize.Width) /2,
-                    (this.line.Y1 + this.line.Y2 - labelSize.Height) /2
+                    (this.line.X1 + this.line.X2 - labelSize.Width) / 2,
+                    (this.line.Y1 + this.line.Y2 - labelSize.Height) / 2
                 );
             }
         }

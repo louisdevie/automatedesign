@@ -52,7 +52,18 @@ namespace AutomateDesign.Client.Model.Network
 
         public Task<int> SaveDocument(Session session, Document document)
         {
-            throw new NotImplementedException();
+            using var channel = this.OpenChannel();
+            var client = new Documents.DocumentsClient(channel);
+
+            var csCall = client.SaveDocument(CallOptionsFromSession(session));
+
+            new PipelineBuilder()
+                .UseEncryptionMethod(GetDefaultEncryptionMethodWithKey(session.UserEncryptionKey))
+                .UseDocumentSerialiser(GetDefaultDocumentSerialiser())
+                .UseClientStream(csCall.RequestStream)
+                .BuildDocumentTransmissionPipeline();
+
+            return Task.FromResult(0);
         }
 
         public Task<int> SaveHeader(Session session, DocumentHeader header)

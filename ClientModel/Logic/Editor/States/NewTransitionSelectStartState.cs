@@ -18,6 +18,9 @@
         {
             switch (evt)
             {
+                case EditorEvent.SelectState selectState:
+                    return new NewTransitionSelectEndState(selectState.state);
+
                 default:
                     return this;
             }

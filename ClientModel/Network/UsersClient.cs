@@ -2,7 +2,6 @@
 using Grpc.Core;
 using System.Reflection;
 using AutomateDesign.Client.Model.Logic;
-using AutomateDesign.Protos;
 
 namespace AutomateDesign.Client.Model.Network
 {

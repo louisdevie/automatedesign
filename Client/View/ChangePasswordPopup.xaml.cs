@@ -25,7 +25,7 @@ namespace AutomateDesign.Client.View
             WindowPreferences.ApplyResizeMode(WindowPreferences.ResizeMode.MinimizeOnly, this);
         }
 
-        public Window Window => this;
+        public Window ParentWindow => this;
 
         public void ApplyPreferences(WindowPreferences preferences)
         {

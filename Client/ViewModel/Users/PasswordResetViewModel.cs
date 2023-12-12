@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows;
+using AutomateDesign.Client.Model.Logic.Exceptions;
 
 namespace AutomateDesign.Client.ViewModel.Users
 {
@@ -35,7 +38,16 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche représentant l'opération.</returns>
         public async Task ResetPasswordAsync()
         {
-            await Users.ChangePasswordWithResetCodeAsync(this.userId, this.PasswordValue, this.verficationCode);
+            this.ThrowIfInputsAreInvalid();
+
+            if (!this.UserAgreement)
+            {
+                throw new InvalidInputsException(nameof(UserAgreement));
+            }
+            else
+            {
+                await Users.ChangePasswordWithResetCodeAsync(this.userId, this.PasswordValue, this.verficationCode);
+            }
         }
     }
 }

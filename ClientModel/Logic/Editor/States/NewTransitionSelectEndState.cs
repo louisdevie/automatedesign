@@ -21,6 +21,10 @@ namespace AutomateDesign.Client.Model.Logic.Editor.States
         {
             switch (e)
             {
+                case EditorEvent.SelectState selectState:
+                    ctx.AddTransition(this.firstState, selectState.state);
+                    ctx.Mode = EditorMode.Move;
+                    break;
             }
         }
 
@@ -28,6 +32,9 @@ namespace AutomateDesign.Client.Model.Logic.Editor.States
         {
             switch (e)
             {
+                case EditorEvent.SelectState selectState:
+                    return new ReadyState();
+
                 default:
                     return this;
             }

@@ -17,7 +17,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         public abstract string Name { get; }
 
         /// <summary>
-        /// Le temps depuis la dernière modification.
+        /// Une représentation formatée du temps depuis la dernière modification.
         /// </summary>
         public abstract string TimeSinceLastModification { get; }
     }

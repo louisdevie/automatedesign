@@ -22,7 +22,7 @@ namespace AutomateDesign.Client.View
             this.navigator = new(this, new SignInView());
         }
 
-        public Window Window => this;
+        public Window ParentWindow => this;
 
         public void ApplyPreferences(WindowPreferences preferences)
         {

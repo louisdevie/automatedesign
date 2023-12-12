@@ -6,10 +6,12 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace AutomateDesign.Client.ViewModel.Documents
 {
+    /// <summary>
+    /// Représente l'ensemble des automates d'un utilisateur.
+    /// </summary>
     public class DocumentCollectionViewModel : ObservableCollection<DocumentBaseViewModel>
     {
         private Session? session;
@@ -18,18 +20,29 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// <summary>
         /// Les informations sur le propriétaire des documents.
         /// </summary>
-        public Session Session => this.session ?? throw new InvalidOperationException("La DocumentCollectionViewModel n'a pas encore été configurée.");
+        public Session Session
+        {
+            get
+            {
+                if (this.session == null)
+                {
+                    throw new InvalidOperationException("La DocumentCollectionViewModel n'a pas encore été configurée.");
+                }
+                return this.session;
+            }
+            set
+            {
+                this.session = value;
+            }
+        }
 
         /// <summary>
         /// Crée un nouveau modèle-vue représentant une collection de documents.
         /// </summary>
-        /// <param name="session">Les informations sur le propriétaire des documents.</param>
         public DocumentCollectionViewModel()
         {
             this.client = DependencyContainer.Current.GetImplementation<IDocumentsClient>();
         }
-
-        public void UseSession(Session session) => this.session = session;
 
         /// <summary>
         /// Recharge les automates.
@@ -62,7 +75,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// <returns>L'automate créé.</returns>
         public ExistingDocumentViewModel NewDocument()
         {
-            ExistingDocumentViewModel newDocument = ExistingDocumentViewModel.CreateEmptyDocument(this);
+            ExistingDocumentViewModel newDocument = new(this);
             this.Add(newDocument);
             return newDocument;
         }

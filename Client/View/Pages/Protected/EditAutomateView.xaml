@@ -7,7 +7,8 @@
       xmlns:my="clr-namespace:AutomateDesign.Client.View.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="1000" d:DesignWidth="1900"
-      Title="EditAutomateView">
+      Title="EditAutomateView"
+      KeyUp="PageKeyUp">
 
     <!--Page-->
     <Grid>
@@ -51,20 +52,27 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
+            
+            <!-- Nom du document -->
+            <my:EditableLabel Grid.Column="1"
+                              Margin="10 0 0 0"
+                              Width="180"
+                              HorizontalAlignment="Left"
+                              Text="{Binding Header.Name, Mode=TwoWay}"/>
 
             <!--Menu principal-->
             <Button Name="AddStateButton"
                     Content="Etat"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
                     Height="50" Width="50"
-                    Margin="10,0,0,0"
+                    Margin="210,0,0,0"
                     Grid.Column="1" Click="AddStateButtonClick" 
                     />
             <Button Name="AddTransButton"
                     Content="Transition"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
                     Height="50" Width="50"
-                    Margin="70,0,0,0"
+                    Margin="270,0,0,0"
                     Grid.Column="1"
                     Click="AddTransitionButtonClick"
                     />
@@ -73,14 +81,14 @@
                     Content="Etat de départ"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
                     Height="50" Width="50"
-                    Margin="130,0,0,0"
+                    Margin="330,0,0,0"
                     Grid.Column="1" 
                     />
             <Button Name="AddEndStateButton"
                     Content="Etat d'arrivée"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
                     Height="50" Width="50"
-                    Margin="190,0,0,0"
+                    Margin="390,0,0,0"
                     Grid.Column="1" 
                     />
 
@@ -100,7 +108,7 @@
                 <StackPanel Height="Auto" Width="Auto"
                     Orientation="Vertical">
                     <Button Content="Ouvrir" />
-                    <Button Content=" Enregistrer " />
+                    <Button Content=" Enregistrer" Click="SaveButtonClick"/>
                     <Button Content="Importer" />
                     <Button Content="Exporter" />
                 </StackPanel>

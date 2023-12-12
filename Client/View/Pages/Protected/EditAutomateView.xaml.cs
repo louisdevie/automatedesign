@@ -4,23 +4,13 @@ using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Controls.DiagramShapes;
 using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
+using AutomateDesign.Client.ViewModel;
 using AutomateDesign.Client.ViewModel.Documents;
 using AutomateDesign.Core.Documents;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AutomateDesign.Client.View
 {
@@ -31,6 +21,10 @@ namespace AutomateDesign.Client.View
     {
         private EditorContext context;
         private ExistingDocumentViewModel viewModel;
+
+        public ExistingDocumentViewModel Document => this.viewModel;
+
+        public DocumentHeaderViewModel Header => this.viewModel.Header;
 
         public Observable<string> StatusMessage { get; } = new("");
 
@@ -46,11 +40,13 @@ namespace AutomateDesign.Client.View
 
             this.context = new(this.viewModel.Document, this);
             this.context.EditorStateChanged += this.OnEditorStateChanged;
+            this.context.AddModificationObserver(this.viewModel);
 
             InitializeComponent();
             BurgerMenu.Visibility = Visibility.Collapsed;
             ProfilMenu.Visibility = Visibility.Collapsed;
 
+            this.diagramEditor.ViewModel = this.viewModel;
             this.diagramEditor.OnShapeSelected += this.DiagramEditorOnShapeSelected;
             this.diagramEditor.OnStatePlaced += this.DiagramEditorOnStatePlaced;
 
@@ -112,14 +108,14 @@ namespace AutomateDesign.Client.View
             switch (selected)
             {
                 case DiagramState state:
-                    this.context.HandleEvent(new EditorEvent.SelectState(state.Model));
+                    this.context.HandleEvent(new EditorEvent.SelectState(state.ViewModel.Model));
                     break;
             }
         }
 
-        private void DiagramEditorOnStatePlaced(Point position)
+        private void DiagramEditorOnStatePlaced(Position position)
         {
-            this.context.HandleEvent(new EditorEvent.FinishCreatingState());
+            this.context.HandleEvent(new EditorEvent.FinishCreatingState(position));
         }
 
         #endregion
@@ -131,6 +127,11 @@ namespace AutomateDesign.Client.View
                 Visibility.Visible => Visibility.Collapsed,
                 _ => Visibility.Visible
             };
+        }
+
+        private void SaveButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Navigator.Back();
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)
@@ -167,12 +168,20 @@ namespace AutomateDesign.Client.View
             this.context.HandleEvent(new EditorEvent.BeginCreatingTransition());
         }
 
+        private void PageKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                this.context.HandleEvent(new EditorEvent.Cancel());
+            }
+        }
+
         #region Implémentation de IEditorUI
 
         public bool PromptForStateName([NotNullWhen(true)] out string? name)
         {
             InputDialog popup = new("Nouvel état", "Entrez le nom du nouvel état :");
-            popup.Owner = this.Navigator.Window;
+            popup.Owner = this.Navigator.ParentWindow;
             bool result = popup.ShowDialog() ?? false;
 
             name = popup.UserInput;
@@ -185,7 +194,7 @@ namespace AutomateDesign.Client.View
                 "Nouvelle transition", "Entrez le nom de l'évènement déclencheur :",
                 this.context.Document.Events.Select(e => e.Name)
             );
-            popup.Owner = this.Navigator.Window;
+            popup.Owner = this.Navigator.ParentWindow;
             bool result = popup.ShowDialog() ?? false;
 
             string name = popup.UserInput;
@@ -196,13 +205,13 @@ namespace AutomateDesign.Client.View
             }
             else
             {
-                evt = this.context.Document.CreateEnumEvent(name);
+                evt = this.context.AddEnumEvent(name);
             }
 
             return result;
         }
 
-        public void ShowStateToAdd() => this.diagramEditor.AddStateGhost();
+        public void ShowStateToAdd() => this.diagramEditor.ShowStateGhost();
 
         #endregion
     }

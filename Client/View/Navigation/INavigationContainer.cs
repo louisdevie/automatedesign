@@ -15,12 +15,12 @@ namespace AutomateDesign.Client.View.Navigation
         /// <summary>
         /// La fenêtre parente au conteneur.
         /// </summary>
-        Window Window { get; }
+        Window ParentWindow { get; }
 
         /// <summary>
         /// Applique les préférences de la vue actuelle. Le conteneur a le choix de suivre les préférences ou non.
         /// </summary>
-        /// <param name="preferences"></param>
+        /// <param name="preferences">Les préférences demandées par la vue.</param>
         void ApplyPreferences(WindowPreferences preferences);
 
         /// <summary>

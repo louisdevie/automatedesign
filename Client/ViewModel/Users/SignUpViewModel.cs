@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows;
+using AutomateDesign.Client.Model.Logic.Exceptions;
+using AutomateDesign.Client.View.Helpers;
 
 namespace AutomateDesign.Client.ViewModel.Users
 {
@@ -50,12 +54,21 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche représentant l'opération, qui termine avec le modèle-vue de la vérification à effectuer ensuite.</returns>
         public async Task<SignUpEmailVerificationViewModel> SignUpAsync()
         {
-            int userId = await Users.SignUpAsync(this.email, this.Password.Password);
-            return new SignUpEmailVerificationViewModel(
-                new SignUpEmailVerification(userId),
-                this.email,
-                this.Password.Password
-            );
+            this.ThrowIfInputsAreInvalid();
+
+            if (!this.WarningRead)
+            {
+                throw new InvalidInputsException(nameof(WarningRead));
+            }
+            else
+            {
+                int userId = await Users.SignUpAsync(this.email, this.Password.Password);
+                return new SignUpEmailVerificationViewModel(
+                    new SignUpEmailVerification(userId),
+                    this.email,
+                    this.Password.Password
+                );
+            }
         }
     }
 }

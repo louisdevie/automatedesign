@@ -7,6 +7,7 @@ using System.Windows.Media;
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.Model.Logic.Verifications;
 using AutomateDesign.Client.ViewModel.Users;
+using AutomateDesign.Client.Model.Logic.Exceptions;
 
 namespace AutomateDesign.Client.View
 {
@@ -19,8 +20,11 @@ namespace AutomateDesign.Client.View
         private PasswordResetViewModel viewModel;
 
         /// <summary>
-        /// Envoyer False lors d'un premier appel a la page
+        /// Crée une nouvelle page permettant de choisir un nouveau mot de passe.
         /// </summary>
+        /// <param name="verification">Un opération de réinitialisation de mot de passe vérifiée.</param>
+        /// <param name="userId">L'identifiant de l'utilisateur qui veut changer son mot de passe.</param>
+        /// <param name="secretCode">Le code secret saisi précedemment.</param>
         public NewPasswordView(VerificationBaseViewModel verification, int userId, uint secretCode)
         {
             this.verification = verification;
@@ -35,32 +39,30 @@ namespace AutomateDesign.Client.View
 
         private async void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (!this.viewModel.PasswordsNotEmpty)
-            {
-                MessageBox.Show("Veuillez saisir un mot de passe", "Erreur");
-            }
-            else if (!this.viewModel.PasswordsMatch)
-            {
-                MessageBox.Show("Les mots de passe ne correspondent pas", "Erreur");
-            }
-            else if (!this.viewModel.UserAgreement)
-            {
-                this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
-            }
-            else
-            {
-                this.IsEnabled = false;
+            this.IsEnabled = false;
 
-                try
+            try
+            {
+                await this.viewModel.ResetPasswordAsync();
+                this.Navigator.Go(new EmailVerificationSuccessView(this.verification));
+            }
+            catch (InvalidInputsException ex)
+            {
+                // si le champ invalide est la case à cocher, on colore son label en rouge
+                if (ex.IsInputInvalid(nameof(PasswordResetViewModel.UserAgreement)))
                 {
-                    await this.viewModel.ResetPasswordAsync();
-                    this.Navigator.Go(new EmailVerificationSuccessView(this.verification));
+                    this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
                 }
-                catch (Exception ex)
+                else
                 {
                     ErrorMessageBox.Show(ex);
-                    this.IsEnabled = true;
                 }
+                this.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageBox.Show(ex);
+                this.IsEnabled = true;
             }
         }
 

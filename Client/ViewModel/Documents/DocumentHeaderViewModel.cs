@@ -26,6 +26,10 @@ namespace AutomateDesign.Client.ViewModel.Documents
         public string TimeSinceLastModification
             => this.documentHeader.TimeSinceLastModification.Humanize(culture: new CultureInfo("fr-FR"));
 
+        /// <summary>
+        /// Crée un nouveau modèle-vue pour l'en-tête d'un document.
+        /// </summary>
+        /// <param name="documentHeader">L'en-tête à présenter.</param>
         public DocumentHeaderViewModel(DocumentHeader documentHeader)
         {
             this.documentHeader = documentHeader;

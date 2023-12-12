@@ -15,7 +15,7 @@ namespace AutomateDesign.Client.Model.Logic.Editor
         /// <summary>
         /// Un état est ajouté au diagramme.
         /// </summary>
-        public record FinishCreatingState() : EditorEvent;
+        public record FinishCreatingState(Position position) : EditorEvent;
 
         /// <summary>
         /// Une transition commence à être ajoutée au diagramme.

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\check.png" />
     <None Remove="Resources\Icons\circle-user.png" />
     <None Remove="Resources\Icons\cross-small.png" />
     <None Remove="Resources\Icons\pencil.png" />
@@ -47,6 +48,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Icons\check.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Icons\circle-user.png" />
     <Resource Include="Resources\Icons\cross-small.png" />
     <Resource Include="Resources\Icons\pencil.png" />
@@ -58,9 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="View\Controls\DiagramShapes\DiagramStateGhost.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="View\Helpers\SuggestionInputDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

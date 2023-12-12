@@ -11,6 +11,15 @@ namespace AutomateDesign.Core.Documents
     /// </summary>
     public class DocumentHeader
     {
+        private const int unsavedId = -1;
+        private const string defaultDocumentName = "Automate sans nom";
+
+        /// <summary>
+        /// Le nom par défaut d'un document, utilisé quand un nouveau n'as pas encore de nom.
+        /// </summary>
+        public static string DefaultDocumentName => defaultDocumentName;
+
+
         private int id;
         private string name;
         private DateTime lastModification;
@@ -35,15 +44,17 @@ namespace AutomateDesign.Core.Documents
         /// </summary>
         public TimeSpan TimeSinceLastModification => DateTime.Now - lastModification;
 
+
+        public bool HasNeverBeenSaved => this.id == unsavedId;
+
         /// <summary>
         /// Crée des métadonnées pour un nouvel automate.
         /// </summary>
-        /// <param name="name">Le nom à donner à l'automate.</param>
-        /// <param name="lastModification">La date de dernière modification si l'automate existe déjà.</param>
-        public DocumentHeader(string name, DateTime? lastModification = null)
+        public DocumentHeader()
         {
-            this.name = name;
-            this.lastModification = lastModification ?? DateTime.Now;
+            this.id = unsavedId;
+            this.name = DefaultDocumentName;
+            this.lastModification = DateTime.Now;
         }
 
         /// <summary>
@@ -54,6 +65,7 @@ namespace AutomateDesign.Core.Documents
         /// <param name="lastModification">La date de dernière modification si l'automate existe déjà.</param>
         public DocumentHeader(int id, string name, DateTime? lastModification = null)
         {
+            this.id = id;
             this.name = name;
             this.lastModification = lastModification ?? DateTime.Now;
         }

@@ -2,11 +2,13 @@
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
+using AutomateDesign.Client.ViewModel;
 using AutomateDesign.Client.ViewModel.Documents;
 using AutomateDesign.Client.ViewModel.Users;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AutomateDesign.Client.View
@@ -31,7 +33,7 @@ namespace AutomateDesign.Client.View
 
         public HomeView()
         {
-            this.CurrentUserEmail = new("aaa");
+            this.CurrentUserEmail = new(string.Empty);
             this.documentsVM = new();
 
             DataContext = this;
@@ -45,7 +47,7 @@ namespace AutomateDesign.Client.View
                 this.sessionVM = new SessionViewModel(session);
                 this.CurrentUserEmail.Value = this.sessionVM.UserEmail.Split('@')[0];
 
-                this.documentsVM.UseSession(session);
+                this.documentsVM.Session = session;
                 Task.Run(ErrorMessageBox.HandleActionErrors(this.documentsVM.Reload));
             }
         }
@@ -72,6 +74,14 @@ namespace AutomateDesign.Client.View
             this.Navigator.Go(new EditAutomateView(this.documentsVM.NewDocument()));
         }
 
+        private void ExistingDocumentClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button { CommandParameter: var param })
+            {
+                this.Navigator.Go(new EditAutomateView((ExistingDocumentViewModel)param));
+            }
+        }
+
         private void CliclProfilButton(object sender, RoutedEventArgs e)
         {
             if (ProfilMenu.Visibility == Visibility.Visible)
@@ -87,7 +97,7 @@ namespace AutomateDesign.Client.View
         private void ChangePassword(object sender, RoutedEventArgs e)
         {
             ChangePasswordPopup popup = new(this.Navigator.Session, this.sessionVM!.ChangePassword());
-            popup.Owner = this.Navigator.Window;
+            popup.Owner = this.Navigator.ParentWindow;
 
             popup.ShowDialog();
         }

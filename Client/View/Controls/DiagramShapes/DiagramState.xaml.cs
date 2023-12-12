@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Core.Documents;
+﻿using AutomateDesign.Client.ViewModel.Documents;
+using AutomateDesign.Core.Documents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,33 +22,39 @@ namespace AutomateDesign.Client.View.Controls.DiagramShapes
     /// </summary>
     public partial class DiagramState : DiagramShape
     {
-        private State model;
-        private HashSet<DiagramTransition> attachedTransitions;
+        private StateViewModel viewModel;
 
-        public State Model => this.model;
-
-        public IEnumerable<DiagramTransition> AttachedTransitions => this.attachedTransitions;
+        public StateViewModel ViewModel => this.viewModel;
 
         public override Shape MainShape => this.mainShape;
 
-        public DiagramState(State model)
-        {
-            this.model = model;
-            this.attachedTransitions = new();
-
-            DataContext = this.model;
-            InitializeComponent();
+        public Position Position {
+            get => this.viewModel.Position;
+            set
+            {
+                this.viewModel.Position = value;
+                this.OnMovement();
+            }
         }
 
-        public void AttachTransition(DiagramTransition transition) => this.attachedTransitions.Add(transition);
+        public DiagramState(StateViewModel viewModel)
+        {
+            this.viewModel = viewModel;
+            this.viewModel.Presentation = this;
 
-        public void DetachTransition(DiagramTransition transition) => this.attachedTransitions.Remove(transition);
+            DataContext = this.viewModel;
+            InitializeComponent();
+
+            this.OnMovement();
+        }
 
         public override void OnMovement()
         {
-            foreach (var transition in this.AttachedTransitions)
+            Canvas.SetTop(this, this.viewModel.Position.Top);
+            Canvas.SetLeft(this, this.viewModel.Position.Left);
+            foreach (var transition in this.viewModel.AttachedTransitions)
             {
-                transition.OnMovement();
+                (transition.Presentation as DiagramTransition)?.OnMovement();
             }
         }
     }

@@ -11,12 +11,18 @@ namespace AutomateDesign.Client.View.Helpers
     {
         private DataTemplate? defaultTemplate, firstItemTemplate;
 
+        /// <summary>
+        /// Le modèle à utiliser pour tous les éléments àprès le premier.
+        /// </summary>
         public DataTemplate DefaultTemplate
         {
             get => this.defaultTemplate ?? throw new NullReferenceException("No default template set.");
             set => this.defaultTemplate = value;
         }
 
+        /// <summary>
+        /// Le modèle à utiliser pour le premier élément.
+        /// </summary>
         public DataTemplate FirstItemTemplate
         {
             get => this.firstItemTemplate ?? throw new NullReferenceException("No first item template set.");

@@ -16,7 +16,14 @@
         </Grid.Resources>
         <Canvas Background="{StaticResource SmallGridBrush}"/>
         <Canvas Background="{StaticResource LargeGridBrush}" x:Name="frontCanvas">
-            
+            <Ellipse Fill="White"
+                     StrokeThickness="2"
+                     Stroke="Black"
+                     Grid.Row="0" Grid.Column="0"
+                     Opacity="0.6"
+                     Width="100" Height="100"
+                     Panel.ZIndex="1000"
+                     x:Name="stateGhost" />    
         </Canvas>
     </Grid>
 </UserControl>

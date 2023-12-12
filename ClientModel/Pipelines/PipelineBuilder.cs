@@ -1,5 +1,6 @@
 ﻿using AutomateDesign.Client.Model.Cryptography;
 using AutomateDesign.Client.Model.Serialisation;
+using AutomateDesign.Core.Documents;
 using AutomateDesign.Protos;
 using Grpc.Core;
 
@@ -93,15 +94,39 @@ namespace AutomateDesign.Client.Model.Pipelines
             return this;
         }
 
+        private IClientStreamWriter<EncryptedDocumentChunk> RequireClientStream()
+        {
+            if (this.clientStream == null)
+            {
+                throw new InvalidOperationException("Aucun flux de requête n'a été configuré.");
+            }
+            else
+            {
+                return this.clientStream;
+            }
+        }
+
         /// <summary>
         /// Indique les données à envoyer.
         /// </summary>
         /// <param name="payload">Un objet à envoyer au serveur.</param>
         /// <returns>Le <see cref="PipelineBuilder"/> modifié.</returns>
-        public PipelineBuilder UsePayload(object? payload)
+        public PipelineBuilder UsePayload(object payload)
         {
             this.payload = payload;
             return this;
+        }
+
+        private object RequirePayload()
+        {
+            if (this.payload == null)
+            {
+                throw new InvalidOperationException("Aucune charge utilse n'a été configurée.");
+            }
+            else
+            {
+                return this.payload;
+            }
         }
 
         public DocumentReceptionPipeline BuildDocumentReceptionPipeline()
@@ -120,7 +145,12 @@ namespace AutomateDesign.Client.Model.Pipelines
 
         public DocumentTransmissionPipeline BuildDocumentTransmissionPipeline()
         {
-            throw new NotImplementedException("Not implemented");
+            return new DocumentTransmissionPipeline(
+                this.RequireDocumentSerialiser(),
+                this.RequireEncryptionMethod(),
+                this.RequireClientStream(),
+                (this.RequirePayload() as Document) ?? throw new ArgumentException("La charge utile d'un DocumentTransmissionPipeline doit être un Document.")
+            );
         }
 
         public HeaderTransmissionPipeline BuildHeaderTransmissionPipeline()

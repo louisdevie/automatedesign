@@ -37,7 +37,7 @@ namespace AutomateDesign.Client.View.Helpers
             {
                 message = "Une erreur inconnue est survenue";
             }
-            MessageBox.Show(message, "Erreur", MessageBoxButton.OK);
+            MessageBox.Show(message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>

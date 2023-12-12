@@ -11,7 +11,10 @@
         {
             switch (evt)
             {
-
+                case EditorEvent.FinishCreatingState finishCreatingState:
+                    ctx.AddState(finishCreatingState.position);
+                    ctx.Mode = EditorMode.Move;
+                    break;
             }
         }
 
@@ -19,6 +22,9 @@
         {
             switch (evt)
             {
+                case EditorEvent.FinishCreatingState:
+                    return new ReadyState();
+
                 default:
                     return this;
             }

@@ -61,18 +61,21 @@ namespace AutomateDesign.Client.View
                     catch (Exception error)
                     {
                         ErrorMessageBox.Show(error);
+                        this.viewModel.ClearPassword();
                         this.IsEnabled = true;
                     }
                 }
                 else
                 {
                     ErrorMessageBox.Show(rpce);
+                    this.viewModel.ClearPassword();
                     this.IsEnabled = true;
                 }
             }
             catch (Exception error)
             {
                 ErrorMessageBox.Show(error);
+                this.viewModel.ClearPassword();
                 this.IsEnabled = true;
             }
         }

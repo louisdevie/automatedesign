@@ -23,6 +23,7 @@ namespace AutomateDesign.Client.View.Navigation
             {
                 this.current = value;
                 this.container.ChangeContent(value);
+                this.container.ApplyPreferences(this.Current.Preferences);
             }
         }
 
@@ -34,13 +35,13 @@ namespace AutomateDesign.Client.View.Navigation
         /// <summary>
         /// La fenêtre parente.
         /// </summary>
-        public Window Window => this.container.Window;
+        public Window ParentWindow => this.container.ParentWindow;
 
         /// <summary>
         /// Crée un navigateur.
         /// </summary>
-        /// <param name="container"></param>
-        /// <param name="initialPage"></param>
+        /// <param name="container">Le conteneur qui va afficher les pages.</param>
+        /// <param name="initialPage">La première page à afficher.</param>
 #pragma warning disable CS8618 // `current` est bien assigné
         public Navigator(INavigationContainer container, INavigable initialPage)
         {
@@ -50,7 +51,6 @@ namespace AutomateDesign.Client.View.Navigation
 
             initialPage.UseNavigator(this);
             this.Current = initialPage;
-            this.container.ApplyPreferences(this.Current.Preferences);
             this.Current.OnNavigatedToThis(true);
         }
 #pragma warning restore CS8618
@@ -73,7 +73,6 @@ namespace AutomateDesign.Client.View.Navigation
 
             nextPage.UseNavigator(this);
             this.Current = nextPage;
-            this.container.ApplyPreferences(this.Current.Preferences);
             nextPage.OnNavigatedToThis(clearAllHistory);
         }
 
@@ -89,7 +88,6 @@ namespace AutomateDesign.Client.View.Navigation
             try
             {
                 this.Current = this.history.Pop();
-                this.container.ApplyPreferences(this.Current.Preferences);
                 this.Current.OnWentBackToThis();
             }
             catch (InvalidOperationException)

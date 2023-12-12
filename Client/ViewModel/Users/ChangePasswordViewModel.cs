@@ -1,8 +1,10 @@
-﻿using System;
+﻿using AutomateDesign.Client.Model.Logic.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutomateDesign.Client.ViewModel.Users
 {
@@ -31,7 +33,22 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche qui représente l'opération.</returns>
         public async Task ChangePasswordAsync()
         {
-            await Users.ChangePasswordAsync(this.userId, this.PasswordValue, this.currentPassword.Password);
+            if (this.CurrentPassword.Password != string.Empty)
+            {
+                throw new InvalidInputsException("Veuillez saisir votre mot de passe actuel");
+            }
+            else if (!this.PasswordsNotEmpty)
+            {
+                throw new InvalidInputsException("Veuillez saisir un nouveau mot de passe");
+            }
+            else if (!this.PasswordsMatch)
+            {
+                throw new InvalidInputsException("Les mots de passe ne correspondent pas");
+            }
+            else
+            {
+                await Users.ChangePasswordAsync(this.userId, this.PasswordValue, this.currentPassword.Password);
+            }
         }
     }
 }

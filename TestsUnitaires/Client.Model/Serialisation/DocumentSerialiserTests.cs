@@ -14,9 +14,9 @@ namespace AutomateDesign.Client.Model.Serialisation
             JsonDocumentSerialiser serialiser = new();
 
             List<DocumentHeader> headers = new() {
-                new DocumentHeader("Document test 1", new DateTime(2023, 11, 24, 13, 16, 00)),
-                new DocumentHeader("Document test 2", new DateTime(2023, 11, 24, 13, 17, 00)),
-                new DocumentHeader("Document test 3", new DateTime(2023, 11, 24, 13, 18, 00)),
+                new DocumentHeader(1, "Document test 1", new DateTime(2023, 11, 24, 13, 16, 00)),
+                new DocumentHeader(2, "Document test 2", new DateTime(2023, 11, 24, 13, 17, 00)),
+                new DocumentHeader(3, "Document test 3", new DateTime(2023, 11, 24, 13, 18, 00)),
             };
 
             List<DocumentHeader> results = new();
@@ -43,6 +43,7 @@ namespace AutomateDesign.Client.Model.Serialisation
 
             foreach((DocumentHeader original, DocumentHeader result) in headers.Zip(results))
             {
+                Assert.Equal(original.Id, result.Id);
                 Assert.Equal(original.Name, result.Name);
                 Assert.Equal(original.LastModificationdate, result.LastModificationdate);
             }
@@ -54,10 +55,10 @@ namespace AutomateDesign.Client.Model.Serialisation
             DocumentChannel channel = new();
             JsonDocumentSerialiser serialiser = new();
 
-            Document document = new Document(new DocumentHeader("Document test"));
-            State state1 = document.CreateState("État 1", StateKind.Initial);
+            Document document = new Document(new DocumentHeader(0, "Document test"));
+            State state1 = document.CreateState("État 1", kind: StateKind.Initial);
             State state2 = document.CreateState("État 2");
-            State state3 = document.CreateState("État 3", StateKind.Final);
+            State state3 = document.CreateState("État 3", kind: StateKind.Final);
             Event eventA = document.CreateEnumEvent("A");
             Event eventB = document.CreateEnumEvent("B");
             document.CreateTransition(state1, state2, eventA);
