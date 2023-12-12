@@ -67,7 +67,7 @@ namespace AutomateDesign.Client.DependencyInjection
                 
                 if (!implementation.GetType().IsAssignableTo(service))
                 {
-                    throw new InvalidOperationException($"The provider for {service.FullName} returned an implementation of type {impl.GetType().FullName}, which is not assignable to the former.");
+                    throw new InvalidOperationException($"The provider for {service.FullName} returned an implementation of type {implementation.GetType().FullName}, which is not assignable to the former.");
                 }
             }
             else

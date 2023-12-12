@@ -8,7 +8,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         public void ModelToDto()
         {
             DateTime time = new(2023, 6, 21, 17, 15, 43);
-            DocumentHeader header = new("Unholy Meat Obelisk™", time);
+            DocumentHeader header = new(1, "Unholy Meat Obelisk™", time);
 
             DocumentHeaderDto dto = DocumentHeaderDto.MapFromModel(header);
             Assert.Equal("Unholy Meat Obelisk™", dto.Name);
