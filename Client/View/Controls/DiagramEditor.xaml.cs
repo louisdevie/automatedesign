@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace AutomateDesign.Client.View.Controls
@@ -247,6 +248,24 @@ namespace AutomateDesign.Client.View.Controls
         private void CanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        /// <summary>
+        /// Enregistre l'automate sous format png
+        /// </summary>
+        /// <returns>Image Png</returns>
+        public void PngCaptureDiagramEditor(string filePath)
+        {
+            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)this.ActualWidth, (int)this.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            renderTargetBitmap.Render(this);
+
+            PngBitmapEncoder pngImage = new PngBitmapEncoder();
+            pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                pngImage.Save(stream);
+            }           
         }
     }
 }
