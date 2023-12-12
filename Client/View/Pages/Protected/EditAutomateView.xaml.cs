@@ -163,32 +163,49 @@ namespace AutomateDesign.Client.View
             this.context.HandleEvent(new EditorEvent.BeginCreatingTransition());
         }
 
-        private void ExportPng(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Ouvre une boîte de dialogue de sauvegarde pour exporter une image dans un format spécifié
+        /// </summary>
+        /// <param name="format">Le format de l'image (PNG, JPEG)</param>
+        /// <param name="extension">L'extension de fichier correspondant au format d'image (png, jpg)</param>
+        /// <param name="captureAndSaveMethod">La méthode qui capture et enregistre l'image, prenant un RenderTargetBitmap et un chemin de fichier en paramètres</param>
+        private void ExportImage(string format, string extension, Action<RenderTargetBitmap, string> captureAndSaveMethod)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = "Sélectionnez un dossier";
-            saveFileDialog.Filter = "Image PNG (*.png)|*.png";
+            saveFileDialog.Filter = $"Image {format} (*.{extension})|*.{extension}";
             saveFileDialog.FileName = this.viewModel.Name;
-            
+
             if (saveFileDialog.ShowDialog() == true)
-            {                
+            {
                 string filePath = saveFileDialog.FileName;
-                if (!filePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                if (!filePath.EndsWith($".{extension}", StringComparison.OrdinalIgnoreCase))
                 {
-                    filePath += ".png";
+                    filePath += $".{extension}";
                 }
 
-                PngCaptureDiagramEditor(filePath);
+                RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)diagramEditor.ActualWidth, (int)diagramEditor.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+                captureAndSaveMethod(renderTargetBitmap, filePath);
             }
         }
 
-        /// <summary>
-        /// Enregistre l'automate sous format png
-        /// </summary>
-        /// <returns>Image Png</returns>
-        private void PngCaptureDiagramEditor(string filePath)
+        private void ExportPng(object sender, RoutedEventArgs e)
         {
-            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)diagramEditor.FrontCanvas.ActualWidth, (int)diagramEditor.FrontCanvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            ExportImage("PNG", "png", PngCaptureDiagramEditor);
+        }
+
+        private void ExportJpg(object sender, RoutedEventArgs e)
+        {
+            ExportImage("JPEG", "jpg", JpgSaveDiagramEditor);
+        }
+
+        /// <summary>
+        /// Récupère et sauvegarde une image sous format png
+        /// </summary>
+        /// <param name="renderTargetBitmap">tableau de pixel</param>
+        /// <param name="filePath">chemin de sauvegarde</param>
+        private void PngCaptureDiagramEditor(RenderTargetBitmap renderTargetBitmap, string filePath)
+        {
             renderTargetBitmap.Render(diagramEditor.FrontCanvas);
 
             PngBitmapEncoder pngImage = new PngBitmapEncoder();
@@ -199,6 +216,25 @@ namespace AutomateDesign.Client.View
                 pngImage.Save(stream);
             }
         }
+
+        /// <summary>
+        /// Récupère et sauvegarde une image sous format jpg
+        /// </summary>
+        /// <param name="renderTargetBitmap">tableau de pixel</param>
+        /// <param name="filePath">chemin de sauvegarde</param>
+        private void JpgSaveDiagramEditor(RenderTargetBitmap renderTargetBitmap, string filePath)
+        {
+            renderTargetBitmap.Render(diagramEditor);
+
+            JpegBitmapEncoder jpegImage = new JpegBitmapEncoder();
+            jpegImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                jpegImage.Save(stream);
+            }
+        }
+
 
         private void PageKeyUp(object sender, KeyEventArgs e)
         {

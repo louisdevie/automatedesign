@@ -105,7 +105,10 @@
                     <MenuItem Header="Importer" />
                     <MenuItem Header="Exporter">
                         <MenuItem Header="Latex" />
-                        <MenuItem Header="Image" Click="ExportPng"/>
+                        <Separator/>
+                        <MenuItem Header="Image png" Click="ExportPng"/>
+                        <MenuItem Header="Image jpg" Click="ExportJpg"/>
+                        <Separator/>
                         <MenuItem Header="Code" />
                     </MenuItem>
                 </MenuItem>
