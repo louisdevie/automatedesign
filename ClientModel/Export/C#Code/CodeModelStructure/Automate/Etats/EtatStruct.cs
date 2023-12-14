@@ -10,7 +10,7 @@ namespace NomAutomate.Etats
     {
         public EtatX Transition(Enum e)
         {
-            // Ici la transition à généré à partir de l'automate
+            
         }
 
         public void Action(Enum e)

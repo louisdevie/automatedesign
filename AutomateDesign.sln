@@ -30,7 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{AB88211D-EC6
 		SQL\automatedesign-ddl.sql = SQL\automatedesign-ddl.sql
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StructureCodeAutomate", "StructureCodeAutomate", "{05629C47-BA25-48C3-8230-549844EEA973}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeModelStructure", "CodeModelStructure", "{05629C47-BA25-48C3-8230-549844EEA973}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Etats", "Etats", "{57B6BC5F-8D12-4D3C-8FD0-45A56CB80061}"
 	ProjectSection(SolutionItems) = preProject
