@@ -104,7 +104,7 @@
                               Click="SaveButtonClick"/>
                     <MenuItem Header="Importer" />
                     <MenuItem Header="Exporter">
-                        <MenuItem Header="Latex" />
+                        <MenuItem Header="Latex" Click="ExportLatex"/>
                         <Separator/>
                         <MenuItem Header="Image png" Click="ExportPng"/>
                         <MenuItem Header="Image jpg" Click="ExportJpg"/>

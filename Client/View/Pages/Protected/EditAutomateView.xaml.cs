@@ -11,6 +11,7 @@ using AutomateDesign.Core.Documents;
 using Microsoft.Win32;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -199,6 +200,26 @@ namespace AutomateDesign.Client.View
             ExportImage("JPEG", "jpg", JpgSaveDiagramEditor);
         }
 
+        private void ExportLatex(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Génère l'image sous format png
+        /// </summary>
+        /// <param name="renderTargetBitmap">tableau de pixel</param>
+        /// <returns></returns>
+        private PngBitmapEncoder GeneratePngDiagramEditor(RenderTargetBitmap renderTargetBitmap)
+        {
+            renderTargetBitmap.Render(diagramEditor.FrontCanvas);
+
+            PngBitmapEncoder pngImage = new PngBitmapEncoder();
+            pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+            return pngImage;
+        }
+
         /// <summary>
         /// Récupère et sauvegarde une image sous format png
         /// </summary>
@@ -206,15 +227,26 @@ namespace AutomateDesign.Client.View
         /// <param name="filePath">chemin de sauvegarde</param>
         private void PngCaptureDiagramEditor(RenderTargetBitmap renderTargetBitmap, string filePath)
         {
-            renderTargetBitmap.Render(diagramEditor.FrontCanvas);
-
-            PngBitmapEncoder pngImage = new PngBitmapEncoder();
-            pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
-
+            PngBitmapEncoder pngImage = GeneratePngDiagramEditor(renderTargetBitmap);
             using (var stream = System.IO.File.Create(filePath))
             {
                 pngImage.Save(stream);
             }
+        }
+
+        /// <summary>
+        /// Génère l'image sous format jpg
+        /// </summary>
+        /// <param name="renderTargetBitmap">tableau de pixel</param>
+        /// <returns></returns>
+        private JpegBitmapEncoder GenerateJpgDiagramEditor(RenderTargetBitmap renderTargetBitmap)
+        {
+            renderTargetBitmap.Render(diagramEditor);
+
+            JpegBitmapEncoder jpegImage = new JpegBitmapEncoder();
+            jpegImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+            return jpegImage;
         }
 
         /// <summary>
@@ -224,17 +256,12 @@ namespace AutomateDesign.Client.View
         /// <param name="filePath">chemin de sauvegarde</param>
         private void JpgSaveDiagramEditor(RenderTargetBitmap renderTargetBitmap, string filePath)
         {
-            renderTargetBitmap.Render(diagramEditor);
-
-            JpegBitmapEncoder jpegImage = new JpegBitmapEncoder();
-            jpegImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
-
+            JpegBitmapEncoder jpegImage = GenerateJpgDiagramEditor(renderTargetBitmap);
             using (var stream = System.IO.File.Create(filePath))
             {
                 jpegImage.Save(stream);
             }
         }
-
 
         private void PageKeyUp(object sender, KeyEventArgs e)
         {
