@@ -9,6 +9,6 @@ namespace AutomateDesign.Client.Model.Export
 {
     public interface ICodeExport
     {
-        public void Export(string path, IEnumerable<State> states);
+        public void Export(string path, Document document);
     }
 }

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NomAutomate
+namespace NomAutomate.Automate
 {
     public class Automate
     {
         private Etat etatCourant;
+
+        public Etat EtatCourant { get => etatCourant; set => etatCourant = value; }
 
         public void Action()
         {
