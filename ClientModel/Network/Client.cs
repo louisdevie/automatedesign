@@ -11,11 +11,19 @@ namespace AutomateDesign.Client.Model.Network
     {
         private static readonly string serverUrl = "https://localhost:5001";
 
+        private GrpcChannel? channel;
+
         /// <summary>
-        /// Ouvre un canal de communication avec le serveur.
+        /// Un canal de communication avec le serveur.
         /// </summary>
-        /// <returns></returns>
-        protected GrpcChannel OpenChannel() => GrpcChannel.ForAddress(serverUrl);
+        protected GrpcChannel Channel
+        {
+            get
+            {
+                this.channel ??= GrpcChannel.ForAddress(serverUrl);
+                return this.channel;
+            }
+        }
 
         /// <summary>
         /// Crée un objet contenant des métadonnées pour authentifer une requête.
@@ -27,7 +35,7 @@ namespace AutomateDesign.Client.Model.Network
             return new CallOptions(
                 new Metadata
                 {
-                    { "Authrorization", $"Bearer {session.Token}" }
+                    { "Authorization", $"Bearer {session.Token}" }
                 }
             );
         }

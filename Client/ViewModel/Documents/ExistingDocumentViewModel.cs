@@ -1,5 +1,6 @@
 ﻿using AutomateDesign.Client.Model.Logic.Editor;
 using AutomateDesign.Client.Model.Network;
+using AutomateDesign.Client.Model.Pipelines;
 using AutomateDesign.Core.Documents;
 using System;
 using System.Collections.ObjectModel;
@@ -45,15 +46,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// <summary>
         /// Si l'automate a été modifié depuis le dernier chargement/enregistrement.
         /// </summary>
-        public bool HasUnsavedChanges
-        {
-            get => this.hasUnsavedChanges;
-            private set
-            {
-                this.hasUnsavedChanges = value;
-                this.NotifyPropertyChanged();
-            }
-        }
+        public bool HasUnsavedChanges  => this.hasUnsavedChanges;
 
         public override string Name => this.header.Name;
 
@@ -90,6 +83,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
             this.parentCollection = parentCollection;
 
             this.header = new(this.document.Header);
+            this.header.PropertyChanged += this.HeaderPropertyChanged;
 
             this.loaded = false;
             this.hasUnsavedChanges = false;
@@ -144,9 +138,19 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// <summary>
         /// Enregistre l'automate et l'en-tête.
         /// </summary>
-        public void Save()
+        /// <param name="progress">Un objet à qui rapporter l'avancement de l'opération.</param>
+        public async Task Save(IPipelineProgress? progress = null)
         {
-            
+            /*var pipeline = this.documentsClient.SaveDocument(this.parentCollection.Session, this.document);
+
+            pipeline.ReportProgressTo(progress);
+
+            if (await pipeline.ExecuteAsync())
+            {
+                this.document.Header.Id = await pipeline.GetNewDocumentId();
+            }*/
+            progress?.Done();
+            return;
         }
 
         /// <summary>

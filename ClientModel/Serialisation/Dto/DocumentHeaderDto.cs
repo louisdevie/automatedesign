@@ -12,9 +12,6 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
     /// </summary>
     internal class DocumentHeaderDto
     {
-        /// <inheritdoc cref="DocumentHeader.Id"/>
-        public int Id { get; set; }
-
         /// <inheritdoc cref="DocumentHeader.Name"/>
         public string Name { get; set; } = "";
 
@@ -30,7 +27,6 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         {
             return new DocumentHeaderDto
             {
-                Id = header.Id,
                 Name = header.Name,
                 LastModificationDate = header.LastModificationdate
             };
@@ -42,7 +38,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         /// <returns>Un nouveau modèle avec les informations de ce DTO.</returns>
         public DocumentHeader MapToModel()
         {
-            return new DocumentHeader(this.Id, this.Name, this.LastModificationDate);
+            return new DocumentHeader(-1, this.Name, this.LastModificationDate);
         }
     }
 }

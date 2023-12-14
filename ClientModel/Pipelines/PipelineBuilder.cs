@@ -3,6 +3,7 @@ using AutomateDesign.Client.Model.Serialisation;
 using AutomateDesign.Core.Documents;
 using AutomateDesign.Protos;
 using Grpc.Core;
+using Grpc.Net.Client;
 
 namespace AutomateDesign.Client.Model.Pipelines
 {
@@ -15,6 +16,7 @@ namespace AutomateDesign.Client.Model.Pipelines
         private IDocumentSerialiser? documentSerialiser;
         private IAsyncStreamReader<EncryptedDocumentChunk>? serverStream;
         private IClientStreamWriter<EncryptedDocumentChunk>? clientStream;
+        private Task? asyncResponse;
         private object? payload;
 
         /// <summary>
@@ -83,11 +85,13 @@ namespace AutomateDesign.Client.Model.Pipelines
         /// <summary>
         /// Configure le flux requête à utiliser comme sortie.
         /// </summary>
-        /// <param name="streamReader">Un flux requête gRPC.</param>
+        /// <param name="streamWriter">Un flux requête gRPC.</param>
+        /// <param name="asyncResponse">La réponse suivant la fin du flux.</param>
         /// <returns>Le <see cref="PipelineBuilder"/> modifié.</returns>
-        public PipelineBuilder UseClientStream(IClientStreamWriter<EncryptedDocumentChunk> streamWriter)
+        public PipelineBuilder UseClientStream(IClientStreamWriter<EncryptedDocumentChunk> streamWriter, Task asyncResponse)
         {
             this.clientStream = streamWriter;
+            this.asyncResponse = asyncResponse;
             return this;
         }
 
@@ -99,6 +103,16 @@ namespace AutomateDesign.Client.Model.Pipelines
             }
 
             return this.clientStream;
+        }
+
+        private Task RequireAsyncResponse()
+        {
+            if (this.asyncResponse == null)
+            {
+                throw new InvalidOperationException("Aucun flux de requête n'a été configuré.");
+            }
+
+            return this.asyncResponse;
         }
 
         /// <summary>
@@ -150,11 +164,18 @@ namespace AutomateDesign.Client.Model.Pipelines
         /// <returns>Un nouveau <see cref="DocumentTransmissionPipeline"/>.</returns>
         public DocumentTransmissionPipeline BuildDocumentTransmissionPipeline()
         {
+            var asyncResponse = this.RequireAsyncResponse() as Task<DocumentIdOnly>
+                ?? throw new ArgumentException("La réponse à un DocumentTransmissionPipeline doit être un DocumentIdOnly.");
+            
+            var payload = this.RequirePayload() as Document
+                ?? throw new ArgumentException("La charge utile d'un DocumentTransmissionPipeline doit être un Document.");
+            
             return new DocumentTransmissionPipeline(
                 this.RequireDocumentSerialiser(),
                 this.RequireEncryptionMethod(),
                 this.RequireClientStream(),
-                (this.RequirePayload() as Document) ?? throw new ArgumentException("La charge utile d'un DocumentTransmissionPipeline doit être un Document.")
+                asyncResponse,
+                payload
             );
         }
 
@@ -166,6 +187,5 @@ namespace AutomateDesign.Client.Model.Pipelines
         {
             throw new NotImplementedException("Not implemented");
         }
-
     }
 }

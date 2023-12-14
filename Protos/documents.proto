@@ -10,7 +10,7 @@ service Documents {
 
 	rpc GetDocument (DocumentIdOnly)  returns (stream EncryptedDocumentChunk); 
 
-	rpc SaveHeader (EncryptedDocumentChunk) returns (DocumentIdOnly);
+	rpc SaveHeader (EncryptedDocumentChunk) returns (Nothing);
 	rpc SaveDocument (stream EncryptedDocumentChunk) returns (DocumentIdOnly);
 
 	rpc DeleteDocument (DocumentIdOnly) returns (Nothing);

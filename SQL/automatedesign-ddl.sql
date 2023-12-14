@@ -28,7 +28,7 @@ CREATE TABLE `Registration` (
 );
 
 create table `Document` (
-   `DocumentId` INT,
+   `DocumentId` INT AUTO_INCREMENT,
    `UserId` INT not null,
    `HeaderSize` INT unsigned not null,
    `HeaderData` BLOB,

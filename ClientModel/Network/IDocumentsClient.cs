@@ -26,8 +26,8 @@ namespace AutomateDesign.Client.Model.Network
         /// </summary>
         /// <param name="session">Les informations de l'utilisateur connecté.</param>
         /// <param name="document">Les informations à mettre à jour.</param>
-        /// <returns>Une tâche représentant l'opération qui termine avec le nouvel identifiant du document.</returns>
-        Task<int> SaveDocument(Session session, Document document);
+        /// <returns>Un <see cref="DocumentTransmissionPipeline"/> qui représente l'opération.</returns>
+        DocumentTransmissionPipeline SaveDocument(Session session, Document document);
 
         /// <summary>
         /// Supprime un document définitivement.

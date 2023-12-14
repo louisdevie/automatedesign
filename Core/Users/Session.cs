@@ -74,6 +74,8 @@ namespace AutomateDesign.Core.Users
         {
             var rtg = new RandomTextGenerator(new BasicRandomProvider());
             this.token = rtg.AlphaNumericString(20);
+            this.lastUse = DateTime.UtcNow;
+            this.expiration = DateTime.UtcNow + LIFETIME;
             this.user = user;
         }
 

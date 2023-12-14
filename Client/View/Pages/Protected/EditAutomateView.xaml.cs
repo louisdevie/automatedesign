@@ -9,6 +9,7 @@ using AutomateDesign.Client.ViewModel.Documents;
 using AutomateDesign.Core.Documents;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -59,48 +60,6 @@ namespace AutomateDesign.Client.View
             this.diagramEditor.Mode = this.context.Mode;
         }
 
-        /// <summary>
-        /// Ajoute au bon endroit le document dans le TreeView
-        /// </summary>
-        /// <param name="document"></param>
-        private void AddTreeViewItem(State document)
-        {
-            // Si doc est un etat
-            StateTreeViewItem.Items.Add(document);
-        }
-
-        private void AddTreeViewItem(Transition document)
-        {
-            // Sinon si doc est une transition
-            TransitionTreeViewItem.Items.Add(document);
-            }
-
-        private void AddTreeViewItem(EnumEvent document)
-        {
-            // Sinon doc est un evenement
-            EventTreeViewItem.Items.Add(document);
-        }
-
-        /// <summary>
-        /// Ajoute au bon endroit le document dans le TreeView
-        /// </summary>
-        /// <param name="document"></param>
-        private void DeleteTreeViewItem(State document)
-        {
-            // Si doc est un etat
-            StateTreeViewItem.Items.Remove(document);
-        }
-        private void DeleteTreeViewItem(Transition document)
-        {
-            // Sinon si doc est une transition
-            TransitionTreeViewItem.Items.Remove(document);
-        }
-        private void DeleteTreeViewItem(EnumEvent document)
-        {
-            // Sinon doc est un evenement
-            EventTreeViewItem.Items.Remove(document);
-        }
-
         #region Évènements du diagramme
 
         private void DiagramEditorOnShapeSelected(DiagramShape selected)
@@ -131,7 +90,18 @@ namespace AutomateDesign.Client.View
 
         private void SaveButtonClick(object sender, RoutedEventArgs e)
         {
-            this.Navigator.Back();
+            ProgressDialog popup = new(
+                title: "Enregistrement",
+                progressMessage: "Enregistrement du document...",
+                successMessage: $"« {this.viewModel.Name} » a bien été enregistré."
+            );
+
+            Task.Run(() => this.viewModel.Save(popup));
+
+            if (popup.ShowDialog() == true)
+            {
+                this.Navigator.Back();
+            }
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)

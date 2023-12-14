@@ -33,7 +33,7 @@
                       Grid.Column="1"
                       Background="Gray">
                 <TreeViewItem Header="Etats"
-                              Name="StateTreeViewItem">
+                              Name="StateTreeViewItem" ItemsSource="{Binding Document.States}">
                 </TreeViewItem>
                 <TreeViewItem Header="Transitions"
                               Name="TransitionTreeViewItem">
