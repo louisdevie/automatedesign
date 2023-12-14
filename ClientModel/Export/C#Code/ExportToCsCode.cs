@@ -59,6 +59,10 @@ namespace AutomateDesign.Client.Model.Export.ExportToCsCode
                 string stateName = state.Name;
                 stateName.Replace(" ", "");
                 specificEtat.Replace("EtatX", state.Name);
+                
+                // A CONTINUER !
+                specificEtat.Replace("//TransitionAutomate", "");
+                // A CONTINUER !
             }
             
         }
