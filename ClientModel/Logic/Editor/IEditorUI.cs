@@ -20,7 +20,7 @@ namespace AutomateDesign.Client.Model.Logic.Editor
         /// </summary>
         /// <param name="evt">L'évènement choisi par l'utilisateur, ou <see langword="null"/> si l'utilisateur à refusé.</param>
         /// <returns><see langword="true"/> si l'utilisateur choisi un évènement et confirmé, sinon <see langword="false"/>.</returns>
-        bool PromptForEvent([NotNullWhen(true)] out Event? evt);
+        bool PromptForEvent([NotNullWhen(true)] out IEvent? evt);
 
         /// <summary>
         /// Indique à l'utilisateur q'un état va être ajouté au diagramme.

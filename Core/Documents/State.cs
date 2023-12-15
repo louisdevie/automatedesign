@@ -8,7 +8,7 @@
         private int id;
         private string name;
         private Document document;
-        public StateKind kind;
+        private StateKind kind;
         private Position position;
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace AutomateDesign.Client.View
                 this.CurrentUserEmail.Value = this.sessionVM.UserEmail.Split('@')[0];
 
                 this.documentsVM.Session = session;
-                Task.Run(ErrorMessageBox.HandleActionErrors(this.documentsVM.Reload));
+                Task.Run(ErrorMessageBox.HandleAsyncActionErrors(this.documentsVM.Reload));
             }
         }
 

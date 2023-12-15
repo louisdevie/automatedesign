@@ -117,6 +117,11 @@ namespace AutomateDesign.Client.Model.Logic.Editor
             this.EditorStateChanged?.Invoke(this.state);
         }
 
+        /// <summary>
+        /// Finalise l'ajout d'un état.
+        /// </summary>
+        /// <param name="initialPosition">La position de l'état dans le diagramme.</param>
+        /// <returns>L'état nouvellement créé si l'utilisateur à confirmé l'opération.</returns>
         public State? AddState(Position? initialPosition)
         {
             if (this.editorUI.PromptForStateName(out string? name))
@@ -131,9 +136,15 @@ namespace AutomateDesign.Client.Model.Logic.Editor
             }
         }
 
+        /// <summary>
+        /// Finalise l'ajout d'une transition.
+        /// </summary>
+        /// <param name="start">L'état de départ de la transition.</param>
+        /// <param name="end">L'état d'arrivée de la transition.</param>
+        /// <returns>La transition nouvellement crée si l'utilisateur à confirmé l'opération.</returns>
         internal Transition? AddTransition(State start, State end)
         {
-            if (this.editorUI.PromptForEvent(out Event? evt))
+            if (this.editorUI.PromptForEvent(out IEvent? evt))
             {
                 Transition transition = this.document.CreateTransition(start, end, evt);
                 this.NotifyTransitionAdded(transition);

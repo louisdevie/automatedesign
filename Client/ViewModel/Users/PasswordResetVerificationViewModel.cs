@@ -14,6 +14,10 @@ namespace AutomateDesign.Client.ViewModel.Users
     {
         private PasswordResetVerification verification;
 
+        /// <summary>
+        /// Crée un nouveau <see cref="PasswordResetVerificationViewModel"/>.
+        /// </summary>
+        /// <param name="verification">L'opération de réinitialisation de mot de passe.</param>
         public PasswordResetVerificationViewModel(PasswordResetVerification verification)
         {
             this.verification = verification;

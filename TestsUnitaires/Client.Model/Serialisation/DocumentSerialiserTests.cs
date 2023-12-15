@@ -59,8 +59,8 @@ namespace AutomateDesign.Client.Model.Serialisation
             State state1 = document.CreateState("État 1", kind: StateKind.Initial);
             State state2 = document.CreateState("État 2");
             State state3 = document.CreateState("État 3", kind: StateKind.Final);
-            Event eventA = document.CreateEnumEvent("A");
-            Event eventB = document.CreateEnumEvent("B");
+            IEvent eventA = document.CreateEnumEvent("A");
+            IEvent eventB = document.CreateEnumEvent("B");
             document.CreateTransition(state1, state2, eventA);
             document.CreateTransition(state2, state1, new DefaultEvent());
             document.CreateTransition(state2, state3, eventB);

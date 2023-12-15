@@ -4,27 +4,33 @@ using AutomateDesign.Core.Documents;
 using AutomateDesign.Protos;
 using Google.Protobuf;
 using Grpc.Core;
-using System.Threading.Channels;
 
 namespace AutomateDesign.Client.Model.Pipelines
 {
+    /// <summary>
+    /// Une opération d'envoi d'un document.
+    /// </summary>
     public class DocumentTransmissionPipeline : Pipeline
     {
         private IClientStreamWriter<EncryptedDocumentChunk> streamWriter;
+        private Task<DocumentIdOnly> asyncResponse;
         private Document payload;
 
         public DocumentTransmissionPipeline(
             IDocumentSerialiser documentSerialiser,
             IEncryptionMethod encryptionMethod,
             IClientStreamWriter<EncryptedDocumentChunk> streamWriter,
-            Document payload)
+            Task<DocumentIdOnly> asyncResponse,
+            Document payload
+        )
         : base(documentSerialiser, encryptionMethod)
         {
             this.streamWriter = streamWriter;
+            this.asyncResponse = asyncResponse;
             this.payload = payload;
         }
 
-        public override Task ExecuteAsync()
+        protected override Task DoExecuteAsync()
         {
             DocumentChannel encryptedChannel = new();
             DocumentChannel decryptedChannel = new();
@@ -50,6 +56,18 @@ namespace AutomateDesign.Client.Model.Pipelines
                 );
             }
             await this.streamWriter.CompleteAsync();
+
+            await this.asyncResponse;
+        }
+
+        /// <summary>
+        /// Récupère le nouvel identifiant du document après enregistrement.
+        /// </summary>
+        /// <returns>Un tâche qui termine avec l'identifiant.</returns>
+        public async Task<int> GetNewDocumentId()
+        {
+            var result = await this.asyncResponse;
+            return result.DocumentId;
         }
     }
 }

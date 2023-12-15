@@ -21,7 +21,7 @@ namespace AutomateDesign.Client.ViewModel.Users
         private bool warningRead;
 
         /// <summary>
-        /// L'adresse mail de l'utilisateur.
+        /// L'adresse mail du nouvel utilisateur.
         /// </summary>
         public string Email
         {
@@ -33,6 +33,9 @@ namespace AutomateDesign.Client.ViewModel.Users
             }
         }
 
+        /// <summary>
+        /// Si l'utilisateur a bien lu l'avertissement concernant le mot de passe.
+        /// </summary>
         public bool WarningRead
         {
             get => this.warningRead;

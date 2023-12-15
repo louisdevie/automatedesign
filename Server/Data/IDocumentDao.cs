@@ -1,17 +1,21 @@
 ﻿using AutomateDesign.Core.Documents;
+using AutomateDesign.Protos;
 using System.Reflection.Metadata;
 
 namespace AutomateDesign.Server.Data
 {
+    /// <summary>
+    /// Permet d'accéder aux données des documents.
+    /// </summary>
     public interface IDocumentDao
     {
         /// <summary>
         /// Enregistre un nouveal automate.
         /// </summary>
         /// <param name="userId">L'identifiant de l'utilisateur à qui appartient l'automate.</param>
-        /// <param name="documentChunks">Les morceux de l'automate chiffré. Le premier morceau correspond aux métadonnées.</param>
+        /// <param name="documentChunks">L'automate chiffré.</param>
         /// <returns>L'identifiant du nouvel automate.</returns>
-        public int CreateAsync(int userId, IAsyncEnumerable<byte[]> documentChunks);
+        public Task<int> CreateAsync(int userId, DocumentChannelReader document);
 
         /// <summary>
         /// Récupère l'automate correspondant à un identifiant.
@@ -24,14 +28,14 @@ namespace AutomateDesign.Server.Data
         /// Récupère tous les automates d'un utilisateur.
         /// </summary>
         /// <returns>Les métadonnées des automates. Chaque morceau doit correspondre à un automate.</returns>
-        public IAsyncEnumerable<byte[]> ReadAllHeadersAsync(int userId, CancellationToken ct = default);
+        public IAsyncEnumerable<EncryptedDocumentChunk> ReadAllHeadersAsync(int userId, CancellationToken ct = default);
 
         /// <summary>
         /// Enregistre un automate existant.
         /// </summary>
         /// <param name="documentId">L'identifiant de l'automate à mettre à jour.</param>
-        /// <param name="documentChunks">Les morceux de l'automate chiffré. Le premier morceau correspond aux métadonnées.</param>
-        public void UpdateAsync(int userId, int documentId, IAsyncEnumerable<byte[]> documentChunks);
+        /// <param name="document">L'automate chiffré.</param>
+        public Task<int> UpdateAsync(int userId, int documentId, DocumentChannelReader document);
 
         /// <summary>
         /// Enregistre les métadonnées un automate existant.

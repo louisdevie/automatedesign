@@ -119,7 +119,7 @@ namespace AutomateDesign.Core.Documents
         /// <param name="to">L'état d'arrivée.</param>
         /// <param name="triggeredBy">L'évènement qui déclenche cette transition.</param>
         /// <returns>La nouvelle transition.</returns>
-        public Transition CreateTransition(State from, State to, Event triggeredBy)
+        public Transition CreateTransition(State from, State to, IEvent triggeredBy)
         {
             Transition trans = new(this.transitions.Count, from, to, triggeredBy);
             this.transitions.Add(trans);

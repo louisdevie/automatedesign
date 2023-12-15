@@ -17,7 +17,7 @@ namespace AutomateDesign.Client.Model.Network
         /// Enregistre uniquement les métadonnées d'un document.
         /// </summary>
         /// <param name="session">Les informations de l'utilisateur connecté.</param>
-        /// <param name="header">Les informations à mettre à jour.</param
+        /// <param name="header">Les informations à mettre à jour.</param>
         /// <returns>Une tâche représentant l'opération qui termine avec le nouvel identifiant du document.</returns>
         Task<int> SaveHeader(Session session, DocumentHeader header);
 
@@ -25,15 +25,15 @@ namespace AutomateDesign.Client.Model.Network
         /// Enregistre un document entier.
         /// </summary>
         /// <param name="session">Les informations de l'utilisateur connecté.</param>
-        /// <param name="document">Les informations à mettre à jour.</param
-        /// <returns>Une tâche représentant l'opération qui termine avec le nouvel identifiant du document.</returns>
-        Task<int> SaveDocument(Session session, Document document);
+        /// <param name="document">Les informations à mettre à jour.</param>
+        /// <returns>Un <see cref="DocumentTransmissionPipeline"/> qui représente l'opération.</returns>
+        DocumentTransmissionPipeline SaveDocument(Session session, Document document);
 
         /// <summary>
         /// Supprime un document définitivement.
         /// </summary>
         /// <param name="session">Les informations de l'utilisateur connecté.</param>
-        /// <param name="documentId">L'identifiant du document à supprimer.</param
+        /// <param name="documentId">L'identifiant du document à supprimer.</param>
         /// <returns>Une tâche représentant l'opération.</returns>
         Task DeleteDocument(Session session, int documentId);
     }

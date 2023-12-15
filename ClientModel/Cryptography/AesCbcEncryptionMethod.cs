@@ -5,10 +5,17 @@ using System.Threading.Channels;
 
 namespace AutomateDesign.Client.Model.Cryptography
 {
+    /// <summary>
+    /// Fournit un moyen de (dé)chiffrer les automates avec AES en mode Cipher Block Chaining.
+    /// </summary>
     public class AesCbcEncryptionMethod : IEncryptionMethod
     {
         private byte[] key;
 
+        /// <summary>
+        /// Crée un object permettant de chiffrer les automates avec AES en mode Cipher Block Chaining.
+        /// </summary>
+        /// <param name="key">Une clé de 128 bits à utiliser pour (dé)chiffrer les données.</param>
         public AesCbcEncryptionMethod(byte[] key)
         {
             this.key = key;

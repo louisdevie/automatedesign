@@ -10,6 +10,9 @@ using System;
 
 namespace AutomateDesign.Client.Model.Network
 {
+    /// <summary>
+    /// Une implémentation de <see cref="IDocumentsClient"/> qui utilise le service gRPC.
+    /// </summary>
     public class DocumentsClient : Client, IDocumentsClient
     {
         private static IEncryptionMethod GetDefaultEncryptionMethodWithKey(byte[] userKey)
@@ -24,8 +27,7 @@ namespace AutomateDesign.Client.Model.Network
 
         public async Task DeleteDocument(Session session, int documentId)
         {
-            using var channel = this.OpenChannel();
-            var document = new Documents.DocumentsClient(channel);
+            var document = new Documents.DocumentsClient(this.Channel);
 
             await document.DeleteDocumentAsync(
                 new DocumentIdOnly
@@ -38,8 +40,7 @@ namespace AutomateDesign.Client.Model.Network
 
         public HeadersReceptionPipeline GetAllHeaders(Session session)
         {
-            using var channel = this.OpenChannel();
-            var client = new Documents.DocumentsClient(channel);
+            var client = new Documents.DocumentsClient(this.Channel);
 
             var ssCall = client.GetAllHeaders(new Nothing(), CallOptionsFromSession(session));
 
@@ -50,20 +51,18 @@ namespace AutomateDesign.Client.Model.Network
                 .BuildHeadersReceptionPipeline();
         }
 
-        public Task<int> SaveDocument(Session session, Document document)
+        public DocumentTransmissionPipeline SaveDocument(Session session, Document document)
         {
-            using var channel = this.OpenChannel();
-            var client = new Documents.DocumentsClient(channel);
+            var client = new Documents.DocumentsClient(this.Channel);
 
             var csCall = client.SaveDocument(CallOptionsFromSession(session));
 
-            new PipelineBuilder()
+            return new PipelineBuilder()
                 .UseEncryptionMethod(GetDefaultEncryptionMethodWithKey(session.UserEncryptionKey))
                 .UseDocumentSerialiser(GetDefaultDocumentSerialiser())
-                .UseClientStream(csCall.RequestStream)
+                .UseClientStream(csCall.RequestStream, csCall.ResponseAsync)
+                .UsePayload(document)
                 .BuildDocumentTransmissionPipeline();
-
-            return Task.FromResult(0);
         }
 
         public Task<int> SaveHeader(Session session, DocumentHeader header)

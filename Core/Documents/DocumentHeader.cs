@@ -15,10 +15,14 @@ namespace AutomateDesign.Core.Documents
         private const string defaultDocumentName = "Automate sans nom";
 
         /// <summary>
+        /// L'identifiant utilisé par les documents qui n'ont pas encore été enregistrés 
+        /// </summary>
+        public static int UnsavedId => unsavedId;
+
+        /// <summary>
         /// Le nom par défaut d'un document, utilisé quand un nouveau n'as pas encore de nom.
         /// </summary>
         public static string DefaultDocumentName => defaultDocumentName;
-
 
         private int id;
         private string name;
@@ -27,7 +31,7 @@ namespace AutomateDesign.Core.Documents
         /// <summary>
         /// L'id de l'automate.
         /// </summary>
-        public int Id { get => this.id; set => this.id = Id; }
+        public int Id { get => this.id; set => this.id = value; }
 
         /// <summary>
         /// Le nom donné à l'automate.

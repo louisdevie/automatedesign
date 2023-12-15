@@ -24,6 +24,8 @@
 
         public override EditorState Next(EditorEvent e)
         {
+            EditorState nextState = this;
+
             switch (e)
             {
                 case EditorEvent.BeginCreatingState:
@@ -31,10 +33,9 @@
 
                 case EditorEvent.BeginCreatingTransition:
                     return new NewTransitionSelectStartState();
-
-                default:
-                    return this;
             }
+
+            return nextState;
         }
     }
 }

@@ -7,16 +7,29 @@ using System.Threading.Tasks;
 
 namespace AutomateDesign.Client.ViewModel.Users
 {
+    /// <summary>
+    /// Le modèle-vue de base pour les vérifications avec un code à usage unique.
+    /// </summary>
     public abstract class VerificationBaseViewModel : UsersBaseViewModel
     {
         private uint code;
 
+        /// <summary>
+        /// Le code de vérification.
+        /// </summary>
         public string Code
         {
             get => this.code.ToString();
             set
             {
-                this.code = uint.Parse(value);
+                if (string.IsNullOrEmpty(value))
+                {
+                    this.code = 0;
+                }
+                else
+                {
+                    this.code = uint.Parse(value);
+                }
                 this.NotifyPropertyChanged();
             }
         }

@@ -4,13 +4,9 @@ namespace AutomateDesign.Server.Data.MariaDb
 {
     public class BaseDao
     {
-        #region Attributs
         private DatabaseConnector connector;
-        #endregion
 
-        #region Properties
-        public MySqlConnection Connect() => this.connector.Connect();
-        #endregion
+        protected MySqlConnection Connect() => this.connector.Connect();
 
         public BaseDao(DatabaseConnector connector)
         {

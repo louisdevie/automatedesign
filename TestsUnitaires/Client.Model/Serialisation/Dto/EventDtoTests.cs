@@ -61,7 +61,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
                 Id = 7,
             };
 
-            Event enumEvent = enumEventDto.MapToModel(document);
+            IEvent enumEvent = enumEventDto.MapToModel(document);
             Assert.IsType<EnumEvent>(enumEvent);
             Assert.Equal(7, (enumEvent as EnumEvent)?.Id);
             Assert.Equal("Truc", (enumEvent as EnumEvent)?.Name);
@@ -71,7 +71,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
                 Type = EventReferenceDto.EventType.DefaultEvent,
             };
 
-            Event defaultEvent = defaultEventDto.MapToModel(document);
+            IEvent defaultEvent = defaultEventDto.MapToModel(document);
             Assert.IsType<DefaultEvent>(defaultEvent);
         }
     }
