@@ -2,6 +2,7 @@
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Navigation;
 using System.Windows;
+using AutomateDesign.Client.View.Pages;
 
 namespace AutomateDesign.Client.View
 {

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour EditAutomateView.xaml
@@ -103,6 +103,7 @@ namespace AutomateDesign.Client.View
 
             if (popup.ShowDialog() == true)
             {
+                this.viewModel.Unload();
                 this.Navigator.Back();
             }
         }
