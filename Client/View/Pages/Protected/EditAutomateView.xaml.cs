@@ -24,7 +24,6 @@ namespace AutomateDesign.Client.View
         private EditorContext context;
         private ExistingDocumentViewModel viewModel;
         private SessionViewModel? sessionVM;
-        private ExistingDocumentViewModel existingDocumentViewModel;
 
         public ExistingDocumentViewModel Document => this.viewModel;
 
@@ -56,11 +55,6 @@ namespace AutomateDesign.Client.View
             this.diagramEditor.OnStatePlaced += this.DiagramEditorOnStatePlaced;
 
             this.context.Initialize();
-        }
-
-        public EditAutomateView(ExistingDocumentViewModel existingDocumentViewModel)
-        {
-            this.existingDocumentViewModel = existingDocumentViewModel;            
         }
 
         private void OnEditorStateChanged(EditorState state)
@@ -130,7 +124,7 @@ namespace AutomateDesign.Client.View
         private async void LogOutButton(object sender, RoutedEventArgs e)
         {
             await this.sessionVM!.SignOutAsync();
-            this.Navigator.Go(new SignInView());
+            this.Navigator.Go(new SignInView(),true);
         }
 
         private void ChangePwdButton(object sender, RoutedEventArgs e)

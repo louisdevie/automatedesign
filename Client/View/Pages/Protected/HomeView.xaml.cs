@@ -105,7 +105,7 @@ namespace AutomateDesign.Client.View
         private async void SignOut(object sender, RoutedEventArgs e)
         {
             await this.sessionVM!.SignOutAsync();
-            this.Navigator.Go(new SignInView());
+            this.Navigator.Go(new SignInView(),true);
         }
 
         private void DeleteSearchButtonClick(object sender, RoutedEventArgs e)
