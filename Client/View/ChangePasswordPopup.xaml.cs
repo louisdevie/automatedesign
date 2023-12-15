@@ -1,9 +1,8 @@
 ﻿using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Client.ViewModel.Users;
-using System;
-using System.Collections.Generic;
 using System.Windows;
+using AutomateDesign.Client.View.Pages;
 
 namespace AutomateDesign.Client.View
 {

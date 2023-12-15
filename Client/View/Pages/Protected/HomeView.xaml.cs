@@ -11,17 +11,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
-    /// <summary>
-    /// Logique d'interaction pour Page1.xaml
-    /// </summary>
     public partial class HomeView : NavigablePage
     {
         private SessionViewModel? sessionVM;
         private DocumentCollectionViewModel documentsVM;
 
-        public Observable<string> CurrentUserEmail { get; private init; }
+        public Observable<string> CurrentUserEmail { get; }
 
 
         public ObservableCollection<DocumentBaseViewModel> Documents => this.documentsVM;
@@ -33,8 +30,8 @@ namespace AutomateDesign.Client.View
 
         public HomeView()
         {
-            this.CurrentUserEmail = new(string.Empty);
-            this.documentsVM = new();
+            this.CurrentUserEmail = new Observable<string>(string.Empty);
+            this.documentsVM = new DocumentCollectionViewModel();
 
             DataContext = this;
             InitializeComponent();
@@ -45,7 +42,7 @@ namespace AutomateDesign.Client.View
             if (this.Navigator.Session is Session session)
             {
                 this.sessionVM = new SessionViewModel(session);
-                this.CurrentUserEmail.Value = this.sessionVM.UserEmail.Split('@')[0];
+                this.CurrentUserEmail.Value = this.sessionVM.UserEmail.Split('@', 2)[0];
 
                 this.documentsVM.Session = session;
                 Task.Run(ErrorMessageBox.HandleAsyncActionErrors(this.documentsVM.Reload));
@@ -74,11 +71,22 @@ namespace AutomateDesign.Client.View
             this.Navigator.Go(new EditAutomateView(this.documentsVM.NewDocument()));
         }
 
-        private void ExistingDocumentClick(object sender, RoutedEventArgs e)
+        private async void ExistingDocumentClick(object sender, RoutedEventArgs e)
         {
-            if (sender is Button { CommandParameter: var param })
+            if (sender is Button { CommandParameter: ExistingDocumentViewModel param })
             {
-                this.Navigator.Go(new EditAutomateView((ExistingDocumentViewModel)param));
+                ProgressDialog popup = new(
+                    title: "Chargement",
+                    progressMessage: "Ouverture du document..."
+                );
+
+                Task backgroundLoading = param.Load(popup);
+
+                if (popup.ShowDialog() == true)
+                {
+                    await backgroundLoading;
+                    this.Navigator.Go(new EditAutomateView(param));
+                }
             }
         }
 

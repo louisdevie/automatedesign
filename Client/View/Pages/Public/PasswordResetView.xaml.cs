@@ -7,7 +7,7 @@ using AutomateDesign.Client.ViewModel.Users;
 using System;
 using AutomateDesign.Client.Model.Logic.Verifications;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour PasswordResetView.xaml

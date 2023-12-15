@@ -10,7 +10,7 @@ using AutomateDesign.Client.ViewModel.Users;
 using AutomateDesign.Client.Model.Logic;
 using System;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour LoginView.xaml
