@@ -8,5 +8,6 @@ namespace NomAutomate
 {
     public enum Event
     {
-        // Liste des évènements
+        //ListeDesEvents
     }
+}

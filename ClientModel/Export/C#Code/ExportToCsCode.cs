@@ -1,5 +1,4 @@
 ﻿using AutomateDesign.Core.Documents;
-using NomAutomate;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,77 +7,92 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutomateDesign.Client.Model.Export.ExportToCsCode
+namespace AutomateDesign.Client.Model.Export
 {
     public class ExportToCsCode : ICodeExport
     {
+        public ExportToCsCode()
+        {
+        }
+
         /// <summary>
-        /// Export a document to a code structure in C#
+        /// Exporte un document en structure de code C#
         /// </summary>
         /// <param name="path"></param>
         /// <param name="document"></param>
         public void Export(string path, Document document)
         {
-            // Creation of the root folder of the export
+            // Création du dossier racine de l'exportation
             string documentFolderName = document.Header.Name;
-            documentFolderName.Replace(' ', '_');
+            documentFolderName = documentFolderName.Replace(" ", "_");
             path = path + "/" + documentFolderName;
             makeDirectory(path);
-            // Creation of the Automate Folder
-            path = path + "/Automate";
+            // Création du dossier Automate
+            path = path + "/Automate/";
             makeDirectory(path);
-            // Creation of the states folder
-            makeDirectory(path + "/Etats");
+            // Création du dossier Etats
+            makeDirectory(path + "Etats/");
 
-            string innerPath = "/CodeTemplateStructure/Automate/";
-            // Creation of the Automate class file
+            // Récupération du répertoire du projet afin d'aller les documents sources à modifier
+            string currentFolder = Directory.GetCurrentDirectory();
+            DirectoryInfo parentFolder = new DirectoryInfo(currentFolder);
+            for (int i = 0; i < 4; i++)
+            {
+                parentFolder = parentFolder.Parent;
+            }
+            string innerPath = parentFolder + "/CodeTemplateStructure/Automate/";
+
+            // Création du fichier de la classe Automate
             string automate = this.ReadFile(innerPath+"Automate.cs");
-            automate.Replace("NomAutomate", documentFolderName);
+            automate = automate.Replace("NomAutomate", documentFolderName);
             this.makeFile(path + "Automate.cs", automate);
 
-            // Creation of the State class file
+            // Création du fichier de la classe State
             string etat = this.ReadFile(innerPath + "Etat.cs");
-            etat.Replace("NomAutomate", documentFolderName);
+            etat = etat.Replace("NomAutomate", documentFolderName);
             this.makeFile(path + "Etat.cs", etat);
 
-            // Creation of the Event enum file
+            // Création du fichier de l'énumération Event
             string eventEnum = this.ReadFile(innerPath + "Event.cs");
-            eventEnum.Replace("NomAutomate", documentFolderName);
+            eventEnum = eventEnum.Replace("NomAutomate", documentFolderName);
             string events = string.Join(", ", document.Events);
-            events.Replace(" ", "_");
-            events.ToUpper();
-            eventEnum.Replace("//ListeDesEvents", events);
-            this.makeFile(path+"Event.cs", events); 
+            events = events.Replace(" ", "_");
+            events = events.ToUpper();
+            eventEnum = eventEnum.Replace("//ListeDesEvents", events);
+            this.makeFile(path+"Event.cs", eventEnum);
 
-            // Creation of the State class file for each state of the document
+            // Creéation du fichier de la classe Etat correspondant à chaque état du document
+            path += "Etats/";
+            string stateTemplate = this.ReadFile(innerPath + "Etats/EtatModels.cs");
             foreach (State state in document.States)
             {
-                string statePath = path + "/Etats/";
-                string specificEtat = this.ReadFile(statePath + "EtatModel.cs");
-                specificEtat.Replace("NomAutomate", documentFolderName);
-                string stateName = state.Name;
-                stateName.Replace(" ", "");
-                specificEtat.Replace("EtatX", state.Name);
-                
-                // A CONTINUER !
-                specificEtat.Replace("//TransitionAutomate", "");
-                // A CONTINUER !
+                string specificEtat = stateTemplate;
+                specificEtat = specificEtat.Replace("NomAutomate", documentFolderName);
+                string stateName = this.formatNameClass(state.Name);
+                specificEtat = specificEtat.Replace("EtatX", stateName);
+                // A faire
+                //specificEtat.Replace("//TransitionAutomate", "");
+                this.makeFile(path + stateName +".cs", specificEtat);
             }
-            
+
         }
 
         /// <summary>
-        /// Return the content of a file
+        /// Retourne le contenue du fichier
         /// </summary>
-        /// <param name="path">Path of the file with the name of the file include</param>
-        /// <returns>the content of the file</returns>
+        /// <param name="path">Chemin d'accès du fichier avec nom du fichier inclut</param>
+        /// <returns>contenue du fichier</returns>
         private string ReadFile(string path)
         {
-            string fileContent = string.Empty;
+            string fileContent = "";
             try
             {
-                string completPath = Path.Combine(Directory.GetCurrentDirectory(), path);
-                fileContent = File.ReadAllText(completPath);
+                StreamReader reader = new StreamReader(path);
+                while (!reader.EndOfStream)
+                {
+                    fileContent += reader.ReadLine() + "\n";
+                }
+                reader.Close();
             }
             catch (Exception e)
             {
@@ -88,9 +102,9 @@ namespace AutomateDesign.Client.Model.Export.ExportToCsCode
         }
 
         /// <summary>
-        /// Make a new directory at the given path
+        /// Créer un dossier avec le chemin fournit
         /// </summary>
-        /// <param name="path">the path with the name of the directory at the end of the path</param>
+        /// <param name="path">le chemin du dossier à créer avec le nom du dossier inclut</param>
         private void makeDirectory(string path)
         {
             try
@@ -107,10 +121,10 @@ namespace AutomateDesign.Client.Model.Export.ExportToCsCode
         }
 
         /// <summary>
-        /// Make a file in the given path with the given content
+        /// Créer un fichier avec le chemin fournit et écrit le contenue souhaité dedans
         /// </summary>
-        /// <param name="path">the path of the file with its name include</param>
-        /// <param name="content">the content of the file</param>
+        /// <param name="path">le chemin du fichier avec le nom du fichier inclut</param>
+        /// <param name="content">le contenue du fichier à écrire</param>
         private void makeFile(string path, string content)
         {
             try
@@ -124,15 +138,15 @@ namespace AutomateDesign.Client.Model.Export.ExportToCsCode
         }
 
         /// <summary>
-        /// Upper case the first letter of each words and remove space
+        /// Formate la chaine fourit en mettant en majuscule la première lettre de chaque mots et enlevant les espaces
         /// </summary>
-        /// <param name="name">the name to format</param>
-        /// <returns>the name format</returns>
+        /// <param name="name">la chaine à formater</param>
+        /// <returns>la chaine formatée</returns>
         private string formatNameClass(string name)
         {
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
             string newName = textInfo.ToTitleCase(name);
-            newName.Replace(" ", "");
+            newName = newName.Replace(" ", "");
             return newName;
         }
     }
