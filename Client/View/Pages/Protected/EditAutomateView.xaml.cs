@@ -6,6 +6,7 @@ using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Client.ViewModel;
 using AutomateDesign.Client.ViewModel.Documents;
+using AutomateDesign.Client.ViewModel.Users;
 using AutomateDesign.Core.Documents;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace AutomateDesign.Client.View
     {
         private EditorContext context;
         private ExistingDocumentViewModel viewModel;
+        private SessionViewModel? sessionVM;
 
         public ExistingDocumentViewModel Document => this.viewModel;
 
@@ -34,10 +36,11 @@ namespace AutomateDesign.Client.View
             WindowPreferences.ResizeMode.Resizeable
         );
 
-        public EditAutomateView(ExistingDocumentViewModel viewModel)
+        public EditAutomateView(ExistingDocumentViewModel viewModel, SessionViewModel sessionVM)
         {
             this.viewModel = viewModel;
             DataContext = this;
+            this.sessionVM = sessionVM;
 
             this.context = new(this.viewModel.Document, this);
             this.context.EditorStateChanged += this.OnEditorStateChanged;
@@ -118,9 +121,10 @@ namespace AutomateDesign.Client.View
             }
         }
 
-        private void LogOutButton(object sender, RoutedEventArgs e)
+        private async void LogOutButton(object sender, RoutedEventArgs e)
         {
-
+            await this.sessionVM!.SignOutAsync();
+            this.Navigator.Go(new SignInView(),true);
         }
 
         private void ChangePwdButton(object sender, RoutedEventArgs e)
