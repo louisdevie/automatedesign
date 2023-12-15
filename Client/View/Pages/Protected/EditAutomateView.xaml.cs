@@ -6,6 +6,7 @@ using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Client.ViewModel;
 using AutomateDesign.Client.ViewModel.Documents;
+using AutomateDesign.Client.ViewModel.Users;
 using AutomateDesign.Core.Documents;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace AutomateDesign.Client.View
     {
         private EditorContext context;
         private ExistingDocumentViewModel viewModel;
+        private SessionViewModel? sessionVM;
+        private ExistingDocumentViewModel existingDocumentViewModel;
 
         public ExistingDocumentViewModel Document => this.viewModel;
 
@@ -33,10 +36,11 @@ namespace AutomateDesign.Client.View
             WindowPreferences.ResizeMode.Resizeable
         );
 
-        public EditAutomateView(ExistingDocumentViewModel viewModel)
+        public EditAutomateView(ExistingDocumentViewModel viewModel, SessionViewModel sessionVM)
         {
             this.viewModel = viewModel;
             DataContext = this;
+            this.sessionVM = sessionVM;
 
             this.context = new(this.viewModel.Document, this);
             this.context.EditorStateChanged += this.OnEditorStateChanged;
@@ -51,6 +55,11 @@ namespace AutomateDesign.Client.View
             this.diagramEditor.OnStatePlaced += this.DiagramEditorOnStatePlaced;
 
             this.context.Initialize();
+        }
+
+        public EditAutomateView(ExistingDocumentViewModel existingDocumentViewModel)
+        {
+            this.existingDocumentViewModel = existingDocumentViewModel;            
         }
 
         private void OnEditorStateChanged(EditorState state)
@@ -148,9 +157,10 @@ namespace AutomateDesign.Client.View
             }
         }
 
-        private void LogOutButton(object sender, RoutedEventArgs e)
+        private async void LogOutButton(object sender, RoutedEventArgs e)
         {
-
+            await this.sessionVM!.SignOutAsync();
+            this.Navigator.Go(new SignInView());
         }
 
         private void ChangePwdButton(object sender, RoutedEventArgs e)

@@ -71,14 +71,14 @@ namespace AutomateDesign.Client.View
 
         private void NewDocumentClick(object sender, RoutedEventArgs e)
         {
-            this.Navigator.Go(new EditAutomateView(this.documentsVM.NewDocument()));
+            this.Navigator.Go(new EditAutomateView(this.documentsVM.NewDocument(), sessionVM!));
         }
 
         private void ExistingDocumentClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button { CommandParameter: var param })
             {
-                this.Navigator.Go(new EditAutomateView((ExistingDocumentViewModel)param));
+                this.Navigator.Go(new EditAutomateView((ExistingDocumentViewModel)param, sessionVM!));
             }
         }
 
@@ -105,7 +105,7 @@ namespace AutomateDesign.Client.View
         private async void SignOut(object sender, RoutedEventArgs e)
         {
             await this.sessionVM!.SignOutAsync();
-
+            this.Navigator.Go(new SignInView());
         }
 
         private void DeleteSearchButtonClick(object sender, RoutedEventArgs e)
