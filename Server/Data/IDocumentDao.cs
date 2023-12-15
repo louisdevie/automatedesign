@@ -20,9 +20,10 @@ namespace AutomateDesign.Server.Data
         /// <summary>
         /// Récupère l'automate correspondant à un identifiant.
         /// </summary>
+        /// <param name="userId">L'identifiant de l'utilisateur à qui appartient le document.</param>
         /// <param name="documentId">L'identifiant de l'automate à lire.</param>
-        /// <returns>L'automate chiffré.</returns>
-        public IAsyncEnumerable<byte[]> ReadByIdAsync(int userId, int documentId);
+        /// <param name="document">Le canal dans lequel écrire les données lues.</param>
+        public Task ReadByIdAsync(int userId, int documentId, DocumentChannelWriter document);
 
         /// <summary>
         /// Récupère tous les automates d'un utilisateur.

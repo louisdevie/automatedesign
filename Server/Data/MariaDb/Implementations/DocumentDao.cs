@@ -1,4 +1,5 @@
 ﻿using AutomateDesign.Core.Documents;
+using AutomateDesign.Core.Exceptions;
 using AutomateDesign.Core.Users;
 using AutomateDesign.Protos;
 using Google.Protobuf;
@@ -16,7 +17,41 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
 
         public void Delete(int userId, int documentId)
         {
-            throw new NotImplementedException();
+            using MySqlConnection connection = Connect();
+
+            int affected = connection.ExecuteNonQuery(
+                "DELETE FROM `Document` WHERE `UserId` = ? AND `DocumentId` = ?",
+                userId, documentId
+            );
+
+            if (affected == 0) throw new ResourceNotFoundException("Le document à supprimer n'a pas été trouvé.");
+        }
+
+        public async Task ReadByIdAsync(int userId, int documentId, DocumentChannelWriter document)
+        {
+            using MySqlConnection connection = Connect();
+
+            using var result = connection.ExecuteReader(
+                "SELECT `DocumentId`, `HeaderSize`, `HeaderData`, `BodySize`, `BodyData` FROM `Document` WHERE `UserId` = ? AND `DocumentId` = ?",
+                userId, documentId
+            );
+
+            if (await result.ReadAsync())
+            {
+                byte[] buffer = new byte[result.GetUInt32(1)];
+                result.GetBytes(2, 0, buffer, 0, buffer.Length);
+
+                await document.WriteHeaderAsync(buffer);
+
+                buffer = new byte[result.GetUInt32(3)];
+                result.GetBytes(4, 0, buffer, 0, buffer.Length);
+
+                await document.WriteBodyAsync(buffer);
+            }
+            else
+            {
+                throw new ResourceNotFoundException("Le document n'a pas été trouvé.");
+            }
         }
 
         public async IAsyncEnumerable<EncryptedDocumentChunk> ReadAllHeadersAsync(int userId, [EnumeratorCancellation] CancellationToken ct = default)
@@ -39,7 +74,6 @@ namespace AutomateDesign.Server.Data.MariaDb.Implementations
                     Data = ByteString.CopyFrom(buffer)
                 };
             }
-            yield break;
         }
 
         public IAsyncEnumerable<byte[]> ReadByIdAsync(int userId, int documentId)

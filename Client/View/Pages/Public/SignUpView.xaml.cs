@@ -8,7 +8,7 @@ using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.ViewModel.Users;
 using AutomateDesign.Client.Model.Logic.Exceptions;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml
