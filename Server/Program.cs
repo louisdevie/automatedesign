@@ -15,10 +15,20 @@ builder.Services.AddGrpc();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(5001, options => {
+    int port = 5001;
+    Action<ListenOptions> config = options => {
         options.Protocols = HttpProtocols.Http2;
         options.UseHttps();
     });
+
+    if (Environment.GetEnvironmentVariable("AUTOMATEDESIGN_LISTENANYIP") == "YES")
+    {
+        options.ListenAnyIP(port, config);
+    }
+    else
+    {
+        options.ListenLocalhost(5001, config);
+    }
 });
 
 DatabaseSettings dbSettings = builder.Configuration.GetSection("DatabaseSettings")

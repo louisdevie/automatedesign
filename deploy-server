@@ -34,6 +34,7 @@ After=network.target
 Type=exec
 WorkingDirectory=/opt/automatedesign
 ExecStart=/opt/automatedesign/Server
+Environment="AUTOMATEDESIGN_LISTENANYIP=YES"
 Restart=always
 RestartLimitBurst=5
 StartLimitIntervalSec=20s
