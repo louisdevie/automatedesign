@@ -32,7 +32,7 @@ After=network.target
 [Service]
 Type=exec
 WorkingDirectory=/opt/automatedesign
-ExecStart=/opt/automatedesign/Serveur
+ExecStart=/opt/automatedesign/Server
 Restart=always
 RestartLimitBurst=5
 StartLimitIntervalSec=20s
@@ -95,7 +95,7 @@ def main(args):
         print("Terminé.")
 
     except Exception as e:
-        print(f"\nErreur: {e.args[0]}")
+        print(f"\nErreur: {e}")
         sys.exit(1)
 
 
@@ -194,6 +194,8 @@ def prompt_config():
     config["DatabaseSettings"]["Password"] = getpass("Mot de passe: ")
 
     print("\n============== OK ===============\n")
+
+    return config
 
 
 def write_config_files(config, keep_service=False):
