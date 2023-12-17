@@ -20,6 +20,7 @@ Commandes:
    install      Installe et configure le serveur pour la première fois
    upgrade      Recompile et mets à jour le serveur
    reconfigure  Modifie la configuration du serveur
+   setupdb      Réinstalle la base de données à partir de la configuration existante 
 
 Options:
    --help       Affiche ce message et quitte
@@ -75,6 +76,7 @@ def main(args):
             copy_build_files()
             config = prompt_config()
             write_config_files(config)
+            setup_database(config)
             print("Démarrage du serveur...")
             service("start", "démarré", just_warn=True)
 
@@ -92,6 +94,18 @@ def main(args):
             print("Redémarrage du serveur...")
             service("restart", "redémarré", just_warn=True)
 
+        elif command == "setupdb":
+            config = read_config()
+            if config is None:
+                do_configure = input(
+                    "Le fichier de configuration n'a pas été trouvé. Voulez-vous le créer maintenant [O/n]: "
+                )
+                if do_configure == "O":
+                    config = prompt_config()
+                    write_config_files(config, keep_service=True)
+            if config is not None:
+                setup_database(config)
+
         print("Terminé.")
 
     except Exception as e:
@@ -103,7 +117,7 @@ def parse_args(args, default_options):
     options = default_options.copy()
     command = None
 
-    if args[0] in ("install", "upgrade", "reconfigure"):
+    if args[0] in ("install", "upgrade", "reconfigure", "setupdb"):
         command = args.pop(0)
 
     for arg in args:
@@ -239,6 +253,18 @@ def setup_database(config):
         raise Exception(
             f"Due à l'erreur/aux erreurs ci-dessus, la base de données n'a pas pu être configurée."
         )
+
+
+def read_config():
+    config = None
+
+    try:
+        with open(APP_DIR / "appsettings.json", "rt", encoding="utf8") as f:
+            config = json.load(f)
+    except:
+        pass
+
+    return config
 
 
 if __name__ == "__main__":
