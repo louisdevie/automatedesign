@@ -19,7 +19,7 @@ builder.WebHost.ConfigureKestrel(options =>
     Action<ListenOptions> config = options => {
         options.Protocols = HttpProtocols.Http2;
         options.UseHttps();
-    });
+    };
 
     if (Environment.GetEnvironmentVariable("AUTOMATEDESIGN_LISTENANYIP") == "YES")
     {
