@@ -1,7 +1,3 @@
-drop table if exists `Session`;
-drop table if exists `Registration`;
-drop table if exists `User`;
-
 create table `User` (
    `UserId` INT auto_increment,
    `Email` VARCHAR(50) character set ascii collate ascii_bin not null,
