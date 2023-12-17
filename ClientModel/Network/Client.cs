@@ -1,4 +1,6 @@
-﻿using AutomateDesign.Client.Model.Logic;
+﻿using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using AutomateDesign.Client.Model.Logic;
 using Grpc.Core;
 using Grpc.Net.Client;
 
@@ -9,7 +11,7 @@ namespace AutomateDesign.Client.Model.Network
     /// </summary>
     public class Client
     {
-        private static readonly string serverUrl = "https://localhost:5001";
+        private static readonly string ServerUrl = "https://10.128.120.128:5001";
 
         private GrpcChannel? channel;
 
@@ -20,7 +22,13 @@ namespace AutomateDesign.Client.Model.Network
         {
             get
             {
-                this.channel ??= GrpcChannel.ForAddress(serverUrl);
+                if (this.channel == null)
+                {
+                    var handler = new HttpClientHandler();
+                    handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                    this.channel = GrpcChannel.ForAddress(ServerUrl, new GrpcChannelOptions { HttpHandler = handler });
+                }
+
                 return this.channel;
             }
         }
