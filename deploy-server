@@ -64,7 +64,9 @@ def main(args):
         current_dir = os.getcwd()
         script_dir = os.path.dirname(os.path.realpath(__file__))
         if current_dir != script_dir:
-            print("Ce script doit être exécuté dans son répertoire, c-à-d la racine du dépôt.")
+            print(
+                "Ce script doit être exécuté dans son répertoire, c-à-d la racine du dépôt."
+            )
             sys.exit(1)
 
         if command == "install":
@@ -224,14 +226,18 @@ def service(action, description, just_warn=False):
                 f"Due à l'erreur/aux erreurs ci-dessus, le serveur n'a pas pu être {description}."
             )
 
+
 def setup_database(config):
     print("Configuration de la base de données...")
     db_config = config["DatabaseSettings"]
-    exit_code = os.system(f"mysql -h {db_config["Server"]} -P {db_config["Port"]} -u {db_config["UserId"]} -p{db_config["Password"]} -D {db_config["Database"]} < ./SQL/automatedesign-ddl.sql")
+    exit_code = os.system(
+        f"mysql -h {db_config['Server']} -P {db_config['Port']} -u {db_config['UserId']} -p{db_config['Password']} -D {db_config['Database']} < ./SQL/automatedesign-ddl.sql"
+    )
     if exit_code != 0:
         raise Exception(
             f"Due à l'erreur/aux erreurs ci-dessus, la base de données n'a pas pu être configurée."
-        )        
+        )
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
