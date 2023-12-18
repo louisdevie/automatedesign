@@ -52,14 +52,14 @@ namespace AutomateDesign.Client.Model.Export
             etat = etat.Replace("NomAutomate", documentFolderName);
             this.makeFile(path + "Etat.cs", etat);
 
-            // Création du fichier de l'énumération Event
-            string eventEnum = this.ReadFile(innerPath + "Event.cs");
+            // Création du fichier de l'énumération Evenement
+            string eventEnum = this.ReadFile(innerPath + "Evenement.cs");
             eventEnum = eventEnum.Replace("NomAutomate", documentFolderName);
             string events = string.Join(", ", document.Events);
             events = events.Replace(" ", "_");
             events = events.ToUpper();
             eventEnum = eventEnum.Replace("//ListeDesEvents", events);
-            this.makeFile(path+"Event.cs", eventEnum);
+            this.makeFile(path+ "Evenement.cs", eventEnum);
 
             // Creéation du fichier de la classe Etat correspondant à chaque état du document
             path += "Etats/";
@@ -70,8 +70,15 @@ namespace AutomateDesign.Client.Model.Export
                 specificEtat = specificEtat.Replace("NomAutomate", documentFolderName);
                 string stateName = this.formatNameClass(state.Name);
                 specificEtat = specificEtat.Replace("EtatX", stateName);
-                // A faire
-                //specificEtat.Replace("//TransitionAutomate", "");
+
+                // Transition de l'Automate
+                string cases = string.Empty;
+                string caseTemplate = this.ReadFile(innerPath + "Etats/cases.cs");
+                foreach (Transition transi in document.Transitions)
+                {
+                    cases += caseTemplate;
+                }
+                specificEtat = specificEtat.Replace("//cases", cases);
                 this.makeFile(path + stateName +".cs", specificEtat);
             }
 

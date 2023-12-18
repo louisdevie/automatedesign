@@ -10,7 +10,14 @@ namespace NomAutomate.Etats
     {
         public EtatX Transition(Enum e)
         {
-            
+            switch (e)
+            {
+                // Supprimer les cases innutiles et modifier leur action
+                //cases
+
+                default:
+                    throw new UnexpectedEventException();
+            }
         }
 
         public void Action(Enum e)

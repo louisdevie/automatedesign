@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NomAutomate
 {
-    public enum Event
+    public enum Evenement
     {
         //ListeDesEvents
     }

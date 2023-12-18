@@ -41,7 +41,7 @@ namespace AutomateDesign.Client.Model.Export
             // Vérifie que les fichiers existent
             Assert.True(File.Exists(path + "Automate.cs"));
             Assert.True(File.Exists(path + "Etat.cs"));
-            Assert.True(File.Exists(path + "Event.cs"));
+            Assert.True(File.Exists(path + "Evenement.cs"));
             Assert.True(File.Exists(path + "Etats/EtatTest1.cs"));
             Assert.True(File.Exists(path + "Etats/EtatTest12.cs"));
             Assert.True(File.Exists(path + "Etats/EtatTest45.cs"));
@@ -52,7 +52,7 @@ namespace AutomateDesign.Client.Model.Export
             Assert.True(fileInfo.Length > 1);
             fileInfo = new FileInfo(path + "Etat.cs");
             Assert.True(fileInfo.Length > 1);
-            fileInfo = new FileInfo(path + "Event.cs");
+            fileInfo = new FileInfo(path + "Evenement.cs");
             Assert.True(fileInfo.Length > 1);
             fileInfo = new FileInfo(path + "Etats/EtatTest1.cs");
             Assert.True(fileInfo.Length > 1);
