@@ -8,16 +8,18 @@ namespace NomAutomate.Etats
 {
     public class EtatX : Etat
     {
-        public EtatX Transition(Enum e)
+        public Etat Transition(Enum e)
         {
+            Etats prochainEtat;
             switch (e)
             {
                 // Supprimer les cases innutiles et modifier leur action
                 //cases
 
                 default:
-                    throw new UnexpectedEventException();
+                    prochainEtat = this;
             }
+            return prochainEtat;
         }
 
         public void Action(Enum e)

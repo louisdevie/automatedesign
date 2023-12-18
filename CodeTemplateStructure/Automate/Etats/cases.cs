@@ -1,3 +1,3 @@
 case Evenement.aRemplacer :
-    //operation
+    prochainEtat = new etatARemplacer();
     break;

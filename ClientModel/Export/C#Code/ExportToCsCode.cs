@@ -76,7 +76,12 @@ namespace AutomateDesign.Client.Model.Export
                 string caseTemplate = this.ReadFile(innerPath + "Etats/cases.cs");
                 foreach (Transition transi in document.Transitions)
                 {
-                    cases += caseTemplate;
+                    if(transi.Start == state)
+                    {
+                        string caseCopy = caseTemplate;
+                        caseCopy = caseCopy.Replace("etatARemplacer", transi.End.Name);
+                        cases += caseCopy;
+                    }
                 }
                 specificEtat = specificEtat.Replace("//cases", cases);
                 this.makeFile(path + stateName +".cs", specificEtat);
