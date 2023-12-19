@@ -27,6 +27,9 @@ namespace AutomateDesign.Client.Model.Export.CsCode
             documentFolderName = documentFolderName.Replace(" ", "_");
             path = path + "/" + documentFolderName;
             makeDirectory(path);
+            // Création du dossier Model
+            path = path + "/Model";
+            makeDirectory(path);
             // Création du dossier Automate
             path = path + "/Automate/";
             makeDirectory(path);

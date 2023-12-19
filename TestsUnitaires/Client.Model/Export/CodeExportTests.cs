@@ -16,7 +16,7 @@ namespace AutomateDesign.Client.Model.Export
         [Fact]
         public void Export()
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            // Création du document
             List<State> states = new List<State>();
             Document doc = new Document();
             Position position = new Position();
@@ -31,9 +31,11 @@ namespace AutomateDesign.Client.Model.Export
 
             doc.AddStates(states);
 
+            // Export du document
+            string path = Path.GetTempPath();
             ExportToCsCode export = new ExportToCsCode();
             export.Export(path, doc);
-            path = path + "/Automate_sans_nom/Automate/";
+            path = path + "/Automate_sans_nom/Model/Automate/";
             
             // Vérifie que le dossier existe
             Assert.True(Directory.Exists(path));
