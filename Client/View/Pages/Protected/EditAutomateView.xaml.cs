@@ -7,19 +7,21 @@ using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Client.ViewModel;
 using AutomateDesign.Client.ViewModel.Documents;
+using AutomateDesign.Client.ViewModel.Users;
 using AutomateDesign.Core.Documents;
 using Microsoft.Win32;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour EditAutomateView.xaml
@@ -28,6 +30,7 @@ namespace AutomateDesign.Client.View
     {
         private EditorContext context;
         private ExistingDocumentViewModel viewModel;
+        private SessionViewModel? sessionVM;
 
         public ExistingDocumentViewModel Document => this.viewModel;
 
@@ -40,10 +43,11 @@ namespace AutomateDesign.Client.View
             WindowPreferences.ResizeMode.Resizeable
         );
 
-        public EditAutomateView(ExistingDocumentViewModel viewModel)
+        public EditAutomateView(ExistingDocumentViewModel viewModel, SessionViewModel sessionVM)
         {
             this.viewModel = viewModel;
             DataContext = this;
+            this.sessionVM = sessionVM;
 
             this.context = new(this.viewModel.Document, this);
             this.context.EditorStateChanged += this.OnEditorStateChanged;
@@ -62,48 +66,6 @@ namespace AutomateDesign.Client.View
         {
             this.StatusMessage.Value = state.StatusMessage;
             this.diagramEditor.Mode = this.context.Mode;
-        }
-
-        /// <summary>
-        /// Ajoute au bon endroit le document dans le TreeView
-        /// </summary>
-        /// <param name="document"></param>
-        private void AddTreeViewItem(State document)
-        {
-            // Si doc est un etat
-            StateTreeViewItem.Items.Add(document);
-        }
-
-        private void AddTreeViewItem(Transition document)
-        {
-            // Sinon si doc est une transition
-            TransitionTreeViewItem.Items.Add(document);
-            }
-
-        private void AddTreeViewItem(EnumEvent document)
-        {
-            // Sinon doc est un evenement
-            EventTreeViewItem.Items.Add(document);
-        }
-
-        /// <summary>
-        /// Ajoute au bon endroit le document dans le TreeView
-        /// </summary>
-        /// <param name="document"></param>
-        private void DeleteTreeViewItem(State document)
-        {
-            // Si doc est un etat
-            StateTreeViewItem.Items.Remove(document);
-        }
-        private void DeleteTreeViewItem(Transition document)
-        {
-            // Sinon si doc est une transition
-            TransitionTreeViewItem.Items.Remove(document);
-        }
-        private void DeleteTreeViewItem(EnumEvent document)
-        {
-            // Sinon doc est un evenement
-            EventTreeViewItem.Items.Remove(document);
         }
 
         #region Évènements du diagramme
@@ -127,7 +89,19 @@ namespace AutomateDesign.Client.View
 
         private void SaveButtonClick(object sender, RoutedEventArgs e)
         {
-            this.Navigator.Back();
+            ProgressDialog popup = new(
+                title: "Enregistrement",
+                progressMessage: "Enregistrement du document...",
+                successMessage: $"« {this.viewModel.Name} » a bien été enregistré."
+            );
+
+            Task.Run(() => this.viewModel.Save(popup));
+
+            if (popup.ShowDialog() == true)
+            {
+                this.viewModel.Unload();
+                this.Navigator.Back();
+            }
         }
 
         private void CliclProfilButton(object sender, RoutedEventArgs e)
@@ -144,9 +118,10 @@ namespace AutomateDesign.Client.View
             }
         }
 
-        private void LogOutButton(object sender, RoutedEventArgs e)
+        private async void LogOutButton(object sender, RoutedEventArgs e)
         {
-
+            await this.sessionVM!.SignOutAsync();
+            this.Navigator.Go(new SignInView(),true);
         }
 
         private void ChangePwdButton(object sender, RoutedEventArgs e)
@@ -283,7 +258,7 @@ namespace AutomateDesign.Client.View
             return result;
         }
 
-        public bool PromptForEvent([NotNullWhen(true)] out Event? evt)
+        public bool PromptForEvent([NotNullWhen(true)] out IEvent? evt)
         {
             SuggestionInputDialog popup = new(
                 "Nouvelle transition", "Entrez le nom de l'évènement déclencheur :",

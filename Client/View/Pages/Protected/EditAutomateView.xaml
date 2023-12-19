@@ -1,4 +1,4 @@
-﻿<my:NavigablePage x:Class="AutomateDesign.Client.View.EditAutomateView"
+﻿<my:NavigablePage x:Class="AutomateDesign.Client.View.Pages.EditAutomateView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -33,7 +33,7 @@
                       Grid.Column="1"
                       Background="Gray">
                 <TreeViewItem Header="Etats"
-                              Name="StateTreeViewItem">
+                              Name="StateTreeViewItem" ItemsSource="{Binding Document.States}">
                 </TreeViewItem>
                 <TreeViewItem Header="Transitions"
                               Name="TransitionTreeViewItem">

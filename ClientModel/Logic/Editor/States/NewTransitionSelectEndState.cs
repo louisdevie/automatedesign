@@ -30,14 +30,16 @@ namespace AutomateDesign.Client.Model.Logic.Editor.States
 
         public override EditorState Next(EditorEvent e)
         {
+            EditorState nextState = this;
+
             switch (e)
             {
                 case EditorEvent.SelectState selectState:
-                    return new ReadyState();
-
-                default:
-                    return this;
+                    nextState = new ReadyState();
+                    break;
             }
+
+            return nextState;
         }
     }
 }

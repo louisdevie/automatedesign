@@ -21,6 +21,10 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// </summary>
         public PasswordBoxBinding CurrentPassword => this.currentPassword;
 
+        /// <summary>
+        /// Crée un nouveau <see cref="ChangePasswordViewModel"/> pour un utilisateur.
+        /// </summary>
+        /// <param name="userId">L'identifiant de l'utilisateur.</param>
         public ChangePasswordViewModel(int userId)
         {
             this.userId = userId;

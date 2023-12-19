@@ -3,15 +3,20 @@ using AutomateDesign.Client.Model.Serialisation;
 using AutomateDesign.Core.Documents;
 using AutomateDesign.Protos;
 using Grpc.Core;
+using Grpc.Net.Client;
 
 namespace AutomateDesign.Client.Model.Pipelines
 {
+    /// <summary>
+    /// Permets de créer et de configurer un <see cref="Pipeline"/>.
+    /// </summary>
     public class PipelineBuilder
     {
         private IEncryptionMethod? encryptionMethod;
         private IDocumentSerialiser? documentSerialiser;
         private IAsyncStreamReader<EncryptedDocumentChunk>? serverStream;
         private IClientStreamWriter<EncryptedDocumentChunk>? clientStream;
+        private Task? asyncResponse;
         private object? payload;
 
         /// <summary>
@@ -29,12 +34,10 @@ namespace AutomateDesign.Client.Model.Pipelines
         {
             if (this.encryptionMethod == null)
             {
-                throw new InvalidOperationException("Aucun algorithme d'encryption n'a été configuré.");
+                throw new InvalidOperationException("Aucun algorithme de chiffrage n'a été configuré.");
             }
-            else
-            {
-                return this.encryptionMethod;
-            }
+
+            return this.encryptionMethod;
         }
 
         /// <summary>
@@ -54,10 +57,8 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucun sérialiseur n'a été configuré.");
             }
-            else
-            {
-                return this.documentSerialiser;
-            }
+
+            return this.documentSerialiser;
         }
 
         /// <summary>
@@ -77,20 +78,21 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucun flux de réponse n'a été configuré.");
             }
-            else
-            {
-                return this.serverStream;
-            }
+
+            return this.serverStream;
         }
 
         /// <summary>
         /// Configure le flux requête à utiliser comme sortie.
         /// </summary>
-        /// <param name="streamReader">Un flux requête gRPC.</param>
+        /// <param name="streamWriter">Un flux requête gRPC.</param>
+        /// <param name="asyncResponse">La réponse suivant la fin du flux.</param>
         /// <returns>Le <see cref="PipelineBuilder"/> modifié.</returns>
-        public PipelineBuilder UseClientStream(IClientStreamWriter<EncryptedDocumentChunk> streamWriter)
+        public PipelineBuilder UseClientStream(IClientStreamWriter<EncryptedDocumentChunk> streamWriter,
+            Task asyncResponse)
         {
             this.clientStream = streamWriter;
+            this.asyncResponse = asyncResponse;
             return this;
         }
 
@@ -100,10 +102,18 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucun flux de requête n'a été configuré.");
             }
-            else
+
+            return this.clientStream;
+        }
+
+        private Task RequireAsyncResponse()
+        {
+            if (this.asyncResponse == null)
             {
-                return this.clientStream;
+                throw new InvalidOperationException("Aucun flux de requête n'a été configuré.");
             }
+
+            return this.asyncResponse;
         }
 
         /// <summary>
@@ -123,17 +133,27 @@ namespace AutomateDesign.Client.Model.Pipelines
             {
                 throw new InvalidOperationException("Aucune charge utilse n'a été configurée.");
             }
-            else
-            {
-                return this.payload;
-            }
+
+            return this.payload;
         }
 
+        /// <summary>
+        /// Construit un pipeline pour recevoir un document.
+        /// </summary>
+        /// <returns>Un nouveau <see cref="DocumentReceptionPipeline"/>.</returns>
         public DocumentReceptionPipeline BuildDocumentReceptionPipeline()
         {
-            throw new NotImplementedException("Not implemented");
+            return new DocumentReceptionPipeline(
+                this.RequireDocumentSerialiser(),
+                this.RequireEncryptionMethod(),
+                this.RequireServerStream()
+            );
         }
 
+        /// <summary>
+        /// Construit un pipeline pour recevoir les en-têtes de plusieurs documents.
+        /// </summary>
+        /// <returns>Un nouveau <see cref="HeadersReceptionPipeline"/>.</returns>
         public HeadersReceptionPipeline BuildHeadersReceptionPipeline()
         {
             return new HeadersReceptionPipeline(
@@ -143,20 +163,36 @@ namespace AutomateDesign.Client.Model.Pipelines
             );
         }
 
+        /// <summary>
+        /// Construit un pipeline pour envoyer un document.
+        /// </summary>
+        /// <returns>Un nouveau <see cref="DocumentTransmissionPipeline"/>.</returns>
         public DocumentTransmissionPipeline BuildDocumentTransmissionPipeline()
         {
+            var asyncResponse = this.RequireAsyncResponse() as Task<DocumentIdOnly>
+                                ?? throw new ArgumentException(
+                                    "La réponse à un DocumentTransmissionPipeline doit être un DocumentIdOnly.");
+
+            var payload = this.RequirePayload() as Document
+                          ?? throw new ArgumentException(
+                              "La charge utile d'un DocumentTransmissionPipeline doit être un Document.");
+
             return new DocumentTransmissionPipeline(
                 this.RequireDocumentSerialiser(),
                 this.RequireEncryptionMethod(),
                 this.RequireClientStream(),
-                (this.RequirePayload() as Document) ?? throw new ArgumentException("La charge utile d'un DocumentTransmissionPipeline doit être un Document.")
+                asyncResponse,
+                payload
             );
         }
 
+        /// <summary>
+        /// Construit un pipeline pour envoyer un en-tête seulement.
+        /// </summary>
+        /// <returns>Un nouveau <see cref="HeaderTransmissionPipeline"/>.</returns>
         public HeaderTransmissionPipeline BuildHeaderTransmissionPipeline()
         {
             throw new NotImplementedException("Not implemented");
         }
-
     }
 }

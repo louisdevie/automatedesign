@@ -3,6 +3,7 @@ using AutomateDesign.Client.Model.Serialisation;
 using AutomateDesign.Core.Documents;
 using AutomateDesign.Protos;
 using Grpc.Core;
+using System.Collections;
 using System.Threading.Channels;
 
 namespace AutomateDesign.Client.Model.Pipelines
@@ -13,6 +14,7 @@ namespace AutomateDesign.Client.Model.Pipelines
     public class HeadersReceptionPipeline : Pipeline
     {
         private IAsyncStreamReader<EncryptedDocumentChunk> stream;
+        private Queue<int> documentIds;
 
         public HeadersReceptionPipeline(
             IDocumentSerialiser documentSerialiser,
@@ -21,6 +23,7 @@ namespace AutomateDesign.Client.Model.Pipelines
         ) : base(documentSerialiser, encryptionMethod)
         {
             this.stream = stream;
+            this.documentIds = new Queue<int>();
         }
 
         public delegate void HeaderReceivedEventHandler(DocumentHeader header);
@@ -30,7 +33,7 @@ namespace AutomateDesign.Client.Model.Pipelines
         /// </summary>
         public event HeaderReceivedEventHandler? OnHeaderReceived;
 
-        public override Task ExecuteAsync()
+        protected override Task DoExecuteAsync()
         {
             Channel<byte[]> encryptedChannel = Channel.CreateUnbounded<byte[]>();
             Channel<byte[]> decryptedChannel = Channel.CreateUnbounded<byte[]>();
@@ -46,6 +49,7 @@ namespace AutomateDesign.Client.Model.Pipelines
         {
             while(await this.stream.MoveNext())
             {
+                documentIds.Enqueue(this.stream.Current.DocumentId);
                 await pipelineInput.WriteAsync(this.stream.Current.Data.ToByteArray());
             }
             pipelineInput.Complete();
@@ -55,6 +59,7 @@ namespace AutomateDesign.Client.Model.Pipelines
         {
             await foreach (DocumentHeader header in this.DocumentSerialiser.DeserialiseHeadersAsync(serialiserInput))
             {
+                header.Id = this.documentIds.Dequeue();
                 this.OnHeaderReceived?.Invoke(header);
             }
         }

@@ -119,7 +119,7 @@ namespace AutomateDesign.Core.Documents
         /// <param name="to">L'état d'arrivée.</param>
         /// <param name="triggeredBy">L'évènement qui déclenche cette transition.</param>
         /// <returns>La nouvelle transition.</returns>
-        public Transition CreateTransition(State from, State to, Event triggeredBy)
+        public Transition CreateTransition(State from, State to, IEvent triggeredBy)
         {
             Transition trans = new(this.transitions.Count, from, to, triggeredBy);
             this.transitions.Add(trans);
@@ -139,5 +139,16 @@ namespace AutomateDesign.Core.Documents
         /// <param name="id">L'identifiant recherché.</param>
         /// <returns>L'évèenemnt trouvé ou <see langword="null"/>.</returns>
         public EnumEvent? FindEnumEvent(int id) => this.Events.FirstOrDefault(evt => evt.Id == id);
+
+        /// <summary>
+        /// Retire toutes les données de l'automate mais garde les métadonnées.
+        /// </summary>
+        public void Clear()
+        {
+            this.initialState = null;
+            this.states.Clear();
+            this.transitions.Clear();
+            this.enumEvents.Clear();
+        }
     }
 }

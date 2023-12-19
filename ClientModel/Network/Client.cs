@@ -4,18 +4,38 @@ using Grpc.Net.Client;
 
 namespace AutomateDesign.Client.Model.Network
 {
+    /// <summary>
+    /// La classe de base pour les clients gRPC.
+    /// </summary>
     public class Client
     {
         private static readonly string serverUrl = "https://localhost:5001";
 
-        public GrpcChannel OpenChannel() => GrpcChannel.ForAddress(serverUrl);
+        private GrpcChannel? channel;
 
+        /// <summary>
+        /// Un canal de communication avec le serveur.
+        /// </summary>
+        protected GrpcChannel Channel
+        {
+            get
+            {
+                this.channel ??= GrpcChannel.ForAddress(serverUrl);
+                return this.channel;
+            }
+        }
+
+        /// <summary>
+        /// Crée un objet contenant des métadonnées pour authentifer une requête.
+        /// </summary>
+        /// <param name="session">Les informations sur l'utilisateur.</param>
+        /// <returns>Des <see cref="CallOptions"/> avec les informations nécessaires.</returns>
         protected static CallOptions CallOptionsFromSession(Session session)
         {
             return new CallOptions(
                 new Metadata
                 {
-                    { "Authrorization", $"Bearer {session.Token}" }
+                    { "Authorization", $"Bearer {session.Token}" }
                 }
             );
         }
