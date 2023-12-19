@@ -15,7 +15,8 @@
             <DrawingBrush x:Key="LargeGridBrush" TileMode="Tile" Viewport="0 0 50 50" ViewportUnits="Absolute" Drawing="{StaticResource LargeGridDrawing}"/>
         </Grid.Resources>
         <Canvas Background="{StaticResource SmallGridBrush}"/>
-        <Canvas Background="{StaticResource LargeGridBrush}" x:Name="frontCanvas">
+        <Canvas Background="{StaticResource LargeGridBrush}" x:Name="background"/>
+        <Canvas x:Name="frontCanvas" Background="Transparent">
             <Ellipse Fill="White"
                      StrokeThickness="2"
                      Stroke="Black"
