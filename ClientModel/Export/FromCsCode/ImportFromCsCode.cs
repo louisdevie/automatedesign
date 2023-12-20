@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using Document = AutomateDesign.Core.Documents.Document;
@@ -21,31 +22,50 @@ namespace AutomateDesign.Client.Model.Export.FromCsCode
         /// <returns>Le document créé à partir de l'automate forunit</returns>
         public Document Import(string path)
         {
-            // Création du document
+            // Création d'un document vide
             Document importDocument = new Document();
 
-            // Récupère le nom de la solution et l'attribut comme nom du document
+            // Récupèration du nom de la solution et l'attribut comme nom du document
             string[] folders = path.Split('\\');
             importDocument.Header.Name = folders[folders.Length-1];
             
             // Test si le chemin vers les états existe
             string statePath = path + "/Model/Automate/Etats/";
-            DirectoryInfo directoryInfo = new DirectoryInfo(statePath);
             try
             {
                 string[] files = GetAllFilesOfFolder(statePath);
-
                 int i = 1;
+                Dictionary<String, int> states = new Dictionary<String, int>();
+
+                // Parcours de tous les fichiers pour récupérer les états
                 foreach (string file in files)
                 {
-                    string name = string.Empty;
-                    Position position = new Position(10*i, 10*i);
-                    StateKind kind = StateKind.Normal;
-                    State state = new State(importDocument, i, name,position, kind);
+                    Position position = new Position(10*i, 10);
+                    
+                    // Récupération du nom de la classe
+                    string className = Path.GetFileNameWithoutExtension(path+file);
 
+                    // Création de l'état
+                    State state = importDocument.CreateState(className, position);
+                    states.Add(className, state.Id);
                     i++;
                 }
 
+                // Création des Events
+
+
+                // Parcours de tous les fichiers pour récupérer les transitions
+                // Afin de créer une transition nous avons besoin de l'état de départ et de l'état d'arrivée
+                foreach (string file in files)
+                {
+                    string startStateName = Path.GetFileName(path+file);
+                    State startState = importDocument.FindState(states[startStateName]);
+                    string endStateName = "" ;
+                    State endState = importDocument.FindState(states[]);
+                    
+                    importDocument.CreateTransition(startState, endState, );
+                    
+                }
             } 
             catch  
             {
@@ -74,6 +94,41 @@ namespace AutomateDesign.Client.Model.Export.FromCsCode
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Renvoie le nom de la class dont le chemin d'accès est fournit en paramètre
+        /// </summary>
+        /// <param name="classPath">le chemin d'accès de la classe</param>
+        /// <returns>le nom de la classe</returns>
+        private string GetClassName(string classPath)
+        {
+            TextReader reader = new StreamReader(classPath);
+            string fileContent = reader.ReadToEnd();
+            reader.Close();
+            int classNameIndex = fileContent.IndexOf("public class");
+            string className = fileContent.Substring(classNameIndex + 11, fileContent.IndexOf(";", classNameIndex) - classNameIndex - 11);
+            return className;
+        }
+
+        /// <summary>
+        /// Renvoie
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        private State? GetState(string name, Document doc)
+        {
+            State? returnState = null;
+            foreach(State state in doc.States)
+            {
+                if (state.Name == name)
+                {
+                    returnState = state;
+                    break;
+                }
+            }
+            return returnState;
         }
     }
 }
