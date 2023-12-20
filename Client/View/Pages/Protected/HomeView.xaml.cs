@@ -21,9 +21,8 @@ namespace AutomateDesign.Client.View
         private SessionViewModel? sessionVM;
         private DocumentCollectionViewModel documentsVM;
 
-        public Observable<string> CurrentUserEmail { get; private init; }
-
-
+        public Observable<string> CurrentUserEmail { get; }
+        
         public ObservableCollection<DocumentBaseViewModel> Documents => this.documentsVM;
 
         public override WindowPreferences Preferences => new(

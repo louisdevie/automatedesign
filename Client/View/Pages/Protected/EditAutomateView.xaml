@@ -105,12 +105,12 @@
                     VerticalAlignment="Top" 
                     Margin="15,65, 0,0"
                     >
-                <StackPanel Height="Auto" Width="Auto"
+                <StackPanel Height="Auto" Width="Auto" Background="LightGray"
                     Orientation="Vertical">
                     <Button Content="Ouvrir" />
                     <Button Content=" Enregistrer" Click="SaveButtonClick"/>
                     <Button Content="Importer" />
-                    <Button Content="Exporter" />
+                    <Button Content="Exporter TikZ/Latex (extrait)" Click="ExportToLatexSnippet"/>
                 </StackPanel>
             </Canvas>
 

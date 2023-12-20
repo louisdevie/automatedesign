@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Client.Model.Logic.Editor;
+﻿using System;
+using AutomateDesign.Client.Model.Logic.Editor;
 using AutomateDesign.Client.Model.Logic.Editor.States;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Controls.DiagramShapes;
@@ -12,6 +13,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using AutomateDesign.Client.Model.Export;
+using Microsoft.Win32;
 
 namespace AutomateDesign.Client.View
 {
@@ -66,9 +71,9 @@ namespace AutomateDesign.Client.View
         {
             switch (selected)
             {
-                case DiagramState state:
-                    this.context.HandleEvent(new EditorEvent.SelectState(state.ViewModel.Model));
-                    break;
+            case DiagramState state:
+                this.context.HandleEvent(new EditorEvent.SelectState(state.ViewModel.Model));
+                break;
             }
         }
 
@@ -120,12 +125,10 @@ namespace AutomateDesign.Client.View
 
         private void LogOutButton(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void ChangePwdButton(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void AddStateButtonClick(object sender, RoutedEventArgs e)
@@ -143,6 +146,43 @@ namespace AutomateDesign.Client.View
             if (e.Key == Key.Escape)
             {
                 this.context.HandleEvent(new EditorEvent.Cancel());
+            }
+        }
+
+        private void ExportToLatexSnippet(object sender, RoutedEventArgs e)
+        {
+            this.ChoosePathAndExport(
+                title: "Exporter au format TikZ",
+                format: ExportFormat.LatexSnippet,
+                formatDescription: "Document LaTeX",
+                formatExtension: ".tex"
+            );
+        }
+
+        private void ChoosePathAndExport(
+            string title,
+            ExportFormat format,
+            string formatDescription,
+            string formatExtension
+        )
+        {
+            SaveFileDialog saveFileDialog = new()
+            {
+                Title = title,
+                Filter = $"{formatDescription} (*{formatExtension})|*{formatExtension}",
+                FileName = this.viewModel.Name
+            };
+            
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string path = saveFileDialog.FileName;
+
+                if (!path.EndsWith(formatExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    path += formatExtension;
+                }
+                
+                this.viewModel.Export(format, path);
             }
         }
 

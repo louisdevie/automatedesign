@@ -2,6 +2,7 @@
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Navigation;
 using System.Windows;
+using AutomateDesign.Client.ViewModel.Documents;
 
 namespace AutomateDesign.Client.View
 {
@@ -18,8 +19,8 @@ namespace AutomateDesign.Client.View
             DependencyContainer.Current.RegisterSingleton<IDocumentsClient>(new DocumentsClient());
 
             InitializeComponent();
-
-            this.navigator = new(this, new SignInView());
+            
+            this.navigator = new(this, new EditAutomateView(new DocumentCollectionViewModel().NewDocument()));
         }
 
         public Window ParentWindow => this;

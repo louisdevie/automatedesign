@@ -24,7 +24,7 @@ namespace AutomateDesign.Client.Model.Serialisation
             using (MemoryStream stream = new(await input.ReadBodyAsync()))
             {
                 body = await JsonSerializer.DeserializeAsync<DocumentBodyDto>(stream)
-                    ?? throw new NullReferenceException();
+                       ?? throw new NullReferenceException();
             }
 
             // reconstruction du document complet
