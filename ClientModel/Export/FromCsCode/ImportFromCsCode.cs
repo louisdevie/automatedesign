@@ -31,13 +31,23 @@ namespace AutomateDesign.Client.Model.Export.FromCsCode
             // Test si le chemin vers les états existe
             string statePath = path + "/Model/Automate/Etats/";
             DirectoryInfo directoryInfo = new DirectoryInfo(statePath);
-            if (directoryInfo.Exists)
+            try
             {
                 string[] files = GetAllFilesOfFolder(statePath);
 
+                int i = 1;
+                foreach (string file in files)
+                {
+                    string name = string.Empty;
+                    Position position = new Position(10*i, 10*i);
+                    StateKind kind = StateKind.Normal;
+                    State state = new State(importDocument, i, name,position, kind);
+
+                    i++;
+                }
 
             } 
-            else 
+            catch  
             {
                 throw new Exception("Le dossier n'existe pas");
             }
