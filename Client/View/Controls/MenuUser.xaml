@@ -16,7 +16,7 @@
         <Popup x:Name="ProfilMenu" StaysOpen="False" IsOpen="False" PlacementTarget="{Binding ElementName=ProfilButton}" Placement="Bottom">
             <Border BorderBrush="Black" BorderThickness="1" Background="White">
                 <StackPanel>
-                    <MenuItem Header="_ici_ton_mail"/>
+                    <MenuItem Name="emailLabel"/>
                     <MenuItem Header="Changer mot de passe" Click="ChangePwdButton"/>
                     <MenuItem Header="Se Déconnecter" Click="LogOutButton"/>
                 </StackPanel>

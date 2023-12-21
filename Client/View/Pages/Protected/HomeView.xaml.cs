@@ -75,14 +75,6 @@ namespace AutomateDesign.Client.View.Pages
             }
         }
 
-        private void ChangePassword(object sender, RoutedEventArgs e)
-        {
-            ChangePasswordPopup popup = new(this.Navigator.Session, this.sessionVM!.ChangePassword());
-            popup.Owner = this.Navigator.ParentWindow;
-
-            popup.ShowDialog();
-        }
-
         private async void SignOut(object sender, RoutedEventArgs e)
         {
             await this.sessionVM!.SignOutAsync();

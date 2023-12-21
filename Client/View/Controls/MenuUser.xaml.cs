@@ -38,18 +38,22 @@ namespace AutomateDesign.Client.View.Controls
 
         private void ProfilButton_Click(object sender, RoutedEventArgs e)
         {
+            this.emailLabel.Header = this.sessionVM!.UserEmail.Split('@')[0];
             ProfilMenu.IsOpen = !ProfilMenu.IsOpen;
         }
 
         private async void LogOutButton(object sender, RoutedEventArgs e)
         {
             await this.sessionVM!.SignOutAsync();
-            this.navigator.Go(new SignInView(), true);
+            this.navigator!.Go(new SignInView(), true);
         }
 
         private void ChangePwdButton(object sender, RoutedEventArgs e)
         {
+            ChangePasswordPopup popup = new(this.navigator!.Session, this.sessionVM!.ChangePassword());
+            popup.Owner = this.navigator.ParentWindow;
 
+            popup.ShowDialog();
         }
     }
 }
