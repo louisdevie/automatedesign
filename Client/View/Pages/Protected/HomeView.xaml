@@ -3,9 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:AutomateDesign.Client.View"
+      xmlns:local="clr-namespace:AutomateDesign.Client.View.Pages"
       xmlns:my="clr-namespace:AutomateDesign.Client.View.Controls"
       xmlns:helper="clr-namespace:AutomateDesign.Client.View.Helpers"
+
+
       mc:Ignorable="d" 
       d:DesignHeight="1000" d:DesignWidth="1900"
       Title="HomeView">
@@ -22,7 +24,6 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
                 <Button Name="btn1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,20,0"
                         Click="ExistingDocumentClick" CommandParameter="{Binding}">
                     <Image Source="/Resources/Images/AutomateEx.png" />
@@ -86,25 +87,10 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
+            
             <!--Zone de recherche-->
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" 
-                    Margin="3,0,0,0" Height="18" Width="18">
-                <Image Source="/Resources/Icons/search.png" Width="12" RenderTransformOrigin="0.1,0.55"/>
-            </Button>
-            <TextBox 
-                x:Name="TextBoxRecherche"
-                Grid.Column="0" 
-                Width="auto" Height="auto" MaxLength="50"
-                VerticalAlignment="Center" 
-                Text="Rechercher" 
-                GotKeyboardFocus="HaveFocusRecherche" LostFocus="LostFocusRecherche" Margin="26,0,26,0"
-            />
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" 
-                    Margin="479,0,0,0" Click="DeleteSearchButtonClick">
-                <Image Source="/Resources/Icons/cross-small.png" />
-            </Button>
-
-
+            <local:SearchBarre Grid.Column="0" VerticalAlignment="Center" Margin="10"/>
+            
             <!--Menu du profil-->
             <Button Name="ProfilButton"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 

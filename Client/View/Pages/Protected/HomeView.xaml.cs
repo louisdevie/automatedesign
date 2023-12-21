@@ -32,7 +32,6 @@ namespace AutomateDesign.Client.View.Pages
         {
             this.CurrentUserEmail = new Observable<string>(string.Empty);
             this.documentsVM = new DocumentCollectionViewModel();
-
             DataContext = this;
             InitializeComponent();
         }
@@ -46,23 +45,6 @@ namespace AutomateDesign.Client.View.Pages
 
                 this.documentsVM.Session = session;
                 Task.Run(ErrorMessageBox.HandleAsyncActionErrors(this.documentsVM.Reload));
-            }
-        }
-
-        private void HaveFocusRecherche(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            if (this.TextBoxRecherche.Text == "Rechercher")
-            {
-                this.TextBoxRecherche.Text = "";
-            }
-        }
-
-        private void LostFocusRecherche(object sender, RoutedEventArgs e)
-        {
-            if (this.TextBoxRecherche.Text == "")
-            {
-                this.TextBoxRecherche.Focus();
-                this.TextBoxRecherche.Text = "Rechercher";
             }
         }
 
@@ -115,10 +97,6 @@ namespace AutomateDesign.Client.View.Pages
             await this.sessionVM!.SignOutAsync();
             this.Navigator.Go(new SignInView(),true);
         }
-
-        private void DeleteSearchButtonClick(object sender, RoutedEventArgs e)
-        {
-            TextBoxRecherche.Text=string.Empty;
-        }
+        
     }
 }
