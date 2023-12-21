@@ -2,7 +2,10 @@
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Navigation;
 using System.Windows;
+using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Client.View.Pages;
+using AutomateDesign.Client.ViewModel.Documents;
+using AutomateDesign.Client.ViewModel.Users;
 
 namespace AutomateDesign.Client.View
 {
@@ -20,7 +23,7 @@ namespace AutomateDesign.Client.View
 
             InitializeComponent();
 
-            this.navigator = new(this, new SignInView());
+            this.navigator = new(this, new EditAutomateView(new DocumentCollectionViewModel().NewDocument(), new SessionViewModel(new Session("", 0, "", ""))));
         }
 
         public Window ParentWindow => this;

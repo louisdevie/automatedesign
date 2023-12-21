@@ -109,7 +109,7 @@
                     Orientation="Vertical">
                     <Button Content="Ouvrir" />
                     <Button Content=" Enregistrer" Click="SaveButtonClick"/>
-                    <Button Content="Importer" />
+                    <Button Content="Importer" Click="ImportClick"/>
                     <Button Content="Exporter" />
                 </StackPanel>
             </Canvas>

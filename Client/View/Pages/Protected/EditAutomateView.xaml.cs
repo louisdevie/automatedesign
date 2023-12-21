@@ -151,6 +151,12 @@ namespace AutomateDesign.Client.View.Pages
             }
         }
 
+        private void ImportClick(object sender, RoutedEventArgs e)
+        {
+            var importDialog = new ReverseEngineeringWindow();
+            importDialog.ShowDialog();
+        }
+
         #region Implémentation de IEditorUI
 
         public bool PromptForStateName([NotNullWhen(true)] out string? name)
