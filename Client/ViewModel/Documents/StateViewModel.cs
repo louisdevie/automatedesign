@@ -42,5 +42,11 @@ namespace AutomateDesign.Client.ViewModel.Documents
         {
             this.attachedTransitionVMs.Add(transition);
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is State model &&
+                   EqualityComparer<State>.Default.Equals(this.model, model);
+        }
     }
 }

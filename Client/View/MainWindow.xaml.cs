@@ -3,6 +3,7 @@ using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Navigation;
 using System.Windows;
 using AutomateDesign.Client.View.Pages;
+using AutomateDesign.Client.ViewModel.Documents;
 
 namespace AutomateDesign.Client.View
 {
@@ -20,7 +21,14 @@ namespace AutomateDesign.Client.View
 
             InitializeComponent();
 
-            this.navigator = new(this, new SignInView());
+            this.navigator = new(this, new EditAutomateView(
+                new ExistingDocumentViewModel(
+                    new DocumentCollectionViewModel()
+                ), 
+                new ViewModel.Users.SessionViewModel(new Model.Logic.Session("token", 148, "test.fiable@test.fr", "tktCsecure"))
+                )
+            );
+            //this.navigator = new(this, new SignInView());
         }
 
         public Window ParentWindow => this;

@@ -199,17 +199,29 @@ namespace AutomateDesign.Client.ViewModel.Documents
         }
 
         #region Implémentation de IModificationObserver
+        /// <summary>
+        /// Ajoute une transitionViewModel à partir de la transition fournit dans notre liste de transitions
+        /// </summary>
+        /// <param name="transition">la transition à ajouter</param>
 
         public void OnTransitionAdded(Transition transition)
         {
             this.transitions.Add(new TransitionViewModel(transition, this));
         }
 
+        /// <summary>
+        /// Ajoute un StateViewModel à partir de l'état fournit dans notre liste d'états
+        /// </summary>
+        /// <param name="state">l'état à ajouter</param>
         public void OnStateAdded(State state)
         {
             this.states.Add(new StateViewModel(state));
         }
 
+        /// <summary>
+        /// Ajoute un EventViewModel à partir de l'enumEvent fournit dans notre liste d'évènements
+        /// </summary>
+        /// <param name="enumEvent">l'évènement à ajouter</param>
         public void OnEnumEventAdded(EnumEvent enumEvent)
         {
             this.events.Add(new EventViewModel(enumEvent));
@@ -225,6 +237,52 @@ namespace AutomateDesign.Client.ViewModel.Documents
             }
         }
 
+        /// <summary>
+        /// Supprime une transitionViewModel à partir de la transition fournit de notre liste de transitions
+        /// </summary>
+        /// <param name="transition">la transition à supprimer</param>
+
+        public void OnTransitionDeleted(Transition transition)
+        {
+            foreach (var item in this.transitions)
+            {
+                if (item.Equals(transition))
+                {
+                    this.transitions.Remove(item);
+                }
+            }
+            this.transitions.Add(new TransitionViewModel(transition, this));
+        }
+
+        /// <summary>
+        /// Supprime un StateViewModel à partir de l'état fournit de notre liste d'états
+        /// </summary>
+        /// <param name="state">l'état à supprimer</param>
+        public void OnStateDeleted(State state)
+        {
+            foreach (var item in this.states)
+            {
+                if (item.Equals(state))
+                {
+                    this.states.Remove(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Supprime un EventViewModel à partir de l'enumEvent fournit de notre liste d'évènements
+        /// </summary>
+        /// <param name="enumEvent">l'évènement à supprimer</param>
+        public void OnEnumEventDeleted(EnumEvent enumEvent)
+        {
+            foreach (var item in this.events)
+            {
+                if (item.Equals(enumEvent))
+                {
+                    this.events.Remove(item);
+                }
+            }
+        }
         #endregion
     }
 }

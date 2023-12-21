@@ -57,5 +57,13 @@ namespace AutomateDesign.Client.View.Controls
                 this.input.Focus();
             }
         }
+
+        private void OnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == System.Windows.Input.Key.Enter)
+            {
+                EditButtonClick(sender, e);
+            }
+        }
     }
 }

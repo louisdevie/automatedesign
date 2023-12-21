@@ -29,14 +29,14 @@
         <TextBox x:Name="inputTextBox"
                  Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
                  Style="{StaticResource TextInput}"
-                 VerticalAlignment="Top"/>
+                 VerticalAlignment="Top" KeyDown="OnKeyDown"/>
         
         <Button x:Name="okButton"
                 Content="OK"
                 Click="OkButtonClick"
                 Style="{StaticResource AccentedButton}"
                 Grid.Column="2" Grid.Row="2"
-                VerticalAlignment="Bottom"/>
+                VerticalAlignment="Bottom" KeyDown="OnKeyDown"/>
 
         <Button x:Name="cancelButton"
                 Content="Annuler"

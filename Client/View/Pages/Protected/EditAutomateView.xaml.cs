@@ -53,8 +53,8 @@ namespace AutomateDesign.Client.View.Pages
             this.viewModel = viewModel;
             DataContext = this;
             this.sessionVM = sessionVM;
+            
             this.exportToCsCode = new ExportToCsCode();
-
             this.context = new(this.viewModel.Document, this);
             this.context.EditorStateChanged += this.OnEditorStateChanged;
             this.context.AddModificationObserver(this.viewModel);
@@ -118,8 +118,7 @@ namespace AutomateDesign.Client.View.Pages
             }
             else
             {
-                //this.emailLabel.Content = this.Navigator.Session.UserEmail.Split('@')[0];
-                this.emailLabel.Content = "automate.design";
+                this.emailLabel.Content = this.Navigator.Session.UserEmail.Split('@')[0];
                 ProfilMenu.Visibility = Visibility.Visible;
             }
         }
@@ -171,11 +170,21 @@ namespace AutomateDesign.Client.View.Pages
             }
         }
 
+        /// <summary>
+        /// Exporte l'automate au format PNG
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExportPng(object sender, RoutedEventArgs e)
         {
             ExportImage("PNG", "png", PngCaptureDiagramEditor);
         }
 
+        /// <summary>
+        /// Exporte l'automate au format JPG
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExportJpg(object sender, RoutedEventArgs e)
         {
             ExportImage("JPEG", "jpg", JpgSaveDiagramEditor);
@@ -199,9 +208,9 @@ namespace AutomateDesign.Client.View.Pages
 
                 if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    // Utilisez dialog.SelectedPath pour obtenir le chemin du dossier sélectionné
+                    // Utilise dialog.SelectedPath pour obtenir le chemin du dossier sélectionné
                     string selectedFolder = dialog.SelectedPath;
-                    this.exportToCsCode.Export("", this.Document.Document);
+                    this.exportToCsCode.Export(selectedFolder, this.Document.Document);
                 }
             }
         }
@@ -309,8 +318,27 @@ namespace AutomateDesign.Client.View.Pages
 
         public void ShowStateToAdd() => this.diagramEditor.ShowStateGhost();
 
+
         #endregion
 
+        private void OnKeyPress(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                if(sender is TransitionViewModel)
+                {
+                    viewModel.OnTransitionDeleted(sender as Transition);
+                } 
+                else if (sender is StateViewModel)
+                {
+                    viewModel.OnTransitionDeleted(sender as Transition);
+                }
+                else if ( sender is EventViewModel)
+                {
+                    viewModel.OnTransitionDeleted(sender as Transition);
+                }
+            }
 
+        }
     }
 }

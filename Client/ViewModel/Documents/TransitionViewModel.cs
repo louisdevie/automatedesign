@@ -52,6 +52,12 @@ namespace AutomateDesign.Client.ViewModel.Documents
             this.End = parentDocument.States.First(svm => svm.Model == this.model.End);
             this.triggeredByVM = parentDocument.Events.First(evm => evm.Model == this.model.TriggeredBy);
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Transition model &&
+                   EqualityComparer<Transition>.Default.Equals(this.model, model);
+        }
 #pragma warning restore CS8618
     }
 }

@@ -46,7 +46,7 @@
         <!--Barre haut de page-->
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
               Background="LightBlue"
-              Panel.ZIndex="100">
+              Panel.ZIndex="100" KeyDown="OnKeyPress">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
@@ -122,6 +122,7 @@
                 <Image Source="/Resources/Icons/circle-user.png" Height="40" Width="40"/>
             </Button>
             <Canvas x:Name="ProfilMenu" 
+                    Visibility="Hidden"
                     VerticalAlignment="Top" HorizontalAlignment="Right" 
                     Margin="0,65,55,0" 
                     Grid.Column="1"

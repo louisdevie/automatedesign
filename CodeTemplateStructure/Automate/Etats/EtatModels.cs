@@ -13,7 +13,7 @@ namespace NomAutomate.Etats
             Etats prochainEtat;
             switch (e)
             {
-                // Supprimer les cases innutiles et modifier leur action
+                // Vérifier les cases et modifier leur action si nécessaire
                 //cases
 
                 default:

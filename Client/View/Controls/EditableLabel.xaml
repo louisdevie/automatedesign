@@ -17,7 +17,7 @@
                  IsEnabled="{Binding Editing, RelativeSource={RelativeSource AncestorType={x:Type local:EditableLabel}}}"
                  Style="{StaticResource FlatInput}"
                  Margin="0 0 4 0" Height="30"
-                 x:Name="input"/>
+                 x:Name="input" KeyDown="OnKeyDown"/>
         <Button Grid.Column="1" Style="{StaticResource FlatIconButton}" Width="30" Height="30" Click="EditButtonClick">
             <Image x:Name="buttonIcon"  Source="/Resources/Icons/pencil.png" RenderOptions.BitmapScalingMode="HighQuality" />
         </Button>

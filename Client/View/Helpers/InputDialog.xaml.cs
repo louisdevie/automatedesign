@@ -48,5 +48,18 @@ namespace AutomateDesign.Client.View.Helpers
         {
             DialogResult = false;
         }
+
+        /// <summary>
+        /// Déclenche le clic sur le bouton Ok en cas d'appuie sur la touche entrer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.OkButtonClick(sender, e);
+            }
+        }
     }
 }
