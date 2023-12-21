@@ -1,4 +1,5 @@
 ﻿using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Export.CsCode;
 using AutomateDesign.Client.Model.Logic.Editor;
 using AutomateDesign.Client.Model.Logic.Editor.States;
 using AutomateDesign.Client.View.Controls;
@@ -16,10 +17,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace AutomateDesign.Client.View.Pages
 {
@@ -31,6 +35,7 @@ namespace AutomateDesign.Client.View.Pages
         private EditorContext context;
         private ExistingDocumentViewModel viewModel;
         private SessionViewModel? sessionVM;
+        private ExportToCsCode exportToCsCode;
 
         public ExistingDocumentViewModel Document => this.viewModel;
 
@@ -48,6 +53,7 @@ namespace AutomateDesign.Client.View.Pages
             this.viewModel = viewModel;
             DataContext = this;
             this.sessionVM = sessionVM;
+            this.exportToCsCode = new ExportToCsCode();
 
             this.context = new(this.viewModel.Document, this);
             this.context.EditorStateChanged += this.OnEditorStateChanged;
@@ -154,7 +160,7 @@ namespace AutomateDesign.Client.View.Pages
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                string filePath = saveFileDialog.FileName;
+                    string filePath = saveFileDialog.FileName;
                 if (!filePath.EndsWith($".{extension}", StringComparison.OrdinalIgnoreCase))
                 {
                     filePath += $".{extension}";
@@ -178,6 +184,26 @@ namespace AutomateDesign.Client.View.Pages
         private void ExportLatex(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        /// <summary>
+        /// Exporte le document contenant l'automate en code C#
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ExportCode(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog())
+            {
+                DialogResult result = dialog.ShowDialog();
+
+                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    // Utilisez dialog.SelectedPath pour obtenir le chemin du dossier sélectionné
+                    string selectedFolder = dialog.SelectedPath;
+                    this.exportToCsCode.Export("", this.Document.Document);
+                }
+            }
         }
 
         /// <summary>
@@ -284,5 +310,7 @@ namespace AutomateDesign.Client.View.Pages
         public void ShowStateToAdd() => this.diagramEditor.ShowStateGhost();
 
         #endregion
+
+
     }
 }

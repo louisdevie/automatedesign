@@ -109,7 +109,7 @@
                         <MenuItem Header="Image png" Click="ExportPng"/>
                         <MenuItem Header="Image jpg" Click="ExportJpg"/>
                         <Separator/>
-                        <MenuItem Header="Code" />
+                        <MenuItem Header="Code" Click="ExportCode"/>
                     </MenuItem>
                 </MenuItem>
             </Menu>
