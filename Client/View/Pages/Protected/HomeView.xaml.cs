@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace AutomateDesign.Client.View.Pages
@@ -33,6 +34,7 @@ namespace AutomateDesign.Client.View.Pages
             this.CurrentUserEmail = new Observable<string>(string.Empty);
             this.documentsVM = new DocumentCollectionViewModel();
             DataContext = this;
+
             InitializeComponent();
         }
 
@@ -42,8 +44,9 @@ namespace AutomateDesign.Client.View.Pages
             {
                 this.sessionVM = new SessionViewModel(session);
                 this.CurrentUserEmail.Value = this.sessionVM.UserEmail.Split('@', 2)[0];
-
                 this.documentsVM.Session = session;
+                this.menuUser.SessionVM = this.sessionVM;
+                this.menuUser.Navigator = this.Navigator;
                 Task.Run(ErrorMessageBox.HandleAsyncActionErrors(this.documentsVM.Reload));
             }
         }
@@ -69,18 +72,6 @@ namespace AutomateDesign.Client.View.Pages
                     await backgroundLoading;
                     this.Navigator.Go(new EditAutomateView(param, sessionVM!));
                 }
-            }
-        }
-
-        private void CliclProfilButton(object sender, RoutedEventArgs e)
-        {
-            if (ProfilMenu.Visibility == Visibility.Visible)
-            {
-                ProfilMenu.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                ProfilMenu.Visibility = Visibility.Visible;
             }
         }
 

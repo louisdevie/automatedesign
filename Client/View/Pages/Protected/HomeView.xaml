@@ -6,8 +6,6 @@
       xmlns:local="clr-namespace:AutomateDesign.Client.View.Pages"
       xmlns:my="clr-namespace:AutomateDesign.Client.View.Controls"
       xmlns:helper="clr-namespace:AutomateDesign.Client.View.Helpers"
-
-
       mc:Ignorable="d" 
       d:DesignHeight="1000" d:DesignWidth="1900"
       Title="HomeView">
@@ -65,7 +63,7 @@
                                           FirstItemTemplate="{StaticResource NewDocumentTemplate}" />
     </Page.Resources>
 
-    <Grid>
+    <Grid x:Name="myGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
@@ -89,34 +87,9 @@
             </Grid.ColumnDefinitions>
             
             <!--Zone de recherche-->
-            <local:SearchBarre Grid.Column="0" VerticalAlignment="Center" Margin="10"/>
-            
-            <!--Menu du profil-->
-            <Button Name="ProfilButton"
-                    HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Height="50" Width="50"
-                    Grid.Column="2" Click="CliclProfilButton"
-                    >
-                <Image Source="/Resources/Icons/circle-user.png" Height="40" Width="40" RenderOptions.BitmapScalingMode="HighQuality"/>
-            </Button>
-            <Canvas x:Name="ProfilMenu" 
-                    VerticalAlignment="Top" HorizontalAlignment="Right" 
-                    Margin="0,65,55,0" 
-                    Grid.Column="1"
-                    >
-                <StackPanel Height="Auto" Width="Auto"
-                            Orientation="Vertical">
-                    <Label Background="LightGray" 
-                           Content="{Binding Path=CurrentUserEmail.Value}" 
-                           />
-                    <Button Content=" Changer mot de passe " 
-                            Click="ChangePassword" 
-                            />
-                    <Button Content="Se Déconecter" 
-                            Click="SignOut" 
-                            />
-                </StackPanel>
-            </Canvas>
+            <my:SearchBarre Grid.Column="0" VerticalAlignment="Center" Margin="10"/>
+            <!--Zone de profil-->
+            <my:MenuUser x:Name="menuUser" Grid.Column="2"/>
         </Grid>
     </Grid>
 </my:NavigablePage>

@@ -1,4 +1,5 @@
 ﻿using AutomateDesign.Client.Model;
+using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Client.Model.Logic.Editor;
 using AutomateDesign.Client.Model.Logic.Editor.States;
 using AutomateDesign.Client.View.Controls;
@@ -62,6 +63,15 @@ namespace AutomateDesign.Client.View.Pages
             this.context.Initialize();
         }
 
+        public override void OnNavigatedToThis(bool clearedHistory)
+        {
+            if (this.Navigator.Session is Session session)
+            {
+                this.menuUser.SessionVM = this.sessionVM;
+                this.menuUser.Navigator = this.Navigator;
+            }
+        }
+
         private void OnEditorStateChanged(EditorState state)
         {
             this.StatusMessage.Value = state.StatusMessage;
@@ -102,32 +112,7 @@ namespace AutomateDesign.Client.View.Pages
                 this.viewModel.Unload();
                 this.Navigator.Back();
             }
-        }
-
-        private void CliclProfilButton(object sender, RoutedEventArgs e)
-        {
-            if (ProfilMenu.Visibility == Visibility.Visible)
-            {
-                ProfilMenu.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                //this.emailLabel.Content = this.Navigator.Session.UserEmail.Split('@')[0];
-                this.emailLabel.Content = "automate.design";
-                ProfilMenu.Visibility = Visibility.Visible;
-            }
-        }
-
-        private async void LogOutButton(object sender, RoutedEventArgs e)
-        {
-            await this.sessionVM!.SignOutAsync();
-            this.Navigator.Go(new SignInView(),true);
-        }
-
-        private void ChangePwdButton(object sender, RoutedEventArgs e)
-        {
-
-        }
+        }             
 
         private void AddStateButtonClick(object sender, RoutedEventArgs e)
         {
