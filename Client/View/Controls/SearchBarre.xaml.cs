@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AutomateDesign.Client.View.Pages
+namespace AutomateDesign.Client.View.Controls
 {
     /// <summary>
     /// Logique d'interaction pour SearchBarre.xaml
