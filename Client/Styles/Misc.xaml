@@ -4,5 +4,12 @@
     <Style TargetType="ProgressBar" x:Key="ProgressBar">
         <Setter Property="Foreground" Value="#25a"/>
     </Style>
+    
+    <Style x:Key="ListBox" TargetType="ListBox">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Padding" Value="8 4"/>
+        <Setter Property="BorderBrush" Value="#ddd"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
 
 </ResourceDictionary>

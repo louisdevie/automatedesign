@@ -48,9 +48,9 @@ namespace AutomateDesign.Client.ViewModel.Documents
         public TransitionViewModel(Transition model, ExistingDocumentViewModel parentDocument)
         {
             this.model = model;
-            this.Start = parentDocument.States.First(svm => svm.Model == this.model.Start);
-            this.End = parentDocument.States.First(svm => svm.Model == this.model.End);
-            this.triggeredByVM = parentDocument.Events.First(evm => evm.Model == this.model.TriggeredBy);
+            this.Start = parentDocument.GetViewModelOf(this.model.Start);
+            this.End = parentDocument.GetViewModelOf(this.model.End);
+            this.triggeredByVM = parentDocument.GetViewModelOf(this.model.TriggeredBy);
         }
 #pragma warning restore CS8618
     }

@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <TextBox Grid.Column="0"
                  Style="{StaticResource TextInput}" x:Name="input"
-                 Text="{Binding Path, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                 Text="{Binding Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
         <Button Grid.Column="1"
                 Style="{StaticResource NormalButton}"
                 Margin="20 0 0 0" x:Name="browseButton" Click="BrowseButtonClick">

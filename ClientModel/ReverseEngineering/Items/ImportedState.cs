@@ -9,6 +9,7 @@ internal class ImportedState : ImportedItem
 {
     private string name;
     private StateKind kind;
+    private State? generatedState;
 
     /// <summary>
     /// Le nom de l'état dans le code.
@@ -19,6 +20,10 @@ internal class ImportedState : ImportedItem
     /// Le type de l'état.
     /// </summary>
     public StateKind Kind => this.kind;
+
+    public override string Description => $"État {this.name}";
+
+    public State? GeneratedState => this.generatedState;
 
     /// <summary>
     /// Crée un nouvel état à importer.
@@ -38,5 +43,10 @@ internal class ImportedState : ImportedItem
     public void Merge(ImportedState other)
     {
         this.kind = other.kind;
+    }
+    
+    public override void Generate(DocumentGenerator documentGenerator)
+    {
+        this.generatedState ??= documentGenerator.GenerateState(this.name, this.kind);
     }
 }

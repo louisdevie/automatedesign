@@ -5,6 +5,8 @@
     /// </summary>
     public class State
     {
+        private const float DEFAULT_SIZE = 100;
+        
         private int id;
         private string name;
         private Document document;
@@ -60,6 +62,17 @@
             this.name = name;
             this.Kind = kind;
             this.position = position;
+        }
+
+        /// <summary>
+        /// Crée une <see cref="Position"/> pour un état centré sur un point.
+        /// </summary>
+        /// <param name="x">L'abscisse voulue de l'état.</param>
+        /// <param name="y">L'ordonnée voulue de l'état.</param>
+        /// <returns>Une position avec la taille par défaut d'un état.</returns>
+        public static Position CenteredAt(float x, float y)
+        {
+            return new Position(x - DEFAULT_SIZE / 2, y - DEFAULT_SIZE / 2, DEFAULT_SIZE, DEFAULT_SIZE);
         }
     }
 }

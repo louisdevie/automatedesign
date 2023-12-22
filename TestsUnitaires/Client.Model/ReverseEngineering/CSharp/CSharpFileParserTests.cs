@@ -40,13 +40,32 @@ public class CSharpFileParserTests
         }
         """;
 
+    private const string EVENT_ENUM =
+        """
+        public enum Evenement
+        {
+            X, Y, Z
+        }
+        """;
+
+    private const string BAD_CODE =
+        """
+        public class Truc
+        {
+            public static int FoisDeux(int num)
+            {
+                return num * 2;
+            // il manque une accolade
+        }
+        """;
+
     [Fact]
     public void Parse()
     {
         IFileParser cSharpParser = new CSharpFileParser();
         ImportedItemsIndex index = new();
 
-        cSharpParser.TryParse(STATE_CLASS, index);
+        Assert.True(cSharpParser.TryParse(STATE_CLASS, index));
         ImportedItem[] result = index.GetAllItems().ToArray();
 
         Assert.Equal(4, result.Length);
@@ -71,5 +90,29 @@ public class CSharpFileParserTests
                 TriggeredBy: ImportedEnumEvent { Name: "X" }
             }
         );
+        
+        index.Clear();
+        
+        Assert.True(cSharpParser.TryParse(EVENT_ENUM, index));
+        result = index.GetAllItems().ToArray();
+
+        Assert.Equal(3, result.Length);
+        Assert.Contains(
+            result,
+            item => item is ImportedEnumEvent { Name: "X" }
+        );
+        Assert.Contains(
+            result,
+            item => item is ImportedEnumEvent { Name: "Y" }
+        );
+        Assert.Contains(
+            result,
+            item => item is ImportedEnumEvent { Name: "Z" }
+        );
+        
+        index.Clear();
+        
+        Assert.False(cSharpParser.TryParse(BAD_CODE, index));
+        result = index.GetAllItems().ToArray();
     }
 }

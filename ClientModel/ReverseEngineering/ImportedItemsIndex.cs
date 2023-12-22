@@ -21,7 +21,7 @@ internal class ImportedItemsIndex
     public ImportedState FindOrCreateState(string name)
     {
         ImportedState state;
-        
+
         if (this.statesIndex.TryGetValue(name, out var stateFound))
         {
             state = stateFound;
@@ -43,7 +43,7 @@ internal class ImportedItemsIndex
     public void CreateOrUpdateState(string name, StateKind kind = StateKind.Normal)
     {
         ImportedState state = new(name, kind);
-        
+
         if (this.statesIndex.TryGetValue(name, out var stateFound))
         {
             stateFound.Merge(state);
@@ -53,7 +53,7 @@ internal class ImportedItemsIndex
             this.statesIndex.Add(name, state);
         }
     }
-    
+
     /// <summary>
     /// Renvoie l'évènement qui correspond à un nom ou le crée s'il est inconnu.
     /// </summary>
@@ -62,7 +62,7 @@ internal class ImportedItemsIndex
     public ImportedEnumEvent FindOrCreateEnumEvent(string name)
     {
         ImportedEnumEvent evt;
-        
+
         if (this.eventsIndex.TryGetValue(name, out var stateFound))
         {
             evt = stateFound;
@@ -77,6 +77,15 @@ internal class ImportedItemsIndex
     }
 
     /// <summary>
+    /// Crée un évènement s'il n'existe pas déjà.
+    /// </summary>
+    /// <param name="name">Le nom de l'évènement.</param>
+    public void CreateOrUpdateEnumEvent(string name)
+    {
+        this.eventsIndex.TryAdd(name, new ImportedEnumEvent(name));
+    }
+
+    /// <summary>
     /// Crée une transition déclenchée par un évènement défini par l'utilisateur.
     /// </summary>
     /// <param name="start">Le nom de l'état de départ.</param>
@@ -84,11 +93,32 @@ internal class ImportedItemsIndex
     /// <param name="evt">Le nom de l'évènement.</param>
     public void CreateTransitionTriggeredByEnumEvent(string start, string end, string evt)
     {
-        ImportedTransition transition = new ImportedTransition(
-            this.FindOrCreateState(start),
-            this.FindOrCreateState(end),
-            this.FindOrCreateEnumEvent(evt)
+        this.transitions.Add(
+            new ImportedTransition(
+                this.FindOrCreateState(start),
+                this.FindOrCreateState(end),
+                this.FindOrCreateEnumEvent(evt)
+            )
         );
+    }
+
+    /// <summary>
+    /// Crée une transition déclenchée par défaut.
+    /// </summary>
+    /// <param name="start">Le nom de l'état de départ.</param>
+    /// <param name="end">Le nom de l'état d'arrivée.</param>
+    public void CreateTransitionTriggeredByDefaultEvent(string start, string end)
+    {
+        if (start != end) // les transitions d'un état à lui-même par défaut est implicite
+        {
+            this.transitions.Add(
+                new ImportedTransition(
+                    this.FindOrCreateState(start),
+                    this.FindOrCreateState(end),
+                    this.defaultEvent
+                )
+            );
+        }
     }
 
     /// <summary>

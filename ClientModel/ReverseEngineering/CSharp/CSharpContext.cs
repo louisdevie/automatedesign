@@ -43,62 +43,42 @@ internal class CSharpContext
         Other
     }
 
-    public enum SwitchLabel
-    {
-        /// <summary>
-        /// Un label case avec une valeur.
-        /// </summary>
-        Case,
-
-        /// <summary>
-        /// Le label par défaut.
-        /// </summary>
-        Default,
-    }
-
-    private Stack<Class> classStack = new();
+    private readonly Stack<(Class, string)> classStack = new();
     private Method currentMethod = Method.Outside;
-    private SwitchLabel? currentSwitchLabelType;
-    private string? currentSwitchLabelValue;
+    
+    private CSharpTransition.Switch currentSwitchLabelKind = CSharpTransition.Switch.Outside;
+    private string? currentSwitchLabelEventName;
 
     /// <summary>
     /// La classe à l'intérieur de laquelle on se trouve.
     /// </summary>
-    public Class CurrentClass => this.classStack.Count == 0 ? Class.Outside : this.classStack.Peek();
+    public Class CurrentClassKind => this.classStack.Count == 0 ? Class.Outside : this.classStack.Peek().Item1;
 
+    public string CurrentClassName => this.classStack.Peek().Item2;
+    
     /// <summary>
     /// La méthode à l'intérieur de laquelle on se trouve.
     /// </summary>
     public Method CurrentMethod => this.currentMethod;
 
     /// <summary>
-    /// Teste si le label au-dessus du code actuel est un case et renvoie la valeur le cas échéant.
+    /// Le type de label de déclaration switch en-dessous de laquelle on se trouve.
     /// </summary>
-    /// <param name="value">La valeur du case, si c'en est un.</param>
-    /// <returns><see langword="true"/> si c'est un label de type case.</returns>
-    public bool CurrentSwitchLabelIsCase([NotNullWhen(true)] out string? value)
-    {
-        bool result = this.currentSwitchLabelType == SwitchLabel.Case;
-        value = result ? this.currentSwitchLabelValue : null;
-        return result;
-    }
+    public CSharpTransition.Switch CurrentSwitchLabelKind => this.currentSwitchLabelKind;
 
     /// <summary>
-    /// Teste si le label au-dessus du code actuel est un default.
+    /// La valeur du label de déclaration switch en-dessous de laquelle on se trouve.
     /// </summary>
-    /// <returns><see langword="true"/> si c'est un label de type default.</returns>
-    public bool CurrentSwitchLabelIsDefault()
-    {
-        return this.currentSwitchLabelType == SwitchLabel.Default;
-    }
-
+    public string? CurrentSwitchLabelEventName => this.currentSwitchLabelEventName;
+    
     /// <summary>
     /// Indique qu'on rentre dans une classe.
     /// </summary>
     /// <param name="cls">Le type de classe.</param>
-    public void PushClass(Class cls)
+    /// <param name="name">Le nom de la classe.</param>
+    public void PushClass(Class cls, string name)
     {
-        this.classStack.Push(cls);
+        this.classStack.Push((cls, name));
     }
 
     /// <summary>
@@ -132,7 +112,25 @@ internal class CSharpContext
     /// <param name="value">La valeur du case.</param>
     public void PushCaseSwitchLabel(string value)
     {
-        this.currentSwitchLabelType = SwitchLabel.Case;
-        this.currentSwitchLabelValue = value;
+        this.currentSwitchLabelKind = CSharpTransition.Switch.Case;
+        this.currentSwitchLabelEventName = value;
+    }
+    
+    /// <summary>
+    /// Indique qu'on a passé un label default dans switch.
+    /// </summary>
+    public void PushDefaultSwitchLabel()
+    {
+        this.currentSwitchLabelKind = CSharpTransition.Switch.Default;
+        this.currentSwitchLabelEventName = null;
+    }
+
+    /// <summary>
+    /// Indique qu'on est sorti d'un switch.
+    /// </summary>
+    public void PopSwitch()
+    {
+        this.currentSwitchLabelKind = CSharpTransition.Switch.Outside;
+        this.currentSwitchLabelEventName = null;
     }
 }

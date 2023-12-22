@@ -4,28 +4,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:my="clr-namespace:AutomateDesign.Client.View.Controls"
+        xmlns:vm="clr-namespace:AutomateDesign.Client.ViewModel.ReverseEngineering"
         mc:Ignorable="d"
         Title="Rétro-génération" Height="450" Width="800">
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
-        <Label Grid.Row="0"
+
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
                Style="{StaticResource InputLabel}">
             Dossier contenant l'automate
         </Label>
-        <my:DirectorySelectionInput Grid.Row="1"/>
-        
-        <Label Grid.Row="2" Style="{StaticResource InputLabel}"
+        <my:DirectorySelectionInput Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                    Path="{Binding SourceDirectory, Mode=TwoWay}" />
+
+        <Label Grid.Row="2"  Grid.Column="0" Grid.ColumnSpan="3"
+               Style="{StaticResource InputLabel}"
                Margin="0 20 0 0">
             Éléments à importer
         </Label>
-
+        <ListBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                 Style="{StaticResource ListBox}"
+                 ItemsSource="{Binding ImportedItems}" IsEnabled="{Binding LoadingFinished}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding WillBeImported, Mode=TwoWay}" />
+                        <Label Content="{Binding Description}"></Label>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <Button Grid.Row="4" Grid.Column="2" Margin="20 20 0 0"
+                Style="{StaticResource AccentedButton}"
+                Click="FinishButtonClick">
+            Terminer
+        </Button>
+        <Button Grid.Row="4" Grid.Column="1" Margin="0 20 0 0"
+                Style="{StaticResource NormalButton}"
+                Click="CancelButtonClick">
+            Annuler
+        </Button>
     </Grid>
 </Window>

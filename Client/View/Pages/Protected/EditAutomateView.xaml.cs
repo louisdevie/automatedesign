@@ -153,7 +153,7 @@ namespace AutomateDesign.Client.View.Pages
 
         private void ImportClick(object sender, RoutedEventArgs e)
         {
-            var importDialog = new ReverseEngineeringWindow();
+            var importDialog = new ReverseEngineeringWindow(this.viewModel);
             importDialog.ShowDialog();
         }
 

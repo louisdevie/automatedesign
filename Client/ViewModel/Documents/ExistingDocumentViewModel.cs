@@ -133,6 +133,27 @@ namespace AutomateDesign.Client.ViewModel.Documents
             }
         }
 
+        public StateViewModel GetViewModelOf(State state)
+        {
+            return this.states.First(svm => svm.Model == state);
+        }
+
+        public EventViewModel GetViewModelOf(IEvent evt)
+        {
+            EventViewModel vm;
+            
+            if (evt is DefaultEvent)
+            {
+                vm = new EventViewModel(evt);
+            }
+            else
+            {
+                vm = this.events.First(evm => evm.Model == evt);
+            }
+
+            return vm;
+        }
+
         /// <summary>
         /// Charge l'automate contenu dans le document.
         /// </summary>

@@ -1,9 +1,12 @@
+using AutomateDesign.Core.Documents;
+
 namespace AutomateDesign.Client.Model.ReverseEngineering.Items;
 
 internal class ImportedTransition : ImportedItem
 {
     private ImportedState start, end;
     private ImportedEvent triggeredBy;
+    private Transition? generatedTransition;
 
     /// <summary>
     /// L'état de départ.
@@ -19,7 +22,9 @@ internal class ImportedTransition : ImportedItem
     /// L'évènement qui déclenche la transition.
     /// </summary>
     public ImportedEvent TriggeredBy => this.triggeredBy;
-    
+
+    public override string Description => $"Transition de {this.Start.Name} à {this.End.Name} (déclenchée par {this.TriggeredBy.Name})";
+
     /// <summary>
     /// Crée une nouvelle transition à importer.
     /// </summary>
@@ -31,5 +36,18 @@ internal class ImportedTransition : ImportedItem
         this.start = start;
         this.end = end;
         this.triggeredBy = triggeredBy;
+    }
+
+    public override void Generate(DocumentGenerator documentGenerator)
+    {
+        this.start.Generate(documentGenerator);
+        this.end.Generate(documentGenerator);
+        this.triggeredBy.Generate(documentGenerator);
+        
+        this.generatedTransition ??= documentGenerator.GenerateTransition(
+            this.start.GeneratedState!,
+            this.end.GeneratedState!,
+            this.triggeredBy.GeneratedEvent!
+        );
     }
 }
