@@ -1,6 +1,4 @@
-﻿using AutomateDesign.Client.Model;
-using AutomateDesign.Client.Model.Export.CsCode;
-using AutomateDesign.Client.Model.Logic.Editor;
+﻿using AutomateDesign.Client.Model.Logic.Editor;
 using AutomateDesign.Client.Model.Logic.Editor.States;
 using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Controls.DiagramShapes;
@@ -10,20 +8,16 @@ using AutomateDesign.Client.ViewModel;
 using AutomateDesign.Client.ViewModel.Documents;
 using AutomateDesign.Client.ViewModel.Users;
 using AutomateDesign.Core.Documents;
-using Microsoft.Win32;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using AutomateDesign.Client.Model.Export;
-using Microsoft.Win32;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
@@ -37,7 +31,6 @@ namespace AutomateDesign.Client.View.Pages
         private EditorContext context;
         private ExistingDocumentViewModel viewModel;
         private SessionViewModel? sessionVM;
-        private ExportToCsCode exportToCsCode;
 
         public ExistingDocumentViewModel Document => this.viewModel;
 
@@ -55,7 +48,6 @@ namespace AutomateDesign.Client.View.Pages
             this.viewModel = viewModel;
             DataContext = this;
             this.sessionVM = sessionVM;
-            this.exportToCsCode = new ExportToCsCode();
 
             this.context = new(this.viewModel.Document, this);
             this.context.EditorStateChanged += this.OnEditorStateChanged;
@@ -182,28 +174,20 @@ namespace AutomateDesign.Client.View.Pages
             ExportImage("JPEG", "jpg", JpgSaveDiagramEditor);
         }
 
-        private void ExportLatex(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         /// <summary>
         /// Exporte le document contenant l'automate en code C#
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ExportCode(object sender, RoutedEventArgs e)
+        private void ExportToCode(object sender, RoutedEventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog())
-            {
-                DialogResult result = dialog.ShowDialog();
+            using var dialog = new FolderBrowserDialog();
+            DialogResult result = dialog.ShowDialog();
 
-                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
-                {
-                    // Utilisez dialog.SelectedPath pour obtenir le chemin du dossier sélectionné
-                    string selectedFolder = dialog.SelectedPath;
-                    this.exportToCsCode.Export("", this.Document.Document);
-                }
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+            {
+                // Utilisez dialog.SelectedPath pour obtenir le chemin du dossier sélectionné
+                this.viewModel.Export(ExportFormat.CSharpCodeTemplate, dialog.SelectedPath);
             }
         }
 
@@ -273,11 +257,15 @@ namespace AutomateDesign.Client.View.Pages
             }
         }
 
-        private void ExportToLatexSnippet(object sender, RoutedEventArgs e)
+        private void ExportToLatexSnippet(object sender, RoutedEventArgs e) => ExportToLatex(ExportFormat.LatexSnippet);
+        
+        private void ExportToLatexArticle(object sender, RoutedEventArgs e) => ExportToLatex(ExportFormat.LatexArticle);
+
+        private void ExportToLatex(ExportFormat format)
         {
             this.ChoosePathAndExport(
                 title: "Exporter au format TikZ",
-                format: ExportFormat.LatexSnippet,
+                format,
                 formatDescription: "Document LaTeX",
                 formatExtension: ".tex"
             );

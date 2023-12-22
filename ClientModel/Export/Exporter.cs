@@ -1,3 +1,4 @@
+using AutomateDesign.Client.Model.Logic.Exceptions;
 using AutomateDesign.Core.Documents;
 
 namespace AutomateDesign.Client.Model.Export;
@@ -56,4 +57,19 @@ public abstract class Exporter
     
     /// <inheritdoc cref="Export"/>
     protected abstract void DoExport(Document document, ExportFormat format, string path);
+
+    public static Exporter operator +(Exporter? lhs, Exporter rhs)
+    {
+        Exporter result;
+        if (lhs == null)
+        {
+            result = rhs;
+        }
+        else
+        {
+            lhs.Add(rhs);
+            result = lhs;
+        }
+        return result;
+    }
 }

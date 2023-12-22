@@ -7,20 +7,16 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutomateDesign.Client.Model.Export.CsCode
+namespace AutomateDesign.Client.Model.Export.CSharp
 {
-    public class ExportToCsCode : ICodeExport
+    public class CSharpExporter : Exporter
     {
-        public ExportToCsCode()
+        protected override bool CanExport(ExportFormat format)
         {
+            return format == ExportFormat.CSharpCodeTemplate;
         }
-
-        /// <summary>
-        /// Exporte un document en structure de code C#
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="document"></param>
-        public void Export(string path, Document document)
+        
+        protected override void DoExport(Document document, ExportFormat format, string path)
         {
             // Création du dossier racine de l'exportation
             string documentFolderName = document.Header.Name;

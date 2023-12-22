@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using AutomateDesign.Client.Model.Export;
+using AutomateDesign.Client.Model.Export.CSharp;
 using AutomateDesign.Client.Model.Export.Latex;
 
 namespace AutomateDesign.Client.ViewModel.Documents
@@ -25,7 +26,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         // objets métier
         private Document document;
         private DocumentsClient documentsClient;
-        private Exporter exporters;
+        private Exporter? exporters;
         
         // autres modèles-vue
         private DocumentHeaderViewModel header;
@@ -94,7 +95,8 @@ namespace AutomateDesign.Client.ViewModel.Documents
             
             this.document = document;
             this.documentsClient = new DocumentsClient();
-            this.exporters = new LatexExporter();
+            this.exporters += new LatexExporter();
+            this.exporters += new CSharpExporter();
 
             this.header = new(this.document.Header);
             this.header.PropertyChanged += this.HeaderPropertyChanged;
@@ -102,6 +104,8 @@ namespace AutomateDesign.Client.ViewModel.Documents
             this.states = new(this.document.States.Select(s => new StateViewModel(s)));
             this.transitions = new(this.document.Transitions.Select(t => new TransitionViewModel(t, this)));
             this.events = new(this.document.Events.Select(e => new EventViewModel(e)).Append(new EventViewModel(new DefaultEvent())));
+            
+            this.deleteCommand = new OnceAsyncCommand(this.Delete, canRetry: true);
         }
 
         /// <summary>

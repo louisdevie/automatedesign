@@ -1,4 +1,4 @@
-namespace AutomateDesign.Client.Model.Export;
+namespace AutomateDesign.Client.Model.Logic.Exceptions;
 
 /// <summary>
 /// Exception levé quand un problème lié à l'export survient.

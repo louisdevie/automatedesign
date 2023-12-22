@@ -1,10 +1,5 @@
-﻿using AutomateDesign.Client.Model.Export.CsCode;
-using AutomateDesign.Core.Documents;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutomateDesign.Core.Documents;
+using AutomateDesign.Client.Model.Export.CSharp;
 
 namespace AutomateDesign.Client.Model.Export
 {
@@ -31,8 +26,8 @@ namespace AutomateDesign.Client.Model.Export
 
             doc.AddStates(states);
 
-            ExportToCsCode export = new ExportToCsCode();
-            export.Export(path, doc);
+            CSharpExporter export = new CSharpExporter();
+            export.Export(doc, ExportFormat.CSharpCodeTemplate, path);
             path = path + "/Automate_sans_nom/Automate/";
             
             // Vérifie que le dossier existe

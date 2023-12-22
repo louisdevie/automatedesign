@@ -104,12 +104,13 @@
                               Click="SaveButtonClick"/>
                     <MenuItem Header="Importer" />
                     <MenuItem Header="Exporter">
-                        <MenuItem Header="Latex" Click="ExportLatex"/>
-                        <Separator/>
                         <MenuItem Header="Image png" Click="ExportPng"/>
                         <MenuItem Header="Image jpg" Click="ExportJpg"/>
                         <Separator/>
-                        <MenuItem Header="Code" Click="ExportCode"/>
+                        <MenuItem Header="LaTeX (article)" Click="ExportToLatexArticle"/>
+                        <MenuItem Header="LaTeX (extrait de code)" Click="ExportToLatexSnippet"/>
+                        <Separator/>
+                        <MenuItem Header="Code" Click="ExportToCode"/>
                     </MenuItem>
                 </MenuItem>
             </Menu>
