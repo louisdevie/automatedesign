@@ -9,13 +9,35 @@ namespace AutomateDesign.Client.View
     public partial class ProgressDialog : Window, IPipelineProgress
     {
         private bool success;
+        private bool askToContinue;
 
+        /// <summary>
+        /// Crée une boîte de dialogue de progression. Un message de succès sera affiché une fois l'opération terminée
+        /// et l'utilisateur sera invité à continuer.
+        /// </summary>
+        /// <param name="title">Le titre de la boîte de dialogue.</param>
+        /// <param name="progressMessage">Le message affiché durant l'opération.</param>
+        /// <param name="successMessage">Le message affiché une fois l'opération terminée.</param>
         public ProgressDialog(string title, string progressMessage, string successMessage)
         {
             InitializeComponent();
             this.Title = title;
             this.progress.Text = progressMessage;
             this.finished.Text = successMessage;
+            this.askToContinue = true;
+        }
+
+        /// <summary>
+        /// Crée une boîte de dialogue de progression. Elle se fermera automatiquement une fois l'opération terminée.
+        /// </summary>
+        /// <param name="title">Le titre de la boîte de dialogue.</param>
+        /// <param name="progressMessage">Le message affiché durant l'opération.</param>
+        public ProgressDialog(string title, string progressMessage)
+        {
+            InitializeComponent();
+            this.Title = title;
+            this.progress.Text = progressMessage;
+            this.askToContinue = false;
         }
 
         private void ShowFinished()
@@ -31,8 +53,15 @@ namespace AutomateDesign.Client.View
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                this.success = true;
-                this.ShowFinished();
+                if (this.askToContinue)
+                {
+                    this.success = true;
+                    this.ShowFinished();
+                }
+                else
+                {
+                    this.DialogResult = true;
+                }
             });
         }
 

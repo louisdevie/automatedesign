@@ -34,7 +34,7 @@ namespace AutomateDesign.Client.Model.Pipelines
         {
             if (this.encryptionMethod == null)
             {
-                throw new InvalidOperationException("Aucun algorithme d'encryption n'a été configuré.");
+                throw new InvalidOperationException("Aucun algorithme de chiffrage n'a été configuré.");
             }
 
             return this.encryptionMethod;
@@ -88,7 +88,8 @@ namespace AutomateDesign.Client.Model.Pipelines
         /// <param name="streamWriter">Un flux requête gRPC.</param>
         /// <param name="asyncResponse">La réponse suivant la fin du flux.</param>
         /// <returns>Le <see cref="PipelineBuilder"/> modifié.</returns>
-        public PipelineBuilder UseClientStream(IClientStreamWriter<EncryptedDocumentChunk> streamWriter, Task asyncResponse)
+        public PipelineBuilder UseClientStream(IClientStreamWriter<EncryptedDocumentChunk> streamWriter,
+            Task asyncResponse)
         {
             this.clientStream = streamWriter;
             this.asyncResponse = asyncResponse;
@@ -142,7 +143,11 @@ namespace AutomateDesign.Client.Model.Pipelines
         /// <returns>Un nouveau <see cref="DocumentReceptionPipeline"/>.</returns>
         public DocumentReceptionPipeline BuildDocumentReceptionPipeline()
         {
-            throw new NotImplementedException("Not implemented");
+            return new DocumentReceptionPipeline(
+                this.RequireDocumentSerialiser(),
+                this.RequireEncryptionMethod(),
+                this.RequireServerStream()
+            );
         }
 
         /// <summary>
@@ -165,11 +170,13 @@ namespace AutomateDesign.Client.Model.Pipelines
         public DocumentTransmissionPipeline BuildDocumentTransmissionPipeline()
         {
             var asyncResponse = this.RequireAsyncResponse() as Task<DocumentIdOnly>
-                ?? throw new ArgumentException("La réponse à un DocumentTransmissionPipeline doit être un DocumentIdOnly.");
-            
+                                ?? throw new ArgumentException(
+                                    "La réponse à un DocumentTransmissionPipeline doit être un DocumentIdOnly.");
+
             var payload = this.RequirePayload() as Document
-                ?? throw new ArgumentException("La charge utile d'un DocumentTransmissionPipeline doit être un Document.");
-            
+                          ?? throw new ArgumentException(
+                              "La charge utile d'un DocumentTransmissionPipeline doit être un Document.");
+
             return new DocumentTransmissionPipeline(
                 this.RequireDocumentSerialiser(),
                 this.RequireEncryptionMethod(),

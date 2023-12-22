@@ -8,7 +8,7 @@ using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.ViewModel.Users;
 using AutomateDesign.Client.Model.Logic.Exceptions;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml
@@ -20,11 +20,12 @@ namespace AutomateDesign.Client.View
         public SignUpView()
         {
             this.viewModel = new();
-            this.viewModel.Password.Bind(this.passBox);
-            this.viewModel.PasswordAgain.Bind(this.passBoxConf);
 
             DataContext = this.viewModel;
             InitializeComponent();
+            this.viewModel.Password.Bind(this.passBox);
+            this.viewModel.PasswordAgain.Bind(this.passBoxConf);
+
             EmailInputHelper.AttachTo(this.emailBox)
                             .AfterAutocompletion += this.EmailInputHelper_AfterAutocompletion;
         }

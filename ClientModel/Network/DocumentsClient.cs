@@ -30,10 +30,7 @@ namespace AutomateDesign.Client.Model.Network
             var document = new Documents.DocumentsClient(this.Channel);
 
             await document.DeleteDocumentAsync(
-                new DocumentIdOnly
-                {
-                    DocumentId = documentId
-                },
+                new DocumentIdOnly { DocumentId = documentId },
                 CallOptionsFromSession(session)
             );
         }
@@ -45,10 +42,26 @@ namespace AutomateDesign.Client.Model.Network
             var ssCall = client.GetAllHeaders(new Nothing(), CallOptionsFromSession(session));
 
             return new PipelineBuilder()
-                .UseEncryptionMethod(GetDefaultEncryptionMethodWithKey(session.UserEncryptionKey))
-                .UseDocumentSerialiser(GetDefaultDocumentSerialiser())
-                .UseServerStream(ssCall.ResponseStream)
-                .BuildHeadersReceptionPipeline();
+                   .UseEncryptionMethod(GetDefaultEncryptionMethodWithKey(session.UserEncryptionKey))
+                   .UseDocumentSerialiser(GetDefaultDocumentSerialiser())
+                   .UseServerStream(ssCall.ResponseStream)
+                   .BuildHeadersReceptionPipeline();
+        }
+
+        public DocumentReceptionPipeline GetDocument(Session session, int id)
+        {
+            var client = new Documents.DocumentsClient(this.Channel);
+
+            var ssCall = client.GetDocument(
+                new DocumentIdOnly { DocumentId = id },
+                CallOptionsFromSession(session)
+            );
+
+            return new PipelineBuilder()
+                   .UseEncryptionMethod(GetDefaultEncryptionMethodWithKey(session.UserEncryptionKey))
+                   .UseDocumentSerialiser(GetDefaultDocumentSerialiser())
+                   .UseServerStream(ssCall.ResponseStream)
+                   .BuildDocumentReceptionPipeline();
         }
 
         public DocumentTransmissionPipeline SaveDocument(Session session, Document document)
@@ -58,11 +71,11 @@ namespace AutomateDesign.Client.Model.Network
             var csCall = client.SaveDocument(CallOptionsFromSession(session));
 
             return new PipelineBuilder()
-                .UseEncryptionMethod(GetDefaultEncryptionMethodWithKey(session.UserEncryptionKey))
-                .UseDocumentSerialiser(GetDefaultDocumentSerialiser())
-                .UseClientStream(csCall.RequestStream, csCall.ResponseAsync)
-                .UsePayload(document)
-                .BuildDocumentTransmissionPipeline();
+                   .UseEncryptionMethod(GetDefaultEncryptionMethodWithKey(session.UserEncryptionKey))
+                   .UseDocumentSerialiser(GetDefaultDocumentSerialiser())
+                   .UseClientStream(csCall.RequestStream, csCall.ResponseAsync)
+                   .UsePayload(document)
+                   .BuildDocumentTransmissionPipeline();
         }
 
         public Task<int> SaveHeader(Session session, DocumentHeader header)

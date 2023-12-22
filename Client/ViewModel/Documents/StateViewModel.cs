@@ -1,5 +1,4 @@
 ﻿using AutomateDesign.Core.Documents;
-using System;
 using System.Collections.Generic;
 
 namespace AutomateDesign.Client.ViewModel.Documents

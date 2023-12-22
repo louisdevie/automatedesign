@@ -14,6 +14,14 @@ namespace AutomateDesign.Client.Model.Network
         HeadersReceptionPipeline GetAllHeaders(Session session);
 
         /// <summary>
+        /// Récupère un document appartenant à un utilisateur.
+        /// </summary>
+        /// <param name="session">Les informations de l'utilisateur connecté.</param>
+        /// <param name="id">L'identifiant du document à récupérer.</param>
+        /// <returns>Un <see cref="DocumentReceptionPipeline"/> qui représente l'opération.</returns>
+        DocumentReceptionPipeline GetDocument(Session session, int id);
+
+        /// <summary>
         /// Enregistre uniquement les métadonnées d'un document.
         /// </summary>
         /// <param name="session">Les informations de l'utilisateur connecté.</param>

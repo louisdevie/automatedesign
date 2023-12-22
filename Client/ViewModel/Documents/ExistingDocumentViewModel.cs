@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace AutomateDesign.Client.ViewModel.Documents
@@ -24,6 +25,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         private ObservableCollection<StateViewModel> states;
         private ObservableCollection<TransitionViewModel> transitions;
         private ObservableCollection<EventViewModel> events;
+        private OnceAsyncCommand deleteCommand;
 
         /// <summary>
         /// L'en-tête du document.
@@ -46,7 +48,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// <summary>
         /// Si l'automate a été modifié depuis le dernier chargement/enregistrement.
         /// </summary>
-        public bool HasUnsavedChanges  => this.hasUnsavedChanges;
+        public bool HasUnsavedChanges => this.hasUnsavedChanges;
 
         public override string Name => this.header.Name;
 
@@ -70,7 +72,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// Une commande qui supprimme ce document quand invoquée, ce qui permet
         /// d'utiliser un binding avec la méthode <see cref="Delete"/>.
         /// </summary>
-        public ICommand DeleteCommand => new ActionCommand(this.Delete);
+        public ICommand DeleteCommand => this.deleteCommand;
 
         /// <summary>
         /// Crée un modèle-vue à partir d'un automate. Le document résultant est considéré comme non chargé et non modifié.
@@ -82,7 +84,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
             this.document = document;
             this.parentCollection = parentCollection;
 
-            this.header = new(this.document.Header);
+            this.header = new DocumentHeaderViewModel(this.document.Header);
             this.header.PropertyChanged += this.HeaderPropertyChanged;
 
             this.loaded = false;
@@ -90,9 +92,11 @@ namespace AutomateDesign.Client.ViewModel.Documents
 
             this.documentsClient = new DocumentsClient();
 
-            this.states = new(this.document.States.Select(s => new StateViewModel(s)));
-            this.transitions = new(this.document.Transitions.Select(t => new TransitionViewModel(t, this)));
-            this.events = new(this.document.Events.Select(e => new EventViewModel(e)).Append(new EventViewModel(new DefaultEvent())));
+            this.states = new ObservableCollection<StateViewModel>();
+            this.transitions = new ObservableCollection<TransitionViewModel>();
+            this.events = new ObservableCollection<EventViewModel>();
+
+            this.deleteCommand = new OnceAsyncCommand(this.Delete, canRetry: true);
         }
 
         /// <summary>
@@ -100,7 +104,7 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// </summary>
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
         public ExistingDocumentViewModel(DocumentCollectionViewModel parentCollection)
-        : this(new Document(), parentCollection)
+            : this(new Document(), parentCollection)
         {
             this.loaded = true;
         }
@@ -111,28 +115,43 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// <param name="headerOnly">Les métadonnées de l'automate.</param>
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
         public ExistingDocumentViewModel(DocumentHeader headerOnly, DocumentCollectionViewModel parentCollection)
-        : this(new Document(headerOnly), parentCollection) { }
+            : this(new Document(headerOnly), parentCollection)
+        {
+        }
 
         private void HeaderPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case nameof(DocumentHeaderViewModel.Name):
-                    this.NotifyPropertyChanged(nameof(Name));
-                    break;
+            case nameof(DocumentHeaderViewModel.Name):
+                this.NotifyPropertyChanged(nameof(Name));
+                break;
 
-                case nameof(DocumentHeaderViewModel.TimeSinceLastModification):
-                    this.NotifyPropertyChanged(nameof(TimeSinceLastModification));
-                    break;
+            case nameof(DocumentHeaderViewModel.TimeSinceLastModification):
+                this.NotifyPropertyChanged(nameof(TimeSinceLastModification));
+                break;
             }
         }
 
         /// <summary>
         /// Charge l'automate contenu dans le document.
         /// </summary>
-        public void Load()
+        public async Task Load(IPipelineProgress? progress = null)
         {
+            var pipeline = this.documentsClient.GetDocument(this.parentCollection.Session, this.document.Id);
 
+            pipeline.ReportProgressTo(progress);
+
+            if (await pipeline.ExecuteAsync())
+            {
+                this.document = await pipeline.GetDocument();
+
+                foreach (State state in this.document.States) this.states.Add(new StateViewModel(state));
+                foreach (EnumEvent evt in this.document.Events) this.events.Add(new EventViewModel(evt));
+                foreach (Transition transition in this.document.Transitions) this.transitions.Add(new TransitionViewModel(transition, this));
+                
+                this.loaded = true;
+            }
         }
 
         /// <summary>
@@ -141,16 +160,14 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// <param name="progress">Un objet à qui rapporter l'avancement de l'opération.</param>
         public async Task Save(IPipelineProgress? progress = null)
         {
-            /*var pipeline = this.documentsClient.SaveDocument(this.parentCollection.Session, this.document);
+            var pipeline = this.documentsClient.SaveDocument(this.parentCollection.Session, this.document);
 
             pipeline.ReportProgressTo(progress);
 
             if (await pipeline.ExecuteAsync())
             {
                 this.document.Header.Id = await pipeline.GetNewDocumentId();
-            }*/
-            progress?.Done();
-            return;
+            }
         }
 
         /// <summary>
@@ -158,28 +175,39 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// </summary>
         public void Unload()
         {
-
+            this.document.Clear();
+            this.states.Clear();
+            this.loaded = false;
         }
 
         /// <summary>
-        /// Supprimme ce document et l'enlève de la collection.
+        /// Supprime ce document et l'enlève de la collection.
         /// </summary>
-        public void Delete()
+        public async Task Delete()
         {
-            //Task.Run(() => this.documentsClient.DeleteDocument(this.parentCollection.Session, this.document.Header.Id));
-            this.parentCollection.Remove(this);
+            var result = MessageBox.Show(
+                $"Êtes-vous sûr de vouloir supprimer « {this.Name} » ?",
+                "Confirmation",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning
+            );
+
+            if (result != MessageBoxResult.Yes) throw new OperationCanceledException();
+
+            await this.documentsClient.DeleteDocument(this.parentCollection.Session, this.document.Header.Id);
+            Application.Current.Dispatcher.Invoke(() => { this.parentCollection.Remove(this); });
         }
 
         #region Implémentation de IModificationObserver
 
-        public void OnStateAdded(State state)
-        {
-            this.states.Add(new StateViewModel(state));
-        }
-
         public void OnTransitionAdded(Transition transition)
         {
             this.transitions.Add(new TransitionViewModel(transition, this));
+        }
+
+        public void OnStateAdded(State state)
+        {
+            this.states.Add(new StateViewModel(state));
         }
 
         public void OnEnumEventAdded(EnumEvent enumEvent)
@@ -192,7 +220,8 @@ namespace AutomateDesign.Client.ViewModel.Documents
             if (document is { } && document != this.document)
             {
                 // on essaie de changer le document
-                throw new InvalidOperationException("Un ExistingDocuentViewModel ne peut pas observer d'autre document que le sien.");
+                throw new InvalidOperationException(
+                    "Un ExistingDocumentViewModel ne peut pas observer d'autre document que le sien.");
             }
         }
 

@@ -6,7 +6,7 @@ using System.Windows;
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.ViewModel.Users;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml

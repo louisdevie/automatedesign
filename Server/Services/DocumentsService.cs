@@ -20,7 +20,8 @@ namespace AutomateDesign.Server.Services
             this.documentDao = documentDao;
         }
 
-        public override async Task GetAllHeaders(Nothing request, IServerStreamWriter<EncryptedDocumentChunk> responseStream, ServerCallContext context)
+        public override async Task GetAllHeaders(Nothing request,
+            IServerStreamWriter<EncryptedDocumentChunk> responseStream, ServerCallContext context)
         {
             User user = context.RequireUser();
 
@@ -30,11 +31,34 @@ namespace AutomateDesign.Server.Services
             }
         }
 
-        public override async Task<DocumentIdOnly> SaveDocument(IAsyncStreamReader<EncryptedDocumentChunk> requestStream, ServerCallContext context)
+        public override async Task GetDocument(DocumentIdOnly request,
+            IServerStreamWriter<EncryptedDocumentChunk> responseStream, ServerCallContext context)
+        {
+            User user = context.RequireUser();
+            DocumentChannel channel = new();
+
+            Task daoTask = this.documentDao.ReadByIdAsync(user.Id, request.DocumentId, channel.Writer);
+
+            var header = await channel.Reader.ReadHeaderAsync();
+            await responseStream.WriteAsync(new EncryptedDocumentChunk
+                { DocumentId = request.DocumentId, Data = ByteString.CopyFrom(header) }
+            );
+
+            await foreach (var chunk in channel.Reader.ReadAllBodyPartsAsync())
+            {
+                await responseStream.WriteAsync(new EncryptedDocumentChunk
+                    { DocumentId = request.DocumentId, Data = ByteString.CopyFrom(chunk) }
+                );
+            }
+
+            await daoTask;
+        }
+
+        public override async Task<DocumentIdOnly> SaveDocument(
+            IAsyncStreamReader<EncryptedDocumentChunk> requestStream, ServerCallContext context)
         {
             User user = context.RequireUser();
             bool headerChunk = true;
-            int documentId;
             DocumentChannel channel = new();
             Task<int> daoTask = Task.FromResult(DocumentHeader.UnsavedId);
 
@@ -44,7 +68,7 @@ namespace AutomateDesign.Server.Services
                 {
                     // traitement du premier morceau
 
-                    documentId = requestStream.Current.DocumentId;
+                    int documentId = requestStream.Current.DocumentId;
 
                     if (documentId == DocumentHeader.UnsavedId)
                     {
@@ -68,6 +92,7 @@ namespace AutomateDesign.Server.Services
                     await channel.Writer.WriteBodyPartAsync(requestStream.Current.Data.ToArray());
                 }
             }
+
             await channel.Writer.FinishWritingBodyAsync();
 
             return new DocumentIdOnly { DocumentId = await daoTask };
