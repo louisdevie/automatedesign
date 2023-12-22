@@ -113,6 +113,7 @@ namespace AutomateDesign.Client.View.Controls
             shape.MouseLeftButtonDown += this.ShapeMouseLeftButtonDown;
             shape.MouseLeftButtonUp += this.ShapeMouseLeftButtonUp;
             shape.MouseMove += this.ShapeMouseMove;
+            shape.MouseRightButtonDown += this.ShapeMouseRightButtonDown;
         }
 
         /// <summary>
@@ -174,6 +175,25 @@ namespace AutomateDesign.Client.View.Controls
             }
         }
 
+        private void ShapeMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Supprimer l'élément en réponse au clic droit
+            if (sender is DiagramShape shape)
+            {
+                this.frontCanvas.Children.Remove(shape);
+                switch (sender)
+                {
+                    case StateViewModel stateViewModel:
+                        this.viewmodel.OnStateDeleted(stateViewModel.Model);
+                        break;
+
+                    case TransitionViewModel transitionViewModel:
+                        this.viewmodel.OnTransitionDeleted(transitionViewModel.Model);
+                        break;
+                }
+            }
+        }
+
         /// <summary>
         /// Gère les mouvements de souris sur les éléments du diagramme.
         /// </summary>
@@ -192,6 +212,9 @@ namespace AutomateDesign.Client.View.Controls
                 );
             }
         }
+
+ 
+
 
         /// <summary>
         /// Affiche un fantôme d'état qui suit la souris.
