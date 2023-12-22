@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using AutomateDesign.Client.Model.Export;
+using AutomateDesign.Client.Model.Export.Latex;
 
 namespace AutomateDesign.Client.ViewModel.Documents
 {
@@ -16,12 +18,18 @@ namespace AutomateDesign.Client.ViewModel.Documents
     /// </summary>
     public class ExistingDocumentViewModel : DocumentBaseViewModel, IModificationsObserver
     {
+        // propriétés internes
         private bool loaded;
         private bool hasUnsavedChanges;
+        
+        // objets métier
         private Document document;
+        private DocumentsClient documentsClient;
+        private Exporter exporters;
+        
+        // autres modèles-vue
         private DocumentHeaderViewModel header;
         private DocumentCollectionViewModel parentCollection;
-        private DocumentsClient documentsClient;
         private ObservableCollection<StateViewModel> states;
         private ObservableCollection<TransitionViewModel> transitions;
         private ObservableCollection<EventViewModel> events;
@@ -81,22 +89,19 @@ namespace AutomateDesign.Client.ViewModel.Documents
         /// <param name="parentCollection">La collection qui contiendra ce modèle-vue.</param>
         public ExistingDocumentViewModel(Document document, DocumentCollectionViewModel parentCollection)
         {
-            this.document = document;
-            this.parentCollection = parentCollection;
-
-            this.header = new DocumentHeaderViewModel(this.document.Header);
-            this.header.PropertyChanged += this.HeaderPropertyChanged;
-
             this.loaded = false;
             this.hasUnsavedChanges = false;
-
+            
+            this.document = document;
             this.documentsClient = new DocumentsClient();
+            this.exporters = new LatexExporter();
 
-            this.states = new ObservableCollection<StateViewModel>();
-            this.transitions = new ObservableCollection<TransitionViewModel>();
-            this.events = new ObservableCollection<EventViewModel>();
-
-            this.deleteCommand = new OnceAsyncCommand(this.Delete, canRetry: true);
+            this.header = new(this.document.Header);
+            this.header.PropertyChanged += this.HeaderPropertyChanged;
+            this.parentCollection = parentCollection;
+            this.states = new(this.document.States.Select(s => new StateViewModel(s)));
+            this.transitions = new(this.document.Transitions.Select(t => new TransitionViewModel(t, this)));
+            this.events = new(this.document.Events.Select(e => new EventViewModel(e)).Append(new EventViewModel(new DefaultEvent())));
         }
 
         /// <summary>
@@ -196,6 +201,16 @@ namespace AutomateDesign.Client.ViewModel.Documents
 
             await this.documentsClient.DeleteDocument(this.parentCollection.Session, this.document.Header.Id);
             Application.Current.Dispatcher.Invoke(() => { this.parentCollection.Remove(this); });
+        }
+
+        /// <summary>
+        /// Exporte ce document dans un format et un fichier spécifié.
+        /// </summary>
+        /// <param name="format">Le format à utiliser.</param>
+        /// <param name="path">Le chemin du fichier dans lequel écrire.</param>
+        public void Export(ExportFormat format, string path)
+        {
+             this.exporters.Export(this.document, format, path);
         }
 
         #region Implémentation de IModificationObserver

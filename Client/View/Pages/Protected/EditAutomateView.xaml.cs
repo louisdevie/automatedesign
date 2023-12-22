@@ -22,6 +22,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using AutomateDesign.Client.Model.Export;
+using Microsoft.Win32;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
@@ -80,9 +82,9 @@ namespace AutomateDesign.Client.View.Pages
         {
             switch (selected)
             {
-                case DiagramState state:
-                    this.context.HandleEvent(new EditorEvent.SelectState(state.ViewModel.Model));
-                    break;
+            case DiagramState state:
+                this.context.HandleEvent(new EditorEvent.SelectState(state.ViewModel.Model));
+                break;
             }
         }
 
@@ -132,7 +134,6 @@ namespace AutomateDesign.Client.View.Pages
 
         private void ChangePwdButton(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void AddStateButtonClick(object sender, RoutedEventArgs e)
@@ -269,6 +270,43 @@ namespace AutomateDesign.Client.View.Pages
             if (e.Key == Key.Escape)
             {
                 this.context.HandleEvent(new EditorEvent.Cancel());
+            }
+        }
+
+        private void ExportToLatexSnippet(object sender, RoutedEventArgs e)
+        {
+            this.ChoosePathAndExport(
+                title: "Exporter au format TikZ",
+                format: ExportFormat.LatexSnippet,
+                formatDescription: "Document LaTeX",
+                formatExtension: ".tex"
+            );
+        }
+
+        private void ChoosePathAndExport(
+            string title,
+            ExportFormat format,
+            string formatDescription,
+            string formatExtension
+        )
+        {
+            SaveFileDialog saveFileDialog = new()
+            {
+                Title = title,
+                Filter = $"{formatDescription} (*{formatExtension})|*{formatExtension}",
+                FileName = this.viewModel.Name
+            };
+            
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string path = saveFileDialog.FileName;
+
+                if (!path.EndsWith(formatExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    path += formatExtension;
+                }
+                
+                this.viewModel.Export(format, path);
             }
         }
 

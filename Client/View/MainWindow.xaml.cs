@@ -3,6 +3,7 @@ using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Navigation;
 using System.Windows;
 using AutomateDesign.Client.View.Pages;
+using AutomateDesign.Client.ViewModel.Documents;
 
 namespace AutomateDesign.Client.View
 {

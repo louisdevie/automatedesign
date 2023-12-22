@@ -19,8 +19,7 @@ namespace AutomateDesign.Client.View.Pages
         private DocumentCollectionViewModel documentsVM;
 
         public Observable<string> CurrentUserEmail { get; }
-
-
+        
         public ObservableCollection<DocumentBaseViewModel> Documents => this.documentsVM;
 
         public override WindowPreferences Preferences => new(

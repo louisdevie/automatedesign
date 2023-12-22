@@ -5,6 +5,7 @@
 
 CoverageReports
 appsettings.*
+.idea
 
 # User-specific files
 *.rsuser
