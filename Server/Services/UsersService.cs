@@ -251,13 +251,5 @@ namespace AutomateDesign.Server.Services
             
             return Task.FromResult(new Nothing());
         }
-
-        public override Task<Nothing> DeleteAutomate(AutomateId request, ServerCallContext context)
-        {
-            documentDao.Delete(context.RequireUser().Id, request.Id);
-
-            return Task.FromResult(new Nothing());
-        }
-
     }
 }

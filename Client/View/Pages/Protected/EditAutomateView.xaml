@@ -93,28 +93,27 @@
                     />
 
             <!--Menu burger-->
-            <ToggleButton x:Name="BurgerButton"
-                          Grid.Column="0"
+            <Menu Grid.Column="0"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  Height="50" Width="50">
+                <MenuItem Header="☰"
                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                          Height="50" Width="50"
-                          Content="☰"
-                          Click="BurgerToggleButton_Click"
-                          />
-            <Canvas x:Name="BurgerMenu" 
-                    Background="LightGray" 
-                    VerticalAlignment="Top" 
-                    Margin="15,65, 0,0"
-                    >
-                <StackPanel Height="Auto" Width="Auto"
-                    Orientation="Vertical">
-                    <Button Content="Ouvrir" />
-                    <Button Content=" Enregistrer" Click="SaveButtonClick"/>
-                    <Button Content="Importer" />
-                    <Button Content="Exporter" />
-                </StackPanel>
-            </Canvas>
-
-
+                          Height="50" Width="50">
+                    <MenuItem Header="Ouvrir" />
+                    <MenuItem Header="Enregistrer" 
+                              Click="SaveButtonClick"/>
+                    <MenuItem Header="Importer" />
+                    <MenuItem Header="Exporter">
+                        <MenuItem Header="Image png" Click="ExportPng"/>
+                        <MenuItem Header="Image jpg" Click="ExportJpg"/>
+                        <Separator/>
+                        <MenuItem Header="LaTeX (article)" Click="ExportToLatexArticle"/>
+                        <MenuItem Header="LaTeX (extrait de code)" Click="ExportToLatexSnippet"/>
+                        <Separator/>
+                        <MenuItem Header="Code" Click="ExportToCode"/>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
             <!--Menu du profil-->
             <Button Name="ProfilButton"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 

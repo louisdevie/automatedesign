@@ -19,6 +19,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{165E0C2E-8E90-40FA-925D-144038D4B966}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		deploy-client.ps1 = deploy-client.ps1
+		Installer\installer.nsi = Installer\installer.nsi
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientModel", "ClientModel\ClientModel.csproj", "{C30B94A8-B9B7-453E-AADA-E2D0BBF634FF}"
