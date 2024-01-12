@@ -14,10 +14,18 @@
 # !define INSTALLSIZE 47355
 
 # demande les permissions admin
+!ifdef USERINSTALL
+RequestExecutionLevel user
+!else
 RequestExecutionLevel admin
+!endif
 
 # dossier par défaut d'installation
+!ifdef USERINSTALL
+InstallDir "$APPDATA\${COMPANYNAME}\${APPNAME}"
+!else
 InstallDir "$PROGRAMFILES\${COMPANYNAME}\${APPNAME}"
+!endif
 
 Name "${APPNAME}"
 
@@ -30,7 +38,11 @@ Name "${APPNAME}"
 
 
 # emplacement de l'installateur
+!ifdef USERINSTALL
+outFile "..\Client\bin\automatedesign_setup_user.exe"
+!else
 outFile "..\Client\bin\automatedesign_setup.exe"
+!endif
 
 !include LogicLib.nsh
 !include MUI2.nsh

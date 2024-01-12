@@ -43,7 +43,7 @@ namespace AutomateDesign.Client.Model.Serialisation
 
             foreach((DocumentHeader original, DocumentHeader result) in headers.Zip(results))
             {
-                Assert.Equal(original.Id, result.Id);
+                Assert.Equal(-1, result.Id); // l'identifiant est transmis/reçu séparément
                 Assert.Equal(original.Name, result.Name);
                 Assert.Equal(original.LastModificationdate, result.LastModificationdate);
             }

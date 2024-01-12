@@ -1,12 +1,20 @@
 ﻿param (
     [Switch]$Help,
-    [Switch]$InstallerOnly
+    [Switch]$InstallerOnly,
+    [Switch]$UserInstall
 )
 
 $ErrorActionPreference = "Stop"
 
 $BuildOutputDir = "Client\bin\deploy"
-$InstallerOutputFile = "Client\bin\automatedesign_setup.exe"
+if ($UserInstall)
+{
+    $InstallerOutputFile = "Client\bin\automatedesign_setup_user.exe"
+}
+else
+{
+    $InstallerOutputFile = "Client\bin\automatedesign_setup.exe"
+}
 
 $HelpMessage = @"
 Ce script permets de construire l'application de bureau AutomateDesign et son installateur. 
@@ -16,6 +24,8 @@ Utilisation: deploy-client [OPTIONS...]
 Options:
    -Help            Affiche ce message et quitte
    -InstallerOnly   Garde le projet déjà publié et reconstruit seulement l'installateur.
+   -UserInstall     Crée un installateur qui installe AutomateDesign pour un utilisateur
+                    seulement et ne demande pas de permissions administrateur.
 "@
 
 if ($Help) {
@@ -114,6 +124,13 @@ $TotalInstalledSizeInKB = [math]::Truncate($TotalInstalledSizeInBytes / 1KB)
 
 Write-Host "Construction de l'installateur..."
 
-& $MakeNSISCommandFound /V1 "/DINSTALLSIZE=$TotalInstalledSizeInKB" Installer/installer.nsi
+$NSISArguments = "/V1", "/DINSTALLSIZE=$TotalInstalledSizeInKB"
+if ($UserInstall)
+{
+    $NSISArguments += "/DUSERINSTALL"    
+}
+$NSISArguments += "Installer/installer.nsi"
+
+&$MakeNSISCommandFound $NSISArguments
 
 Write-Host "Terminé."
