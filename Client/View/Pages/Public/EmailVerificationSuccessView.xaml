@@ -23,7 +23,7 @@
                    Style="{StaticResource Prompt}"
                    TextAlignment="Center"
                    x:Name="successMessage"
-                   Text="{Binding Path=SucessMessage}"
+                   Text="{Binding Path=SuccessMessage}"
                    />
 
         <Button Grid.Row="2"

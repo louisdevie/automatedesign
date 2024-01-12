@@ -12,19 +12,19 @@ namespace AutomateDesign.Client.ViewModel.Users
     /// </summary>
     public abstract class VerificationBaseViewModel : UsersBaseViewModel
     {
-        private uint code;
+        private uint? code;
 
         /// <summary>
         /// Le code de vérification.
         /// </summary>
         public string Code
         {
-            get => this.code.ToString();
+            get => this.code?.ToString() ?? "";
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    this.code = 0;
+                    this.code = null;
                 }
                 else
                 {
@@ -51,7 +51,7 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <summary>
         /// La valeur du code de vérification.
         /// </summary>
-        public uint CodeValue => this.code;
+        public uint CodeValue => this.code ?? 0;
 
         /// <summary>
         /// Envoie une requête pour effectuer la vérification.
@@ -59,7 +59,7 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche représentant l'opération.</returns>
         public async Task SendVerificationRequestAsync()
         {
-            await this.Verification.SendVerificationRequest(Users, this.code);
+            await this.Verification.SendVerificationRequest(Users, this.CodeValue);
         }
 
         /// <summary>

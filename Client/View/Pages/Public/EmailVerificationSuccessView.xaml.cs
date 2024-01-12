@@ -38,7 +38,7 @@ namespace AutomateDesign.Client.View.Pages
         {
             this.viewModel = null;
 
-            DataContext = new { SucessMessage = successMessage, Continuation = continuationText };
+            DataContext = new { SuccessMessage = successMessage, Continuation = continuationText };
             InitializeComponent();
 
             this.continueButton.Click += continuationAction;
