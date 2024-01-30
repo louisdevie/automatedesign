@@ -1,4 +1,5 @@
-﻿using AutomateDesign.Client.Model.Network;
+﻿using AutomateDesign.Client.Model.Logic.Exceptions;
+using AutomateDesign.Client.Model.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,5 +55,17 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// La valeur du premier mot de passe.
         /// </summary>
         public string PasswordValue => this.passwordInput.Password;
+
+        public void ThrowIfInputsAreInvalid()
+        {
+            if (!this.PasswordsNotEmpty)
+            {
+                throw new InvalidInputsException("Veuillez saisir un mot de passe");
+            }
+            else if (!this.PasswordsMatch)
+            {
+                throw new InvalidInputsException("Les mots de passe ne correspondent pas");
+            }
+        }
     }
 }

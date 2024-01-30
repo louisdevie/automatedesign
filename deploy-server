@@ -1,0 +1,272 @@
+#!/usr/bin/python3
+
+"""
+Script de déploiement du serveur AutomateDesign
+"""
+
+import os
+import sys
+import shutil
+import json
+from getpass import getpass
+from pathlib import Path
+
+HELP_MESSAGE = """
+Ce script permets d'installer/de mettre à jour le serveur AutomateDesign. 
+
+Utilisation: deploy-server [COMMANDE] [OPTIONS...]
+
+Commandes:
+   install      Installe et configure le serveur pour la première fois
+   upgrade      Recompile et mets à jour le serveur
+   reconfigure  Modifie la configuration du serveur
+   setupdb      Réinstalle la base de données à partir de la configuration existante 
+
+Options:
+   --help       Affiche ce message et quitte
+"""
+
+SERVICE_CONFIG = """[Unit]
+Description=AutomateDesign gRPC server
+After=network.target
+
+[Service]
+Type=exec
+WorkingDirectory=/opt/automatedesign
+ExecStart=/opt/automatedesign/Server
+Environment="AUTOMATEDESIGN_LISTENANYIP=YES"
+Restart=always
+RestartLimitBurst=5
+StartLimitIntervalSec=20s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+"""
+
+APP_DIR = Path("/opt/automatedesign/")
+
+
+def main(args):
+    try:
+        if os.name != "posix":
+            print("Ce script est uniquement destiné à configurer un serveur linux.")
+            sys.exit(1)
+        if sys.version_info < (3, 8):
+            print("Ce script requiert au minimum python 3.8 pour fonctionner.")
+            sys.exit(1)
+
+        command, options = parse_args(args, {"help": False})
+
+        if options["help"]:
+            print(HELP_MESSAGE)
+            sys.exit(0)
+
+        current_dir = os.getcwd()
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        if current_dir != script_dir:
+            print(
+                "Ce script doit être exécuté dans son répertoire, c-à-d la racine du dépôt."
+            )
+            sys.exit(1)
+
+        if command == "install":
+            check_not_installed()
+            build()
+            copy_build_files()
+            config = prompt_config()
+            write_config_files(config)
+            setup_database(config)
+            print("Démarrage du serveur...")
+            service("start", "démarré", just_warn=True)
+
+        elif command == "upgrade":
+            print("Arrêt du serveur...")
+            service("stop", "arrêté")
+            build()
+            copy_build_files()
+            print("Redémarrage du serveur...")
+            service("start", "redémarré", just_warn=True)
+
+        elif command == "reconfigure":
+            config = prompt_config()
+            write_config_files(config, keep_service=True)
+            print("Redémarrage du serveur...")
+            service("restart", "redémarré", just_warn=True)
+
+        elif command == "setupdb":
+            config = read_config()
+            if config is None:
+                do_configure = input(
+                    "Le fichier de configuration n'a pas été trouvé. Voulez-vous le créer maintenant [O/n]: "
+                )
+                if do_configure == "O":
+                    config = prompt_config()
+                    write_config_files(config, keep_service=True)
+            if config is not None:
+                setup_database(config)
+
+        print("Terminé.")
+
+    except Exception as e:
+        print(f"\nErreur: {e}")
+        sys.exit(1)
+
+
+def parse_args(args, default_options):
+    options = default_options.copy()
+    command = None
+
+    if args[0] in ("install", "upgrade", "reconfigure", "setupdb"):
+        command = args.pop(0)
+
+    for arg in args:
+        if arg == "--help":
+            options["help"] = True
+        else:
+            raise Exception(f"Option inconnue: « {arg} »")
+
+    return command, options
+
+
+def check_already_installed():
+    if not (APP_DIR / "appsettings.json").is_file():
+        raise Exception("Le serveur n'est pas installé, abandon.")
+
+
+def check_not_installed():
+    if (APP_DIR / "appsettings.json").is_file():
+        raise Exception("Le serveur est déjà installé, abandon.")
+
+
+def build():
+    print("Compilation du projet...")
+    exit_code = os.system("dotnet build Server -c Release")
+    if exit_code != 0:
+        raise Exception(
+            f"Due à l'erreur/aux erreurs ci-dessus, la compilation a échouée."
+        )
+
+
+def copy_build_files():
+    print("Copie des fichiers de build...")
+    shutil.copytree(
+        "./Server/bin/Release/net7.0/",
+        APP_DIR,
+        ignore=shutil.ignore_patterns("appsettings.*"),
+        dirs_exist_ok=True,
+    )
+
+
+def prompt_config():
+    config = {
+        "Logging": {
+            "LogLevel": {
+                "Default": "Information",
+                "Microsoft.AspNetCore": "Warning",
+                "AutomateDesign.Server.Middleware": "Warning",
+            }
+        },
+        "AllowedHosts": "*",
+        "EmailSettings": {
+            "DisplayName": "Automate Design",
+        },
+        "DatabaseSettings": {},
+        "TlsSettings": {},
+    }
+
+    print("\n========= CONFIGURATION =========\n")
+
+    cert_file = input("Chemin absolu vers le certificat (optionnel): ")
+    if cert_file:
+        config["TlsSettings"]["CertificateFile"] = cert_file
+        config["TlsSettings"]["CertificatePassword"] = getpass(
+            "Mot de passe du certificat: "
+        )
+
+    print("\n---------------------------------\n")
+
+    config["EmailSettings"]["Host"] = input("Adresse du serveur d'envoi de mail: ")
+    config["EmailSettings"]["Port"] = input("Port: ")
+    config["EmailSettings"]["UserName"] = input("Nom d'utilisateur: ")
+    config["EmailSettings"]["Password"] = getpass("Mot de passe: ")
+    config["EmailSettings"]["From"] = input("Adresse mail à utiliser: ")
+    mail_ssl = input("Mode SSL [auto|ssl|starttls] (auto): ")
+    if mail_ssl.lower() == "ssl":
+        config["EmailSettings"]["UseSSL"] = True
+    elif mail_ssl.lower() == "starttls":
+        config["EmailSettings"]["UseStartTls"] = True
+
+    print("\n---------------------------------\n")
+
+    db_host = input("Adresse de la base de données (localhost): ")
+    config["DatabaseSettings"]["Server"] = db_host if db_host else "localhost"
+    db_port = input("Port (3306): ")
+    config["DatabaseSettings"]["Port"] = db_port if db_port else 3306
+    config["DatabaseSettings"]["Database"] = input("Nom de schéma à utiliser: ")
+    config["DatabaseSettings"]["UserId"] = input("Nom d'utilisateur: ")
+    config["DatabaseSettings"]["Password"] = getpass("Mot de passe: ")
+
+    print("\n============== OK ===============\n")
+
+    return config
+
+
+def write_config_files(config, keep_service=False):
+    print("Écriture des fichiers de configuration...")
+
+    # appsettings.json
+    os.makedirs(APP_DIR, exist_ok=True)
+    with open(APP_DIR / "appsettings.json", "wt", encoding="utf8") as f:
+        json.dump(config, f, indent=2)
+
+    print("Configuration du service...")
+
+    # automatedesign.service
+    if not keep_service:
+        with open(
+            "/usr/lib/systemd/system/automatedesign.service", "wt", encoding="utf8"
+        ) as f:
+            f.write(SERVICE_CONFIG)
+
+
+def service(action, description, just_warn=False):
+    exit_code = os.system(f"systemctl {action} automatedesign")
+    if exit_code != 0:
+        if just_warn:
+            print(
+                f"Avertissement: Due à l'erreur/aux erreurs ci-dessus, le serveur n'a pas pu être {description}. Veuillez le faire manuellement."
+            )
+        else:
+            raise Exception(
+                f"Due à l'erreur/aux erreurs ci-dessus, le serveur n'a pas pu être {description}."
+            )
+
+
+def setup_database(config):
+    print("Configuration de la base de données...")
+    db_config = config["DatabaseSettings"]
+    exit_code = os.system(
+        f"mysql -h {db_config['Server']} -P {db_config['Port']} -u {db_config['UserId']} -p{db_config['Password']} -D {db_config['Database']} < ./SQL/automatedesign-ddl.sql"
+    )
+    if exit_code != 0:
+        raise Exception(
+            f"Due à l'erreur/aux erreurs ci-dessus, la base de données n'a pas pu être configurée."
+        )
+
+
+def read_config():
+    config = None
+
+    try:
+        with open(APP_DIR / "appsettings.json", "rt", encoding="utf8") as f:
+            config = json.load(f)
+    except:
+        pass
+
+    return config
+
+
+if __name__ == "__main__":
+    main(list(sys.argv[1:]))

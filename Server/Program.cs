@@ -1,3 +1,4 @@
+using AutomateDesign.Server;
 using AutomateDesign.Server.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using AutomateDesign.Server.Data.MariaDb;
@@ -15,20 +16,49 @@ builder.Services.AddGrpc();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(5001, options => {
-        options.Protocols = HttpProtocols.Http2;
-        options.UseHttps();
-    });
+    TlsSettings tlsSettings = builder.Configuration.GetSection("TlsSettings")
+                                     .Get<TlsSettings>() ?? new TlsSettings();
+
+    int port = 5001;
+    Action<ListenOptions> config = listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http2;
+
+        if (tlsSettings.CertificateFile is string certificate)
+        {
+            if (tlsSettings.CertificatePassword is string password)
+            {
+                listenOptions.UseHttps(certificate, password);
+            }
+            else
+            {
+                listenOptions.UseHttps(certificate);
+            }
+        }
+        else
+        {
+            listenOptions.UseHttps();
+        }
+    };
+
+    if (Environment.GetEnvironmentVariable("AUTOMATEDESIGN_LISTENANYIP") == "YES")
+    {
+        options.ListenAnyIP(port, config);
+    }
+    else
+    {
+        options.ListenLocalhost(5001, config);
+    }
 });
 
 DatabaseSettings dbSettings = builder.Configuration.GetSection("DatabaseSettings")
-    .Get<DatabaseSettings>() ?? new DatabaseSettings();
+                                     .Get<DatabaseSettings>() ?? new DatabaseSettings();
 
 builder.Services.AddSingleton(new DatabaseConnector(dbSettings))
-                .AddScoped<IUserDao, UserDao>()
-                .AddScoped<IRegistrationDao, RegistrationDao>()
-                .AddScoped<ISessionDao, SessionDao>()
-                .AddScoped<IDocumentDao, DocumentDao>();
+       .AddScoped<IUserDao, UserDao>()
+       .AddScoped<IRegistrationDao, RegistrationDao>()
+       .AddScoped<ISessionDao, SessionDao>()
+       .AddScoped<IDocumentDao, DocumentDao>();
 
 builder.Services.AddAuthentication("Bearer").AddBearer();
 builder.Services.AddAuthorization();

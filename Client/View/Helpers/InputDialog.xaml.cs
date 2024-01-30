@@ -26,10 +26,16 @@ namespace AutomateDesign.Client.View.Helpers
         public InputDialog(string title, string prompt)
         {
             this.userInput = string.Empty;
+            this.Loaded += this.SelfLoaded;
 
             InitializeComponent();
             this.Title = title;
             this.prompt.Text = prompt;
+        }
+
+        private void SelfLoaded(object sender, RoutedEventArgs e)
+        {
+            this.inputTextBox.Focus();
         }
 
         private void OkButtonClick(object sender, RoutedEventArgs e)

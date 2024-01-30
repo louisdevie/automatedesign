@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows;
+using AutomateDesign.Client.Model.Logic.Exceptions;
 
 namespace AutomateDesign.Client.ViewModel.Users
 {
@@ -23,6 +26,11 @@ namespace AutomateDesign.Client.ViewModel.Users
             }
         }
 
+        /// <summary>
+        /// Crée un nouveau <see cref="PasswordResetViewModel"/> pour un utilisateur spécifique.
+        /// </summary>
+        /// <param name="userId">L'identifiant de l'utilisateur qui veut réinitialiser son mot de passe.</param>
+        /// <param name="verificationCode">Le code de vérification saisi et vérifié au préalable.</param>
         public PasswordResetViewModel(int userId, uint verificationCode)
         {
             this.userId = userId;
@@ -35,7 +43,16 @@ namespace AutomateDesign.Client.ViewModel.Users
         /// <returns>Une tâche représentant l'opération.</returns>
         public async Task ResetPasswordAsync()
         {
-            await Users.ChangePasswordWithResetCodeAsync(this.userId, this.PasswordValue, this.verficationCode);
+            this.ThrowIfInputsAreInvalid();
+
+            if (!this.UserAgreement)
+            {
+                throw new InvalidInputsException(nameof(UserAgreement));
+            }
+            else
+            {
+                await Users.ChangePasswordWithResetCodeAsync(this.userId, this.PasswordValue, this.verficationCode);
+            }
         }
     }
 }

@@ -8,7 +8,8 @@
         private int id;
         private string name;
         private Document document;
-        public StateKind kind;
+        private StateKind kind;
+        private Position position;
 
         /// <summary>
         /// L'identifiant de l'état.
@@ -19,6 +20,8 @@
         /// Le nom de l'état.
         /// </summary>
         public string Name { get => this.name; set => this.name = value; }
+
+        public Position Position { get => this.position; set => this.position = value; }
 
         /// <summary>
         /// Les transitions qui partent de cet état.
@@ -50,12 +53,13 @@
         /// <param name="id">L'identifiant de l'état.</param>
         /// <param name="name">Le nom de l'état.</param>
         /// <param name="kind">Le type d'état.</param>
-        public State(Document document, int id, string name, StateKind kind = StateKind.Normal)
+        public State(Document document, int id, string name, Position position, StateKind kind = StateKind.Normal)
         {
             this.document = document;
             this.id = id;
             this.name = name;
             this.Kind = kind;
+            this.position = position;
         }
     }
 }

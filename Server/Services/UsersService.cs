@@ -2,6 +2,7 @@
 using AutomateDesign.Core.Users;
 using AutomateDesign.Protos;
 using AutomateDesign.Server.Data;
+using AutomateDesign.Server.Middleware.Authentication;
 using AutomateDesign.Server.Model;
 using Grpc.Core;
 
@@ -12,17 +13,17 @@ namespace AutomateDesign.Server.Services
         private IUserDao userDao;
         private IRegistrationDao registrationDao;
         private ISessionDao sessionDao;
-        private IAutomateDao automateDao;
+        private IDocumentDao documentDao;
         private EmailSender emailSender;
 
         private static readonly string IUT_EMAIL_HOST = "iut-dijon.u-bourgogne.fr";
 
-        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao, IAutomateDao automateDao, EmailSender emailSender)
+        public UsersService(IUserDao userDao, IRegistrationDao registrationDao, ISessionDao sessionDao, IDocumentDao automateDao, EmailSender emailSender)
         {
             this.userDao = userDao;
             this.registrationDao = registrationDao;
             this.sessionDao = sessionDao;
-            this.automateDao = automateDao;
+            this.documentDao = automateDao;
             this.emailSender = emailSender;           
         }
 
@@ -250,13 +251,5 @@ namespace AutomateDesign.Server.Services
             
             return Task.FromResult(new Nothing());
         }
-
-        public override Task<Nothing> DeleteAutomate(AutomateId request, ServerCallContext context)
-        {
-            automateDao.Delete(request.Id);
-
-            return Task.FromResult(new Nothing());
-        }
-
     }
 }

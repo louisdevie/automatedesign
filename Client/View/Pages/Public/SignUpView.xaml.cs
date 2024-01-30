@@ -6,8 +6,9 @@ using AutomateDesign.Client.View.Controls;
 using AutomateDesign.Client.View.Helpers;
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.ViewModel.Users;
+using AutomateDesign.Client.Model.Logic.Exceptions;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml
@@ -22,6 +23,9 @@ namespace AutomateDesign.Client.View
 
             DataContext = this.viewModel;
             InitializeComponent();
+            this.viewModel.Password.Bind(this.passBox);
+            this.viewModel.PasswordAgain.Bind(this.passBoxConf);
+
             EmailInputHelper.AttachTo(this.emailBox)
                             .AfterAutocompletion += this.EmailInputHelper_AfterAutocompletion;
         }
@@ -35,36 +39,32 @@ namespace AutomateDesign.Client.View
         /// Boutton déclenchant la procedure d'inscription
         /// Si le mot de passe est incorrect ne fait rien et l'indique à l'utilisateur sinon renvoie vers la page de vérification d'email
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private async void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (!this.viewModel.PasswordsMatch)
-            {
-                MessageBox.Show("Les mots de passe ne correspondent pas", "Erreur");
-            }
-            else if (!this.viewModel.PasswordsNotEmpty)
-            {
-                MessageBox.Show("Veuillez saisir une addresse mail et un mot de passe", "Erreur");
-            }
-            else if (!this.viewModel.WarningRead)
-            {
-                this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
-            }
-            else
-            {
-                this.IsEnabled = false;
+            this.IsEnabled = false;
 
-                try
+            try
+            {
+                var signUpVM = await this.viewModel.SignUpAsync();
+                this.Navigator.Go(new EmailVerificationView(signUpVM));
+            }
+            catch (InvalidInputsException ex)
+            {
+                // si le champ invalide est la case à cocher, on colore son label en rouge
+                if (ex.IsInputInvalid(nameof(SignUpViewModel.WarningRead)))
                 {
-                    var signUpVM = await this.viewModel.SignUpAsync();
-                    this.Navigator.Go(new EmailVerificationView(signUpVM));
+                    this.checkBoxText.Foreground = new SolidColorBrush(Colors.Red);
                 }
-                catch (Exception error)
+                else
                 {
-                    ErrorMessageBox.Show(error);
-                    this.IsEnabled = true;
+                    ErrorMessageBox.Show(ex);
                 }
+                this.IsEnabled = true;
+            }
+            catch (Exception error)
+            {
+                ErrorMessageBox.Show(error);
+                this.IsEnabled = true;
             }
         }
 

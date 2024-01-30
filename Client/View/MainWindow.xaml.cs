@@ -2,6 +2,8 @@
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.View.Navigation;
 using System.Windows;
+using AutomateDesign.Client.View.Pages;
+using AutomateDesign.Client.ViewModel.Documents;
 
 namespace AutomateDesign.Client.View
 {
@@ -22,7 +24,7 @@ namespace AutomateDesign.Client.View
             this.navigator = new(this, new SignInView());
         }
 
-        public Window Window => this;
+        public Window ParentWindow => this;
 
         public void ApplyPreferences(WindowPreferences preferences)
         {

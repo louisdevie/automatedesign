@@ -17,8 +17,8 @@ namespace AutomateDesign.Client.ViewModel
         /// </summary>
         public string Password
         {
-            get => (this.box ?? throw new InvalidOperationException("No PasswordBox bound to the property.")).Password;
-            set => (this.box ?? throw new InvalidOperationException("No PasswordBox bound to the property.")).Password = value;
+            get => (this.box ?? throw new InvalidOperationException("Aucun PasswordBox n'est lié à cette propriété.")).Password;
+            set => (this.box ?? throw new InvalidOperationException("Aucun PasswordBox n'est lié à cette propriété.")).Password = value;
         }
 
         public delegate void PasswordChangedEventHandler(PasswordBoxBinding sender);

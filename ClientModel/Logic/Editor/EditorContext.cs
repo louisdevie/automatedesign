@@ -52,13 +52,36 @@ namespace AutomateDesign.Client.Model.Logic.Editor
         /// Commence à observer les modifications apportées à l'automate.
         /// </summary>
         /// <param name="observer">L'objet qui va observer les modifications.</param>
-        public void AddModificationObserver(IModificationsObserver observer) => this.observers.Add(observer);
+        public void AddModificationObserver(IModificationsObserver observer)
+        {
+            this.observers.Add(observer);
+            observer.OnSubjectChanged(this.document);
+        }
 
         /// <summary>
         /// Arrête d'observer les modifications apportées à l'automate.
         /// </summary>
         /// <param name="observer">L'objet qui observait les modifications.</param>
-        public void RemoveModificationObserver(IModificationsObserver observer) => this.observers.Remove(observer);
+        public void RemoveModificationObserver(IModificationsObserver observer)
+        {
+            this.observers.Remove(observer);
+            observer.OnSubjectChanged(null);
+        }
+
+        private void NotifyStateAdded(State state)
+        {
+            foreach (var observer in this.observers) observer.OnStateAdded(state);
+        }
+
+        private void NotifyTransitionAdded(Transition transition)
+        {
+            foreach (var observer in this.observers) observer.OnTransitionAdded(transition);
+        }
+
+        private void NotifyEnumEventAdded(EnumEvent evt)
+        {
+            foreach (var observer in this.observers) observer.OnEnumEventAdded(evt);
+        }
 
         #endregion
 
@@ -94,13 +117,50 @@ namespace AutomateDesign.Client.Model.Logic.Editor
             this.EditorStateChanged?.Invoke(this.state);
         }
 
-        public void AddState()
+        /// <summary>
+        /// Finalise l'ajout d'un état.
+        /// </summary>
+        /// <param name="initialPosition">La position de l'état dans le diagramme.</param>
+        /// <returns>L'état nouvellement créé si l'utilisateur à confirmé l'opération.</returns>
+        public State? AddState(Position? initialPosition)
         {
             if (this.editorUI.PromptForStateName(out string? name))
             {
-                State state = this.document.CreateState(name);
-                
+                State state = this.document.CreateState(name, initialPosition ?? default);
+                this.NotifyStateAdded(state);
+                return state;
             }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Finalise l'ajout d'une transition.
+        /// </summary>
+        /// <param name="start">L'état de départ de la transition.</param>
+        /// <param name="end">L'état d'arrivée de la transition.</param>
+        /// <returns>La transition nouvellement crée si l'utilisateur à confirmé l'opération.</returns>
+        internal Transition? AddTransition(State start, State end)
+        {
+            if (this.editorUI.PromptForEvent(out IEvent? evt))
+            {
+                Transition transition = this.document.CreateTransition(start, end, evt);
+                this.NotifyTransitionAdded(transition);
+                return transition;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public EnumEvent AddEnumEvent(string name)
+        {
+            EnumEvent evt = this.document.CreateEnumEvent(name);
+            this.NotifyEnumEventAdded(evt);
+            return evt;
         }
     }
 }

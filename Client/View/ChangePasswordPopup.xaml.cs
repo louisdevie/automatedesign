@@ -1,9 +1,8 @@
 ﻿using AutomateDesign.Client.Model.Logic;
 using AutomateDesign.Client.View.Navigation;
 using AutomateDesign.Client.ViewModel.Users;
-using System;
-using System.Collections.Generic;
 using System.Windows;
+using AutomateDesign.Client.View.Pages;
 
 namespace AutomateDesign.Client.View
 {
@@ -25,7 +24,7 @@ namespace AutomateDesign.Client.View
             WindowPreferences.ApplyResizeMode(WindowPreferences.ResizeMode.MinimizeOnly, this);
         }
 
-        public Window Window => this;
+        public Window ParentWindow => this;
 
         public void ApplyPreferences(WindowPreferences preferences)
         {

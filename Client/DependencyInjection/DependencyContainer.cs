@@ -11,6 +11,9 @@ namespace AutomateDesign.Client.DependencyInjection
     {
         private static DependencyContainer? current;
 
+        /// <summary>
+        /// L'instance globale du conteneur.
+        /// </summary>
         public static DependencyContainer Current
         {
             get
@@ -56,23 +59,23 @@ namespace AutomateDesign.Client.DependencyInjection
         /// <exception cref="InvalidOperationException"></exception>
         public object GetImplementation(Type service)
         {
+            object implementation;
+
             if (this.providers.TryGetValue(service, out ImplementationProvider? provider))
             {
-                object impl = provider.GetImplementation();
+                implementation = provider.GetImplementation();
                 
-                if (impl.GetType().IsAssignableTo(service))
+                if (!implementation.GetType().IsAssignableTo(service))
                 {
-                    return impl;
-                }
-                else
-                {
-                    throw new InvalidOperationException($"The provider for {service.FullName} returned an implementation of type {impl.GetType().FullName}, which is not assignable to the former.");
+                    throw new InvalidOperationException($"The provider for {service.FullName} returned an implementation of type {implementation.GetType().FullName}, which is not assignable to the former.");
                 }
             }
             else
             {
                 throw new InvalidOperationException($"No provider available for {service.FullName}.");
             }
+
+            return implementation;
         }
 
         /// <summary>

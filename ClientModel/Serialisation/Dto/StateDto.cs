@@ -21,6 +21,9 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         /// <inheritdoc cref="State.Kind"/>
         public StateKind Kind { get; set; }
 
+        /// <inheritdoc cref="State.Position"/>
+        public PositionDto Position { get; set; } = new();
+
         /// <summary>
         /// Crée un DTO à partir du modèle.
         /// </summary>
@@ -33,6 +36,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
                 Id = state.Id,
                 Name = state.Name,
                 Kind = state.Kind,
+                Position = PositionDto.MapFromModel(state.Position),
             };
         }
 
@@ -43,7 +47,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         /// <returns>Un nouveau modèle avec les informations de ce DTO.</returns>
         public State MapToModel(Document document)
         {
-            return new State(document, this.Id, this.Name, this.Kind);
+            return new State(document, this.Id, this.Name, this.Position.MapToModel(), this.Kind);
         }
     }
 }

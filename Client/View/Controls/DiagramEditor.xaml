@@ -15,8 +15,16 @@
             <DrawingBrush x:Key="LargeGridBrush" TileMode="Tile" Viewport="0 0 50 50" ViewportUnits="Absolute" Drawing="{StaticResource LargeGridDrawing}"/>
         </Grid.Resources>
         <Canvas Background="{StaticResource SmallGridBrush}"/>
-        <Canvas Background="{StaticResource LargeGridBrush}" x:Name="frontCanvas">
-            
+        <Canvas Background="{StaticResource LargeGridBrush}" x:Name="background"/>
+        <Canvas x:Name="frontCanvas" Background="Transparent">
+            <Ellipse Fill="White"
+                     StrokeThickness="2"
+                     Stroke="Black"
+                     Grid.Row="0" Grid.Column="0"
+                     Opacity="0.6"
+                     Width="100" Height="100"
+                     Panel.ZIndex="1000"
+                     x:Name="stateGhost" />    
         </Canvas>
     </Grid>
 </UserControl>

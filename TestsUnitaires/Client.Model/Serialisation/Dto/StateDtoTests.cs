@@ -9,7 +9,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         {
             Document document = new();
 
-            State state = new State(document, 5, "État X", StateKind.Final);
+            State state = new State(document, 5, "État X", default, StateKind.Final);
 
             StateDto stateDto = StateDto.MapFromModel(state);
             Assert.Equal(5, stateDto.Id);

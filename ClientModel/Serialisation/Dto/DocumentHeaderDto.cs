@@ -38,7 +38,7 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         /// <returns>Un nouveau modèle avec les informations de ce DTO.</returns>
         public DocumentHeader MapToModel()
         {
-            return new DocumentHeader(this.Name, this.LastModificationDate);
+            return new DocumentHeader(-1, this.Name, this.LastModificationDate);
         }
     }
 }

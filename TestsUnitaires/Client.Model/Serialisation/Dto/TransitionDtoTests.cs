@@ -13,8 +13,8 @@ namespace AutomateDesign.Client.Model.Serialisation.Dto
         public void ModelToDto()
         {
             Document document = new();
-            State stateX = new(document, 11, "État X");
-            State stateY = new(document, 22, "État Y");
+            State stateX = new(document, 11, "État X", default);
+            State stateY = new(document, 22, "État Y", default);
 
             Transition transition = new(6, stateX, stateY, new DefaultEvent());
 

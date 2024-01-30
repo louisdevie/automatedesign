@@ -3,7 +3,7 @@
     /// <summary>
     /// Un évènement de l'automate.
     /// </summary>
-    public abstract class Event
+    public interface IEvent
     {
         /// <summary>
         /// Le nom de l'évènement.

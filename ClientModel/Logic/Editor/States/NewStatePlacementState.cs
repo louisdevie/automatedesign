@@ -11,17 +11,25 @@
         {
             switch (evt)
             {
-
+                case EditorEvent.FinishCreatingState finishCreatingState:
+                    ctx.AddState(finishCreatingState.position);
+                    ctx.Mode = EditorMode.Move;
+                    break;
             }
         }
 
         public override EditorState Next(EditorEvent evt)
         {
+            EditorState nextState = this;
+
             switch (evt)
             {
-                default:
-                    return this;
+                case EditorEvent.FinishCreatingState:
+                    nextState = new ReadyState();
+                    break;
             }
+
+            return nextState;
         }
     }
 }

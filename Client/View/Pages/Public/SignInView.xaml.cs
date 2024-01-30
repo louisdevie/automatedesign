@@ -10,7 +10,7 @@ using AutomateDesign.Client.ViewModel.Users;
 using AutomateDesign.Client.Model.Logic;
 using System;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour LoginView.xaml
@@ -61,18 +61,21 @@ namespace AutomateDesign.Client.View
                     catch (Exception error)
                     {
                         ErrorMessageBox.Show(error);
+                        this.viewModel.ClearPassword();
                         this.IsEnabled = true;
                     }
                 }
                 else
                 {
                     ErrorMessageBox.Show(rpce);
+                    this.viewModel.ClearPassword();
                     this.IsEnabled = true;
                 }
             }
             catch (Exception error)
             {
                 ErrorMessageBox.Show(error);
+                this.viewModel.ClearPassword();
                 this.IsEnabled = true;
             }
         }

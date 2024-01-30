@@ -6,7 +6,7 @@ using System.Windows;
 using AutomateDesign.Client.Model.Network;
 using AutomateDesign.Client.ViewModel.Users;
 
-namespace AutomateDesign.Client.View
+namespace AutomateDesign.Client.View.Pages
 {
     /// <summary>
     /// Logique d'interaction pour SignUpView.xaml
@@ -32,44 +32,29 @@ namespace AutomateDesign.Client.View
 
         private async void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (this.viewModel.CurrentPassword.Password != string.Empty)
-            {
-                MessageBox.Show("Veuillez saisir votre mot de passe actuel", "Erreur");
-            }
-            else if (!this.viewModel.PasswordsNotEmpty)
-            {
-                MessageBox.Show("Veuillez saisir un nouveau mot de passe", "Erreur");
-            }
-            else if (!this.viewModel.PasswordsMatch)
-            {
-                MessageBox.Show("Les mots de passe ne correspondent pas", "Erreur");
-            }
-            else
-            {
-                this.IsEnabled = false;
+            this.IsEnabled = false;
 
-                try
-                {
-                    await this.viewModel.ChangePasswordAsync();
-                    this.Navigator.Go(
-                        new EmailVerificationSuccessView(
-                            successMessage: "Votre mot de passe à bien été changé.",
-                            continuationText: "Terminer",
-                            continuationAction: (sender, e) => this.Navigator.Window.Close()
-                        )
-                    );
-                }
-                catch (Exception error)
-                {
-                    ErrorMessageBox.Show(error);
-                    this.IsEnabled = true;
-                }
+            try
+            {
+                await this.viewModel.ChangePasswordAsync();
+                this.Navigator.Go(
+                    new EmailVerificationSuccessView(
+                        successMessage: "Votre mot de passe à bien été changé.",
+                        continuationText: "Terminer",
+                        continuationAction: (sender, e) => this.Navigator.ParentWindow.Close()
+                    )
+                );
+            }
+            catch (Exception error)
+            {
+                ErrorMessageBox.Show(error);
+                this.IsEnabled = true;
             }
         }
 
         private void BackButtonClick(object sender, RoutedEventArgs e)
         {
-            this.Navigator.Window.Close();
+            this.Navigator.ParentWindow.Close();
         }
     }
 }

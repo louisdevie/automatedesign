@@ -37,7 +37,7 @@ namespace AutomateDesign.Client.View.Helpers
             {
                 message = "Une erreur inconnue est survenue";
             }
-            MessageBox.Show(message, "Erreur", MessageBoxButton.OK);
+            MessageBox.Show(message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace AutomateDesign.Client.View.Helpers
         /// </summary>
         /// <param name="asyncAction">La méthode asyncrhone à encapsuler.</param>
         /// <returns>Une tâche représentant l'opération à gérer.</returns>
-        public static Action HandleActionErrors(Func<Task?> asyncAction)
+        public static Action HandleAsyncActionErrors(Func<Task?> asyncAction)
         {
             return () =>
             {

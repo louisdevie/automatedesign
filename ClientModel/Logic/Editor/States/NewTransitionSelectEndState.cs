@@ -21,16 +21,25 @@ namespace AutomateDesign.Client.Model.Logic.Editor.States
         {
             switch (e)
             {
+                case EditorEvent.SelectState selectState:
+                    ctx.AddTransition(this.firstState, selectState.state);
+                    ctx.Mode = EditorMode.Move;
+                    break;
             }
         }
 
         public override EditorState Next(EditorEvent e)
         {
+            EditorState nextState = this;
+
             switch (e)
             {
-                default:
-                    return this;
+                case EditorEvent.SelectState selectState:
+                    nextState = new ReadyState();
+                    break;
             }
+
+            return nextState;
         }
     }
 }
