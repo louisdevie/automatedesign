@@ -1,3 +1,5 @@
+*Ce dépôt est une archive d'un projet réalisé dans le cadre de la SAÉ 5*
+
 # 2023-AutomateDesign-LetsGo
 
 Voici le dépôt GitHub de l'application AutomateDesign.
